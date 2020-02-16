@@ -48,3 +48,11 @@ compress_html:
 plugins:
   - jekyll-sitemap
   - jekyll-seo-tag
+
+
+video_width: 720
+video_height: 560
+
+
+collections:
+  clips:
