@@ -6,7 +6,12 @@
 <h3> {{ ci.title }} </h3>
 
 {% if ci.youtube_id %}
-{% include youtube_player.html id="bOOHVhrIWAs" %}
+{% assign suffix = '' %}
+{% if ci.start_time %}
+<p> starting at time {{ci.start_time}}</p>
+{% capture suffix%}?start={{ci.start_time}}{% endcapture %}
+{% endif %}
+{% include youtube_player.html id=ci.youtube_id suffix=suffix %}
 {% else %}
 <p>No Youtube ID </p>
 {% endif %}
