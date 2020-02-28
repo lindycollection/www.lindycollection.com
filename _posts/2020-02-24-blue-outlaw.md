@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Blue Outlaw"
-clips: [shimmytown_blue_outlaw]
+clips: [shimmytown_blue_outlaw, kenny_delilah_blue_outlaw]
 ---
 
 

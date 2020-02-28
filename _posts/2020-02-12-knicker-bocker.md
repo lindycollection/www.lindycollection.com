@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Knicker Bocker"
-clips: [kbt]
+clips: [kbt, kenny_delilah_knicker_bocker]
 ---
 
 
