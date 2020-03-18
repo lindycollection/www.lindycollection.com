@@ -52,6 +52,22 @@ layout: compress
           </div>
         </div>
       </section>
+
+      <p>Aerials</p>
+
+      <section class="blog">
+        <div class="container">
+          <div class="post-list" itemscope="" itemtype="http://schema.org/Blog">
+
+            {% for post in site.aerials %}
+              {% include card.html %}
+            {% endfor %}
+
+            <!-- {% include pagination.html %} -->
+          </div>
+        </div>
+      </section>
+
     </main>
 
     {% include footer.html %}

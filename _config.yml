@@ -55,6 +55,8 @@ video_height: 560
 
 
 collections:
+  aerials:
+    output: true
   clips:
   jazz:
     output: true
