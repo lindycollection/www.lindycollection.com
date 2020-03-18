@@ -38,6 +38,20 @@ layout: compress
           </div>
         </div>
       </section>
+      <p>Jazz moves</p>
+
+      <section class="blog">
+        <div class="container">
+          <div class="post-list" itemscope="" itemtype="http://schema.org/Blog">
+
+            {% for post in site.jazz %}
+              {% include card.html %}
+            {% endfor %}
+
+            <!-- {% include pagination.html %} -->
+          </div>
+        </div>
+      </section>
     </main>
 
     {% include footer.html %}

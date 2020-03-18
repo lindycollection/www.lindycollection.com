@@ -56,3 +56,5 @@ video_height: 560
 
 collections:
   clips:
+  jazz:
+    output: true
