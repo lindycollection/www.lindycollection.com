@@ -4,14 +4,10 @@ title: About
 permalink: /about/
 ---
 
-Sleek is a modern Jekyll theme focused on speed performance & SEO best practices. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/) or simply read the guide on how to [get started](/getting-started)
+The Lindy Collection is a site dedicated to collecting Lindy Hop content from the many different sites across the web and helping people find related content.
+This dance has evolved and grown and it's important to not just know what's happening right now but also understand it's history and evolution.
 
-You can find the source code for the Jekyll new theme at:
-[sleek](https://github.com/janczizikow/sleek)
-
-You can find the source code for Jekyll at
-[jekyll](https://github.com/jekyll/jekyll)
-
+## Resources
 
 Lists of Aerials:
 
