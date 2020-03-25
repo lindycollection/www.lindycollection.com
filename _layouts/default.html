@@ -38,7 +38,56 @@ layout: compress
           </div>
         </div>
       </section>
-      <p>Jazz moves</p>
+
+      <a href="/routines">
+      <div class="hero--small">
+        <div class="hero__wrap">
+          <h1 class="hero__title">Routines</h1>
+        </div>
+      </div>
+      </a>
+
+      <section class="blog">
+        <div class="container">
+          <div class="post-list" itemscope="" itemtype="http://schema.org/Blog">
+
+            {% for post in site.routines %}
+              {% include card.html %}
+            {% endfor %}
+
+            <!-- {% include pagination.html %} -->
+          </div>
+        </div>
+      </section>
+
+      <a href="/historical_clips">
+      <div class="hero--small">
+        <div class="hero__wrap">
+          <h1 class="hero__title">Historical Clips</h1>
+        </div>
+      </div>
+      </a>
+
+      <section class="blog">
+        <div class="container">
+          <div class="post-list" itemscope="" itemtype="http://schema.org/Blog">
+
+            {% for post in site.historical_clips %}
+              {% include card.html %}
+            {% endfor %}
+
+            <!-- {% include pagination.html %} -->
+          </div>
+        </div>
+      </section>
+
+      <a href="/solo_jazz">
+        <div class="hero--small">
+        <div class="hero__wrap">
+          <h1 class="hero__title">Solo Jazz Moves</h1>
+        </div>
+      </div>
+      </a>
 
       <section class="blog">
         <div class="container">
@@ -53,7 +102,13 @@ layout: compress
         </div>
       </section>
 
-      <p>Aerials</p>
+      <a href="/aerials">
+        <div class="hero--small">
+        <div class="hero__wrap">
+          <h1 class="hero__title">Aerials</h1>
+        </div>
+      </div>
+      </a>
 
       <section class="blog">
         <div class="container">
