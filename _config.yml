@@ -60,3 +60,5 @@ collections:
   clips:
   jazz:
     output: true
+  historical_clips:
+    output: true
