@@ -15,6 +15,11 @@ Lists of Aerials:
 - [Lindy Hop Moves](http://lindyhopmoves.com/more-lindy-hop/aerials/)
 
 
+Other valuable sites:
+
+- https://swungover.wordpress.com/
+- https://lindyhopmoves.com/
+
 
 # Notes for future work
 
