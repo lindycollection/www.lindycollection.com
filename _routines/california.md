@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Californa Routine"
+title: "California Routine"
 clips: [harlem_hotshots_california, patrick_natasha_california_counts]
 ---
 
