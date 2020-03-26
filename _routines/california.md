@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "California Routine"
-clips: [harlem_hotshots_california, patrick_natasha_california_counts]
+clips: [lindy_focus_california, harlem_hotshots_california, patrick_natasha_california_counts, dan_lainey_california]
 ---
 
 This is the California Routine
