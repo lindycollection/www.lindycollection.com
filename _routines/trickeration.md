@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The Trickeration"
-clips: [global_trickeration_project, adam_trickeration, casey_trickeration, jackson_trickeration_behind, swing_maniacs_trickeration]
+clips: [global_trickeration_project, adam_trickeration, casey_trickeration, jackson_trickeration_behind, easy_swing_trickeration, swing_maniacs_trickeration]
 ---
 
 The Trickeration
