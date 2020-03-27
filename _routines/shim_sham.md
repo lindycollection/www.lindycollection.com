@@ -21,3 +21,5 @@ There's a good writeup on [Wikipedia](https://en.wikipedia.org/wiki/Shim_Sham)
 [Step list by Shesha Marvin](http://www.ocswing.com/pages/review/shimsham.pdf)
 
 [A history of the Shim Sham from Sonny Watson](http://www.streetswing.com/histmain/z3shimsh.htm)
+
+[Lindy Hop Moves Summary](https://lindyhopmoves.com/more-lindy-hop/jazz-routines/shim-sham/)
