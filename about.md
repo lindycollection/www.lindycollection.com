@@ -14,6 +14,20 @@ Lists of Aerials:
 - [The Home of Happy Feet](https://thehomeofhappyfeet.com/swing-aerial-safety-running-a-swing-team-part-10/)
 - [Lindy Hop Moves](http://lindyhopmoves.com/more-lindy-hop/aerials/)
 
+WNH Links: https://wednesdaynighthop.com/links
+
+Instructional:
+WNH Videos: https://www.youtube.com/user/wednesdaynighthop/videos
+9:20 Special Videos: https://www.youtube.com/user/920Special/videos
+
+ILHC Videos: https://www.youtube.com/user/ILHCVideos/videos
+Camp Hollywood: https://www.youtube.com/user/camphollywood/videos
+SONH: https://www.youtube.com/user/SwingOutNewHampshire/videos
+Herrang: https://www.youtube.com/user/herrangmedia/videos
+Houston Swing Dance Society, Houston Lindy Fest: https://www.youtube.com/user/HSDSswing/videos
+
+
+
 
 Other valuable sites:
 

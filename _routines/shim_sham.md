@@ -22,4 +22,4 @@ There's a good writeup on [Wikipedia](https://en.wikipedia.org/wiki/Shim_Sham)
 
 [A history of the Shim Sham from Sonny Watson](http://www.streetswing.com/histmain/z3shimsh.htm)
 
-[Lindy Hop Moves Summary](https://lindyhopmoves.com/more-lindy-hop/jazz-routines/shim-sham/)
+[Lindy Hop Moves Summary](https://lindyhopmoves.com/more-lindy-hop/jazz-routines/shim-sham/)    
