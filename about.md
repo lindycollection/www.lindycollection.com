@@ -26,6 +26,7 @@ SONH: https://www.youtube.com/user/SwingOutNewHampshire/videos
 Herrang: https://www.youtube.com/user/herrangmedia/videos
 Houston Swing Dance Society, Houston Lindy Fest: https://www.youtube.com/user/HSDSswing/videos
 
+Lots of high resolution vintage swing videos: https://www.youtube.com/channel/UC07XsRsNjrogsOfwSpMGr2A
 
 
 
