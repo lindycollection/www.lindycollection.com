@@ -1,0 +1,13 @@
+name: Build Test
+on: [push]
+
+jobs:
+  build:
+    name: Parse Check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install ghrocker
+      run: pip install git+https://github.com/osrf/rocker.git@ghjekyll
+    - name: Invoke ghrocker
+      run: ghrocker .
