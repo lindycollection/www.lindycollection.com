@@ -10,6 +10,6 @@ jobs:
     - name: Install Prerequisites
       run: sudo apt-get install python3-setuptools
     - name: Install ghrocker
-      run: sudo pip3 install git+https://github.com/osrf/rocker.git@ghjekyll
+      run: sudo pip3 install git+https://github.com/osrf/rocker.git@a79e56be5b6d9fa1881b816ba3da9bab8d2377e1
     - name: Invoke ghrocker
       run: ghrocker . --build --non-interactive
