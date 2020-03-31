@@ -12,4 +12,4 @@ jobs:
     - name: Install ghrocker
       run: sudo pip3 install git+https://github.com/osrf/rocker.git@ghjekyll
     - name: Invoke ghrocker
-      run: ghrocker . --build --no-user
+      run: ghrocker . --build --non-interactive
