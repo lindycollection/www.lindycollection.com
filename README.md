@@ -13,6 +13,9 @@ Please feel free to make suggestions I will do my best to accept things but cont
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/lindycollection/www.lindycollection.com . This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
+
+
 ## Development
 
 This site is hosted on github pages using Jekyll but you can test it out yourself locally.
