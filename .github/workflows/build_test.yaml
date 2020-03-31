@@ -8,6 +8,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install ghrocker
-      run: pip install git+https://github.com/osrf/rocker.git@ghjekyll
+      run: pip3 install git+https://github.com/osrf/rocker.git@ghjekyll
     - name: Invoke ghrocker
       run: ghrocker .
