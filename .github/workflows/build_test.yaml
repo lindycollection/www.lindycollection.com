@@ -19,4 +19,4 @@ jobs:
     - name: Install ghrocker
       run: pip install git+https://github.com/osrf/rocker.git@ghjekyll
     - name: Invoke ghrocker
-      run: ghrocker . --build --non-interactive
+      run: ghrocker . --build --mode non-interactive
