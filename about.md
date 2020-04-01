@@ -7,6 +7,10 @@ permalink: /about/
 The Lindy Collection is a site dedicated to collecting Lindy Hop content from the many different sites across the web and helping people find related content.
 This dance has evolved and grown and it's important to not just know what's happening right now but also understand it's history and evolution.
 
+* [How to contribute](/contributing).
+* [Code of Conduct](/code_of_conduct) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](/code_of_conduct)
+
+
 ## Resources
 
 Lists of Aerials:

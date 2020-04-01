@@ -1,3 +1,9 @@
+---
+layout: page
+title: Contributing
+permalink: /contributing/
+---
+
 # Contributing to Lindy Collection
 
 Thank you for considering contributing to the Lindy Collection. With many hands we can make light work. 
