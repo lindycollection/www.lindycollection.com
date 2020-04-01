@@ -7,7 +7,9 @@ description: > # this means to ignore newlines until "baseurl:"
 baseurl: "/" # the subpath of your site, e.g. /blog
 url: "https://www.lindycollection.com"
 # twitter_username: jan_czizikow # replace with your_twitter_username or comment to remove link from footer
-github_username:  lindycollection # replace with your_github_username or comment to remove link from footer
+github:
+  url_base: https://github.com
+  repository: lindycollection/www.lindycollection.com
 # instagram_username: shanlongjj # replace with your_instagram_username or comment to remove link from footer
 social:
   name: Lindy Collection
