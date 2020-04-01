@@ -15,3 +15,5 @@ The site is still young and evolving and I don't have a lot of guidelines for wh
 So please suggest things and we'll discuss them.
 
 My biggest constraint right now is that I'd like to keep the site as timeless as possible to not need to make frequent updates to content.
+
+Contributions to this site are made under Creative Commons BY-NC-SA unless stated explicitly otherwise.
