@@ -137,7 +137,7 @@ gulp.task('html', function() {
 
 // Images
 gulp.task('img', function() {
-  return gulp.src('assets/img/posts/*.{png,jpg}')
+  return gulp.src('assets/img/posts/originals/*.{png,jpg}')
     .pipe($.responsive({
       // For all the images in the folder
       '*': [{
@@ -170,10 +170,12 @@ gulp.task('img', function() {
         width: 1999,
         rename: { suffix: '_lg' },
         format: 'jpg',
+        withoutEnlargement: false,
       }, {
         // max-width hero
         width: 1920,
         format: 'jpg',
+        withoutEnlargement: false,
       }],
     }, {
       quality: 70,
