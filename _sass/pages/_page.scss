@@ -6,7 +6,7 @@
   background-color: #dde5ea;
   background-repeat: no-repeat;
   background-position: 50%;
-  background-size: cover;
+  background-size: contain;
 
   @include breakpoint($lg) {
     margin: 0 auto;
