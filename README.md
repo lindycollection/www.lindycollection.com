@@ -46,6 +46,45 @@ ghrocker ~/lindycollection/www.lindycollection.com
 
 ```
 
+## Gulp Environment
+
+There are a few site maintenace items that need to use gulp.
+Most contributors won't need to use this.
+
+```
+. ~/lindycollection/lc_venv/bin/activate
+ghrocker ~/lindycollection/www.lindycollection.com --debug
+sudo apt-get update && sudo apt-get install npm
+npm install .
+npm install gulp-cli
+```
+
+Note: if you're using this environment the node_modules may cause jekyll's inode watcher to fail. You can manually trigger jekyll with `--no-watch` if you use `ghrocker ~/lindycollection/www.lindycollection.com --debug` then call `jekyll serve --no-watch` inside and manually retrigger it when changes have been made.
+
+### Update Formatting
+
+To update the css from the scss.
+
+With the above gulp environment
+
+```
+node_modules/gulp-cli/bin/gulp.js sass
+```
+
+Commit the results.
+
+
+### Updating Images
+
+If you want to add an image drop the file in the directory: 
+`assets/img/posts/` with an extension `.jpg` and then run this script to generate all the appropriate scaled copies.
+
+```
+node_modules/gulp-cli/bin/gulp.js img
+```
+
+The commit the resultant files.
+
 ## License
 
 The theme is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
