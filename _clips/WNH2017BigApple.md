@@ -8,4 +8,4 @@ clip_type: tutorial
 
 This is the playlist for learning the Big Apple as tought at Wednesday Night Hop in 2017.
 
-Teachers: Brynna and Hanna
+Teachers: Brynna and Hannah
