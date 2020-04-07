@@ -137,7 +137,7 @@ gulp.task('html', function() {
 
 // Images
 gulp.task('img', function() {
-  return gulp.src('assets/img/posts/originals/*.{png,jpg}')
+  return gulp.src('_original_assets/*.{png,jpg}')
     .pipe($.responsive({
       // For all the images in the folder
       '*': [{
