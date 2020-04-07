@@ -7,5 +7,8 @@ clips: [frankie_congeroos_1948, frankie_chazz_shim_sham, frankie_erin_shim_sham_
 Frankie Manning was one of the early dancers in the Savoy Ballroom who helped define the Lindy Hop.
 Frankie was also a critical force in helping share his knowlege of Lindy Hop with the world through his teaching and enthusiasm.
 
-Wikipedia: https://en.wikipedia.org/wiki/Frankie_Manning
+[Wikipedia](https://en.wikipedia.org/wiki/Frankie_Manning)
 
+
+
+A member of  [Whitey's Lindy Hoppers](/historical_clips/whiteys_lindy_hoppers)
