@@ -35,6 +35,7 @@ exclude:
   - vendor
   - npm-debug.log
   - gulpfile.js
+  - scripts
   - sleek.png
 
 include: ['_pages']
