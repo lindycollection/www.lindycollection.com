@@ -31,6 +31,11 @@ tree = html.fromstring(page.content)
 
 clip_info['title'] = tree.xpath('/html/head/title')[0].text
 
+youtube_tag = ' - YouTube'
+
+if clip_info['title'].endswith(youtube_tag):
+    clip_info['title'] = clip_info['title'][:-len(youtube_tag)]
+
 clip_info['clip_shortname'] = input("Please enter the clip shortname, lowercase_underscored: ")
 clip_info['is_tutorial'] = input("Is this a tutorial [y/N]?").lower().startswith('y')
 
