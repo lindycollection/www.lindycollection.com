@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Spirit Moves"
-clips: [spirit_moves, spirit_moves_cake_walk]
+clips: [spirit_moves, spirit_moves_cake_walk, sprit_moves_al_leon_shim_sham]
 ---
 
 Spirit Moves is a documentary series from 1987 by Mura Dehn.
