@@ -21,6 +21,11 @@ layout: compress
   {% if page.featured-img %}
 
   <div class="hero lazyload" data-bg="{{site.url}}/assets/img/posts/{{page.featured-img}}.jpg">
+    {% elsif page.clips %}
+
+      {% assign first_clip_name = page.clips | first %}
+      {% assign first_clip = site.clips | where: 'clip_id', first_clip_name | first %}
+  <div class="hero lazyload" data-bg="http://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg">
     {% else %}
     <div class="hero dark-bg">
       {% endif %}
