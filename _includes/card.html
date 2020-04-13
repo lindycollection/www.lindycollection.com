@@ -14,12 +14,12 @@
   {% assign first_clip = site.clips | where: 'clip_id', first_clip_name | first %}
   <figure class="post-card__thumb">
     <img
-      src="http://img.youtube.com/vi/{{first_clip.youtube_id}}/default.jpg",
-      data-srcset="http://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg"
+      src="https://img.youtube.com/vi/{{first_clip.youtube_id}}/default.jpg",
+      data-srcset="https://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg"
       class="lazyload blur"
       alt="{{post.title}}"
     />
-    <noscript><img src="http://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg" alt="{{ post.title }}"></noscript>
+    <noscript><img src="https://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg" alt="{{ post.title }}"></noscript>
   </figure>
   {% else %}
   <figure class="post-card__thumb">
