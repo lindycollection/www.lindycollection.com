@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The Tranky Doo"
-clips: [ilhc2010_hat_trick_tranky, 920_manu_tranky, nathan_christine_tranky, wnh_2020_tranky_doo, wnh_2019_tranky_doo, wnh_2017_tranky_doo, wnh_2014_tranky_doo, wnh_2012_tranky_doo, harlem_hotshots_tranky_doo]
+clips: [ilhc2010_hat_trick_tranky, 920_manu_tranky, nathan_christine_tranky, wnh_2020_tranky_doo, wnh_2019_tranky_doo, wnh_2017_tranky_doo, wnh_2014_tranky_doo, wnh_2012_tranky_doo, harlem_hotshots_tranky_doo, lindy_ladder_tranky_doo]
 ---
 
 The Tranky Doo
