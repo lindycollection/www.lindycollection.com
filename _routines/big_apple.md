@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The Big Apple"
-clips: [keep_punching_big_apple_high_res, harlem_hotshots_big_apple, patrick_natasha_big_apple_counts, wnh_2017_big_apple, wnh_2016_big_apple, wnh_2011_big_apple]
+clips: [keep_punching_big_apple_high_res, harlem_hotshots_big_apple, patrick_natasha_big_apple_counts, wnh_2017_big_apple, wnh_2016_big_apple, wnh_2011_big_apple, lindy_ladder_big_apple]
 ---
 
 This is the The Big Apple
