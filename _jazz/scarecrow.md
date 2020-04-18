@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Scarecrow"
-clips: []
+clips: [litp_scarecrow]
 featured-img: 'scarecrow'
 ---
 
