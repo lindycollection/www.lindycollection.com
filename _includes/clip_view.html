@@ -10,9 +10,9 @@
 {% if ci.start_time %}
 <p> starting at time {{ci.start_time}}</p>
   {% if ci.end_time %}
-  {% capture suffix%}start={{ci.start_time}}&end={{ci.end_time}}&rel=0{% endcapture %}
+  {% capture suffix%}?start={{ci.start_time}}&end={{ci.end_time}}&rel=0{% endcapture %}
   {% else %}
-  {% capture suffix%}start={{ci.start_time}}&rel=0{% endcapture %}
+  {% capture suffix%}?start={{ci.start_time}}&rel=0{% endcapture %}
   {% endif %}
 {% else %}
   {% capture suffix%}?rel=0{% endcapture %}
