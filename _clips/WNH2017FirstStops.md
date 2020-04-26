@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "WNH – April 2017 Elective – First Stops (routine)"
-youtube_id: "videoseries?list=PLPvg9PA35V8P0N6WJLl7QHGxumAt3fSpW"
+youtube_playlist: "PLPvg9PA35V8P0N6WJLl7QHGxumAt3fSpW"
 clip_id: 'wnh_2017_first_stops'
 clip_type: tutorial
 ---

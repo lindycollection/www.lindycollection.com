@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "WNH – August 2016 Level 3 – The Big Apple"
-youtube_id: "videoseries?list=PLPvg9PA35V8M2daxXxs59boJ8zgYGhK7q"
+youtube_playlist: "PLPvg9PA35V8M2daxXxs59boJ8zgYGhK7q"
 clip_id: 'wnh_2016_big_apple'
 clip_type: tutorial
 ---

@@ -9,11 +9,20 @@
 {% assign suffix = '' %}
 {% if ci.start_time %}
 <p> starting at time {{ci.start_time}}</p>
-{% capture suffix%}?start={{ci.start_time}}{% endcapture %}
+  {% if ci.end_time %}
+  {% capture suffix%}start={{ci.start_time}}&end={{ci.end_time}}&rel=0{% endcapture %}
+  {% else %}
+  {% capture suffix%}start={{ci.start_time}}&rel=0{% endcapture %}
+  {% endif %}
+{% else %}
+  {% capture suffix%}?rel=0{% endcapture %}
 {% endif %}
 {% include youtube_player.html id=ci.youtube_id suffix=suffix %}
+{% elsif ci.youtube_playlist %}
+ {% capture yt_argument%}videoseries?list={{ci.youtube_playlist}}{% endcapture %}
+ {% include youtube_player.html id=yt_argument %}
 {% else %}
-<p>No Youtube ID </p>
+<p>No Youtube ID or Playlist</p>
 {% endif %}
 
 <div>
