@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Jump Charleston"
-clips: [jump-charleston-cork]
+clips: [jump-charleston-cork, jazz_abc_jump_charleston]
 ---
 
 

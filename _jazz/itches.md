@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Itches"
-clips: []
+clips: [jazz_abc_itches]
 featured-img: 'itches'
 ---
 
