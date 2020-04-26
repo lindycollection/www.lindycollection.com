@@ -1,5 +1,5 @@
 ---
 layout: post
 title: "Fishtails"
-clips: [litp_fishtails]
+clips: [litp_fishtails, jazz_abc_fishtails]
 ---
