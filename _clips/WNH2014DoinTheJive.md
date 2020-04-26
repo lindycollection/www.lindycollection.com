@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "WNH - August 2014 Doin’ The Jive"
-youtube_id: "videoseries?list=PLPvg9PA35V8MoRY-RBCNHElIyoBJfcneL&index=2"
+youtube_playlist: "PLPvg9PA35V8MoRY-RBCNHElIyoBJfcneL&index=2"
 clip_id: 'wnh_2014_doin_the_jive'
 clip_type: tutorial
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "WNH – July 2017 Elective – Trickeration"
-youtube_id: "videoseries?list=PLPvg9PA35V8OGbC0RBqDip7M4y2N4BDl2"
+youtube_playlist: "PLPvg9PA35V8OGbC0RBqDip7M4y2N4BDl2"
 clip_id: 'wnh_2017_trickeration'
 clip_type: tutorial
 ---

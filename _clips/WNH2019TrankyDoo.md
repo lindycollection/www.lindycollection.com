@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "WNH – July 2019 Elective – Tranky Doo (solo jazz)"
-youtube_id: "videoseries?list=PLPvg9PA35V8Pqa3MZgQkATUMPwBNRTkdC"
+youtube_playlist: "PLPvg9PA35V8Pqa3MZgQkATUMPwBNRTkdC"
 clip_id: 'wnh_2020_tranky_doo'
 clip_type: tutorial
 ---
