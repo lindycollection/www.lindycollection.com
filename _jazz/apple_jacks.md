@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Apple Jacks"
-clips: []
+clips: [jazz_abc_apple_jacks]
 featured-img: 'apple_jacks'
 ---
 
