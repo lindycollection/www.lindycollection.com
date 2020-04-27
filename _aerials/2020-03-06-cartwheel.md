@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Cartwheel"
-clips: [beginner_gymnastics_cartwheel]
+clips: [beginner_gymnastics_cartwheel, jazz_abc3_cartwheel]
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Gaze Afar"
-clips: []
+clips: [jazz_abc3_gaze_afar]
 featured-img: 'gaze_afar'
 ---
 
