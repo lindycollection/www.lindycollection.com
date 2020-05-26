@@ -1,7 +1,15 @@
 ---
 layout: post
 title: "The Shim Sham"
-clips: [frankie_erin_shim_sham_color, frankie_erin_shim_sham, frankie_chazz_shim_sham, wnh_2018_shim_sham, wnh_2014_shim_sham, lindy_ladder_shim_sham, breakwaway_2020_shim_sham]
+clips: [
+    frankie_erin_shim_sham_color,
+    frankie_erin_shim_sham,
+    frankie_chazz_shim_sham,
+    wnh_2018_shim_sham,
+    wnh_2014_shim_sham,
+    lindy_ladder_shim_sham,
+    breakwaway_2020_shim_sham,
+    wnh_2020_shim_sham]
 ---
 
 This is the Shim Sham
