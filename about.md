@@ -45,8 +45,7 @@ Other valuable sites:
 [Learning ot backflip in 6 hours](https://youtu.be/VzhEiJUEQYc)
 
 
-
-More videos to mine/index:
+## More videos to mine/index:
 
 [Diga Diga Do by 23 Skidoo!](https://www.youtube.com/watch?v=iGf5dvPgAd4&feature=youtu.be)
 Great choreo and coordination of aerials within the team
@@ -56,3 +55,10 @@ Great choreo and coordination of aerials within the team
 
 
 [Lindy Focus XVIII: NYC Harvest Moon Hoppers Performance](https://www.youtube.com/watch?v=Ka-xeeZVcjE) with [Alternate view](https://www.youtube.com/watch?v=P4Za0pUZKOA)
+
+ALHC competition videos: https://www.youtube.com/user/AmericanLindyChamps/videos
+
+Carla and Steve early competitions: https://youtu.be/-TCRKK4LqAU https://www.youtube.com/watch?v=zAYb-geQmlk
+
+RHS: https://www.youtube.com/watch?v=f-3cMoPMb34
+
