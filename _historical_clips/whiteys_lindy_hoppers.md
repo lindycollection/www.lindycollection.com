@@ -10,6 +10,8 @@ It included famous members including:
 
 * [Frankie Manning](/historical_clips/frankie_manning)
 * [Norma Miller](/historical_clips/norma_miller)
+* [Al Minns](/historical_clips/al_minns)
+* [Leon James](/historical_clips/leon_james)
 
 
 
