@@ -44,8 +44,17 @@ Other valuable sites:
 
 [Learning ot backflip in 6 hours](https://youtu.be/VzhEiJUEQYc)
 
+## Historical refererence suggestions
 
-## More videos to mine/index:
+* Bal Swing from Bobby White: Bal-Swing was literally the swing that socal was doing, there's also Lindy Hop mixed up in it and esp. Dean Collins: https://www.youtube.com/user/robertwhiteIII/videos
+* Bobby White also has an official swungover channel with a bunch of historical vids: https://www.youtube.com/channel/UCp-he4ZEBUAfwQfcbueTHTA/videos
+* Bill Green has a TON of excerpts of jazz and tap dances on film on youtube, https://www.youtube.com/user/10150924/videos or https://www.youtube.com/channel/UC07XsRsNjrogsOfwSpMGr2A
+* The famous lindy hop and swing dance historian Peter Loggins has a youtube channel that I don't know that he updates a bunch: https://www.youtube.com/channel/UC9dbOaah9cHZqKMYsaRof-Q
+* Dance historian Forrest Outtman has a variety of clips from not just lindy hop but some pre-swing dances: https://www.youtube.com/user/ForrestOutman/videos
+* Dancetime Publication must have gone out of business a long time ago but I remember they had some videos that were interesting to watch: https://www.youtube.com/user/DancetimePublication/videos
+
+
+## More videos to mine/index for aerials:
 
 [Diga Diga Do by 23 Skidoo!](https://www.youtube.com/watch?v=iGf5dvPgAd4&feature=youtu.be)
 Great choreo and coordination of aerials within the team
