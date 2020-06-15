@@ -2,6 +2,9 @@
 <h2> Clips </h2>
 {% for clip in include.clips %}
 {% assign clip_infos = site.clips | where: 'clip_id', clip %}
+{% if clip_infos.size == 0 %}
+<h3>Failed to find clip with reference: {{clip}}</h3>
+{% endif %}
 {% for ci in clip_infos %}
 <h3> {{ ci.title }} </h3>
 
