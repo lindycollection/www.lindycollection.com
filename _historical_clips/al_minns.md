@@ -7,7 +7,8 @@ clips: [
     al_minns_interview_2,
     al_minns_interview_3,
     al_minns_nbc_1980,
-    al_minns_sweden]
+    al_minns_sweden,
+    ]
 ---
 
 Al Minns
