@@ -1,7 +1,10 @@
 ---
 layout: post
 title: "Norma Miller"
-clips: []
+clips: [
+    norma_100_celebration,
+    norma_harvest_moon
+    ]
 ---
 
 Norma Miller
