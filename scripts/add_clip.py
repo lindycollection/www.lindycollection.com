@@ -29,18 +29,23 @@ page = requests.get(url)
 tree = html.fromstring(page.content)
 
 
-
 clip_info['title'] = tree.xpath('/html/head/title')[0].text
 
 youtube_tag = ' - YouTube'
+print("Title: %s" % clip_info['title'])
 
 if clip_info['title'].endswith(youtube_tag):
-    clip_info['title'] = clip_info['title'][:-len(youtube_tag)]
+    clip_info['title'] = clip_info['title'][0:-len(youtube_tag)]
 
 clip_info['clip_id'] = input("Please enter the clip shortname, lowercase_underscored: ")
 is_tutorial = input("Is this a tutorial [y/N]?").lower().startswith('y')
 if is_tutorial:
     clip_info['clip_type'] = 'tutorial'
+if not is_tutorial:
+    is_interview = input("Is this an interview [y/N]?").lower().startswith('y')
+    if is_interview:
+        clip_info['clip_type'] = 'interview'
+
 
 
 TEMPLATE="""---
@@ -60,7 +65,7 @@ print("Creating file: ", clip_file)
 
 print("contents")
 
-yaml = yaml.safe_dump(clip_info)
+yaml = yaml.safe_dump(clip_info, default_flow_style=False)
 
 out = TEMPLATE % yaml
 print(out)
