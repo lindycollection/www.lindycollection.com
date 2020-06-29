@@ -33,7 +33,22 @@ clips: [
     norma_copenhagen_2017,
     norma_chester_chazz_sats_2014,
     norma_swingpatrol_1,
-    norma_swingpatrol_2
+    norma_swingpatrol_2,
+    norma_99,
+    norma_new_woman_today,
+    norma_lindyfest_2016,
+    norma_rtsf_2018,
+    norma_lincoln_center,
+    norma_chazz_rtsf_2015,
+    norma_lindyfest_2010,
+    history_of_swing,
+    norma_guardian_baltimore,
+    norma_guardian_baltimore_class,
+    pbs_jazz_savoy_ballroom,
+    norma_whose_got_the_beat,
+    sats2018_trickeration,
+    norma_millers_lindy_hoppers,
+    norma_rtsf_2018_swinging_frankies_way
     ]
 ---
 
