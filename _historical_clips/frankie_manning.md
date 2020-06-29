@@ -51,7 +51,8 @@ clips: [
     never_stop_swinging,
     frankie_suzy_q,
     frankie_swingen_anfaller,
-    frankie_pbs_jazz_savoy_ballroom
+    frankie_pbs_jazz_savoy_ballroom,
+    frankie_dawn_lindyfest_2008
     ]
 ---
 

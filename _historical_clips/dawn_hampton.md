@@ -15,7 +15,11 @@ clips: [
     dawn_in_nyc,
     dawn_herrang_2010,
     dawn_adam_hdc_2015,
-    frankie_dawn_lindyfest_2007
+    frankie_dawn_lindyfest_2007,
+    dawn_hampton_compilation,
+    dawn_one_monkey,
+    dawn_life_is_what_you_make_it,
+    frankie_dawn_lindyfest_2008
     ]
 ---
 
