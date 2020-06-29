@@ -2,7 +2,9 @@
 layout: post
 title: "Spirit Moves"
 clips: [spirit_moves, spirit_moves_cake_walk, sprit_moves_al_leon_shim_sham
-    spirit_moves_frankie_willa_mae
+    spirit_moves_frankie_willa_mae,
+    sprint_moves_disk_1,
+    sprint_moves_disk_2
     ]
 ---
 
