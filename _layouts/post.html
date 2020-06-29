@@ -35,7 +35,7 @@ layout: compress
         <p class="hero__meta">
 
             <span>
-              <time>{{ page.date | date_to_string }}</time>&nbsp;
+              {{ page.clips | size }} Clips
             </span>
           <span>
               {% assign words = content | number_of_words %}
