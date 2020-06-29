@@ -8,7 +8,8 @@ clips: [
     frankie_norma_peabody,
     a_night_at_the_savoy,
     frankie_85_with_norma,
-    frankie_norma_chazz_2006
+    frankie_norma_chazz_2006,
+    history_of_swing
     ]
 ---
 
