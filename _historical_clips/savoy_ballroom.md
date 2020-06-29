@@ -3,7 +3,8 @@ layout: post
 title: "The Savoy Ballroom"
 clips: [
     foxtrot_at_savoy,
-    pbs_jazz_savoy_ballroom
+    pbs_jazz_savoy_ballroom,
+    frankie_pbs_jazz_savoy_ballroom
     ]
 ---
 

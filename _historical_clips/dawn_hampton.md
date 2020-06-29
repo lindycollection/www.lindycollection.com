@@ -14,7 +14,8 @@ clips: [
     dawn_70th,
     dawn_in_nyc,
     dawn_herrang_2010,
-    dawn_adam_hdc_2015
+    dawn_adam_hdc_2015,
+    frankie_dawn_lindyfest_2007
     ]
 ---
 
