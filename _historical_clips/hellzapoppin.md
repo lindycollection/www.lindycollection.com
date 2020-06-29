@@ -2,11 +2,12 @@
 layout: post
 title: "Hellzapoppin"
 clips: [
+    hellzapoppin_barbican,
+    hellazpoppin_colorized,
     hellzapoppin_movie,
     hellzapoppin_rephrased,
-    hellazpoppin_colorized,
-    hellzapoppin,
-    hellzapoppin_swingcatsVB]
+    hellzapoppin_swingcatsVB
+    ]
 ---
 
 Hellzapoppin' is a 1941 movie which features one of the most iconic clips of Lindy Hop.
