@@ -6,7 +6,8 @@ clips: [
     hellazpoppin_colorized,
     hellzapoppin_movie,
     hellzapoppin_rephrased,
-    hellzapoppin_swingcatsVB
+    hellzapoppin_swingcatsVB,
+    norma_on_hellzapoppin
     ]
 ---
 
