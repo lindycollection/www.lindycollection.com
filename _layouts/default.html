@@ -25,6 +25,10 @@ layout: compress
       </div>
     </div>
 
+    {% for post in site.posts | first %}
+    {% include post_contents.html %}
+    {% endfor %}
+
     <main class="site__content">
       <section class="blog">
         <div class="container">
