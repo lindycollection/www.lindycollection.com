@@ -1,4 +1,6 @@
 
+{% if include.clips %}
+
 <h2> Clips </h2>
 {% for clip in include.clips %}
 {% assign clip_infos = site.clips | where: 'clip_id', clip %}
@@ -35,3 +37,5 @@
 {% endfor %}
 
 {% endfor %}
+
+{% endif %}
