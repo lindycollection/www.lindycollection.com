@@ -25,6 +25,10 @@ layout: compress
       </div>
     </div>
 
+    {% for post in site.posts | first %}
+    {% include post_contents.html %}
+    {% endfor %}
+
     <main class="site__content">
       <section class="blog">
         <div class="container">
@@ -38,7 +42,7 @@ layout: compress
           </div>
         </div>
       </section>
-
+{% comment %}
       <a href="/routines">
       <div class="hero--small">
         <div class="hero__wrap">
@@ -122,6 +126,7 @@ layout: compress
           </div>
         </div>
       </section>
+    {% endcomment %}
 
     </main>
 
