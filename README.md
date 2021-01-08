@@ -32,12 +32,14 @@ cd ~/lindycollection
 # Create a virtual env and activate it
 python3 -m venv lc_venv
 . ~/lindycollection/lc_venv/bin/activate
-# install rocker 
-pip install git+git@github.com:osrf/rocker.git@ghjekyll
+# install ghrocker 
+pip install ghrocker
 # Close the website
 git clone https://github.com/lindycollection/www.lindycollection.com
 ghrocker ~/lindycollection/www.lindycollection.com
 ```
+
+The first run will take a little while to setup the environment. After it's built you can then browse to http://localhost:4000 to view the preview of the site.
 
 To run it again go to
 ```
