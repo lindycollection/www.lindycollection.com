@@ -52,7 +52,8 @@ clips: [
     frankie_suzy_q,
     frankie_swingen_anfaller,
     frankie_pbs_jazz_savoy_ballroom,
-    frankie_dawn_lindyfest_2008
+    frankie_dawn_lindyfest_2008,
+    frankie_paulette
     ]
 ---
 
