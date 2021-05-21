@@ -53,7 +53,8 @@ clips: [
     frankie_swingen_anfaller,
     frankie_pbs_jazz_savoy_ballroom,
     frankie_dawn_lindyfest_2008,
-    frankie_paulette
+    frankie_paulette,
+    frankie_sea_2003
     ]
 ---
 
