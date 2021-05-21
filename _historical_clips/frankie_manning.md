@@ -54,7 +54,9 @@ clips: [
     frankie_pbs_jazz_savoy_ballroom,
     frankie_dawn_lindyfest_2008,
     frankie_paulette,
-    frankie_sea_2003
+    frankie_sea_2003,
+    frankie_sing_1997,
+    frankie_herrang_1992
     ]
 ---
 
