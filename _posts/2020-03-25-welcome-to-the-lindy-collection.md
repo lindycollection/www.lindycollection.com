@@ -1,7 +1,7 @@
 ---
 layout: post
 ---
-Welcome to The Lindy Collection. Over they years I've generated lots of notes and resources that I have personally used to help develop my dancing. It has taken me many years to collect this information and all the time I realized that there's much more that I have to learn. I took the time to put together this site to try to help make this content more accessible for people discovering the dance and to help them find the resources more quickly.
+Welcome to The Lindy Collection. Over the years I've generated lots of notes and resources that I have personally used to help develop my dancing. It has taken me many years to collect this information and all the time I realized that there's much more that I have to learn. I took the time to put together this site to try to help make this content more accessible for people discovering the dance and to help them find the resources more quickly.
 
 There are several different collections with different focuses.
 
