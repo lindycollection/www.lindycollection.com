@@ -25,7 +25,7 @@ layout: compress
       </div>
     </div>
 
-    {% for post in site.posts | first %}
+    {% for post in site.posts limit: 1 %}
     {% include post_contents.html %}
     {% endfor %}
 
