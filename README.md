@@ -58,7 +58,6 @@ Most contributors won't need to use this.
 ghrocker ~/lindycollection/www.lindycollection.com --debug
 sudo apt-get update && sudo apt-get install npm
 npm install .
-npm install gulp-cli
 ```
 
 Note: if you're using this environment the node_modules may cause jekyll's inode watcher to fail. You can manually trigger jekyll with `--no-watch` if you use `ghrocker ~/lindycollection/www.lindycollection.com --debug` then call `jekyll serve --no-watch` inside and manually retrigger it when changes have been made.
