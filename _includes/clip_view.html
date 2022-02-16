@@ -1,6 +1,36 @@
 
 {% if include.clips %}
 
+<script>
+  /* 2. This code loads the IFrame Player API code asynchronously. */
+  var tag = document.createElement('script');
+
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  var players = {};
+
+  var ytplayers = {};
+
+  function onYouTubeIframeAPIReady() {
+    for (var p in players) {    
+        ytplayers[players[p]['video_id']] = new YT.Player(players[p]['video_id'], {
+            videoId: players[p]['video_id'],
+            playerVars: {
+                'playsinline': 1
+            },
+            events: {
+                'onReady': players[p]['onReady'],
+                'onStateChange': players[p]['onStateChange']
+            }
+        });
+    }
+  }
+
+</script>
+
+
 <h2> Clips </h2>
 {% for clip in include.clips %}
 {% assign clip_infos = site.clips | where: 'clip_id', clip %}
@@ -15,6 +45,7 @@
 {% if ci.start_time %}
 <p> starting at time {{ci.start_time}}</p>
   {% if ci.end_time %}
+<p> ending at time {{ci.end_time}}</p>
   {% capture suffix%}?start={{ci.start_time}}&end={{ci.end_time}}&rel=0{% endcapture %}
   {% else %}
   {% capture suffix%}?start={{ci.start_time}}&rel=0{% endcapture %}

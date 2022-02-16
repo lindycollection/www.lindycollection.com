@@ -1,4 +1,38 @@
 
 <div class="video-container">
-<iframe src="https://www.youtube.com/embed/{{include.id}}{{include.suffix}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<!-- <iframe src="https://www.youtube.com/embed/{{include.id}}{{include.suffix}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+    <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+        <div id="{{include.id}}"></div>
+
+        <script>
+          /* 3. This function creates an <iframe> (and YouTube player)
+          /    after the API code downloads. */
+
+
+    
+          /* 4. The API will call this function when the video player is ready.*/
+          function onPlayerReady{{include.id}}(event) {
+            event.target.playVideo();
+          }
+    
+          /* 5. The API calls this function when the player's state changes.
+          //    The function indicates that when playing a video (state=1),
+          //    the player should play for six seconds and then stop. */
+          var done{{include.id}} = false;
+          function onPlayerStateChange{{include.id}}(event) {
+            if (event.data == YT.PlayerState.PLAYING && !done{{include.id}}) {
+              setTimeout(stopVideo{{include.id}}, 6000);
+              done{{include.id}} = true;
+            }
+          }
+          function stopVideo{{include.id}}() {
+            ytplayers['{{include.id}}'].stopVideo();
+          }
+
+          players['{{include.id}}'] = {video_id: '{{include.id}}',
+           onReady: onPlayerReady{{include.id}},
+           onStateChange: onPlayerStateChange{{include.id}}
+        };
+
+    </script>
 </div>
