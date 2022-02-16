@@ -53,7 +53,7 @@
 {% else %}
   {% capture suffix%}?rel=0{% endcapture %}
 {% endif %}
-{% include youtube_player.html id=ci.youtube_id suffix=suffix %}
+{% include youtube_player.html id=ci.youtube_id suffix=suffix start_time=ci.start_time %}
 {% elsif ci.youtube_playlist %}
  {% capture yt_argument%}videoseries?list={{ci.youtube_playlist}}{% endcapture %}
  {% include youtube_player.html id=yt_argument %}
