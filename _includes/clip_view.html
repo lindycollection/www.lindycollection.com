@@ -15,10 +15,11 @@
 
   function onYouTubeIframeAPIReady() {
     for (var p in players) {    
-        ytplayers[players[p]['video_id']] = new YT.Player(players[p]['video_id'], {
+        ytplayers[p] = new YT.Player(p, {
             videoId: players[p]['video_id'],
             playerVars: {
-                'playsinline': 1
+                'playsinline': 1,
+                'rel': 0
             },
             events: {
                 'onReady': players[p]['onReady'],
@@ -38,25 +39,16 @@
 <h3>Failed to find clip with reference: {{clip}}</h3>
 {% endif %}
 {% for ci in clip_infos %}
+{% comment %} Capturing to avoid printing the clip number {% endcomment %}
+{% capture _ %}{% increment clip_num %}{% endcapture %}
 <h3> {{ ci.title }} </h3>
 
 {% if ci.youtube_id %}
-{% assign suffix = '' %}
-{% if ci.start_time %}
-<p> starting at time {{ci.start_time}}</p>
-  {% if ci.end_time %}
-<p> ending at time {{ci.end_time}}</p>
-  {% capture suffix%}?start={{ci.start_time}}&end={{ci.end_time}}&rel=0{% endcapture %}
-  {% else %}
-  {% capture suffix%}?start={{ci.start_time}}&rel=0{% endcapture %}
-  {% endif %}
-{% else %}
-  {% capture suffix%}?rel=0{% endcapture %}
-{% endif %}
-{% include youtube_player.html id=ci.youtube_id suffix=suffix start_time=ci.start_time %}
+{% include youtube_player.html id=clip_num clip_info=ci %}
 {% elsif ci.youtube_playlist %}
+<p> Playlist mode</p>
  {% capture yt_argument%}videoseries?list={{ci.youtube_playlist}}{% endcapture %}
- {% include youtube_player.html id=yt_argument %}
+ {% include youtube_player.html id=yt_argument clip_info=ci %}
 {% else %}
 <p>No Youtube ID or Playlist</p>
 {% endif %}

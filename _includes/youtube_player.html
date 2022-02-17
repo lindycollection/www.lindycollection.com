@@ -1,8 +1,7 @@
 
 <div class="video-container">
-<!-- <iframe src="https://www.youtube.com/embed/{{include.id}}{{include.suffix}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
     <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
-        <div id="{{include.id}}"></div>
+        <div id="videoid_{{include.id}}"></div>
 
         <script>
           /* 3. This function creates an <iframe> (and YouTube player)
@@ -12,7 +11,7 @@
     
           /* 4. The API will call this function when the video player is ready.*/
           function onPlayerReady{{include.id}}(event) {
-            event.target.seekTo({{include.start_time}});
+            event.target.seekTo({{include.clip_info.start_time}});
             event.target.playVideo();
           }
     
@@ -22,15 +21,17 @@
           var done{{include.id}} = false;
           function onPlayerStateChange{{include.id}}(event) {
             if (event.data == YT.PlayerState.PLAYING && !done{{include.id}}) {
-              setTimeout(stopVideo{{include.id}}, 6000);
+                {% if include.clip_info.end_time %}
+                setTimeout(stopVideo{{include.id}}, ({{include.clip_info.end_time}} - {{include.clip_info.start_time}}) * 1000);
+                {% endif %}
               done{{include.id}} = true;
             }
           }
           function stopVideo{{include.id}}() {
-            ytplayers['{{include.id}}'].stopVideo();
+            ytplayers["videoid_{{include.id}}"].stopVideo();
           }
 
-          players['{{include.id}}'] = {video_id: '{{include.id}}',
+          players["videoid_{{include.id}}"] = {video_id: "{{include.clip_info.youtube_id}}",
            onReady: onPlayerReady{{include.id}},
            onStateChange: onPlayerStateChange{{include.id}}
         };
