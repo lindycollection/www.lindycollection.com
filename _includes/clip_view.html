@@ -14,17 +14,25 @@
   var ytplayers = {};
 
   function onYouTubeIframeAPIReady() {
-    for (var p in players) {    
-        ytplayers[p] = new YT.Player(p, {
-            videoId: players[p]['video_id'],
-            playerVars: {
-                'playsinline': 1,
-                'rel': 0
-            },
-            events: {
+    for (var p in players) {
+        var player_events = {
                 'onReady': players[p]['onReady'],
                 'onStateChange': players[p]['onStateChange']
-            }
+            };
+        var player_vars = {
+                'playsinline': 1,
+                'rel': 0,
+            };
+        if (players[p]['startSeconds']) {
+          player_vars['start'] = players[p]['startSeconds'];
+        }
+        if (players[p]['endSeconds']) {
+          player_vars['end'] = players[p]['endSeconds'];
+        }
+        ytplayers[p] = new YT.Player(p, {
+            videoId: players[p]['video_id'],
+            playerVars: player_vars,
+            events: player_events
         });
     }
   }
