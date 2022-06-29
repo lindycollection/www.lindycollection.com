@@ -18,5 +18,8 @@ jobs:
       run: sudo apt-get install python3-setuptools
     - name: Install ghrocker
       run: pip install ghrocker
-    - name: Invoke ghrocker
+    - name: Invoke ghrocker to test regular build
       run: ghrocker . --build --mode non-interactive
+    #- name: Invoke ghrocker to test image and css generation
+    # TODO(tfoote) needs debug command synatax added to ghrocker
+    #  run: ghrocker . --debug rebuild_css_and_images.bash
