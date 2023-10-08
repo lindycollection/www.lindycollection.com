@@ -6,7 +6,9 @@ import cp from 'child_process'
 
 // Basic workflow plugins
 // const sass = require('gulp-sass');
-import sass from 'gulp-sass'
+import dartSass from 'sass'
+import gulpSass from 'gulp-sass'
+const sass = gulpSass(dartSass)
 const jekyll = process.platform === 'win32' ? 'jekyll.bat' : 'jekyll';
 const messages = {
     jekyllBuild: '<span style="color: grey">Running:</span> $ jekyll build'
