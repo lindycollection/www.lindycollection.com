@@ -1,27 +1,39 @@
 // Gulp and node
-const gulp = require('gulp');
-const cp = require('child_process');
+// const gulp = require('gulp');
+import gulp from 'gulp'
+// const cp = require('child_process');
+import cp from 'child_process'
 
 // Basic workflow plugins
-const sass = require('gulp-sass');
+// const sass = require('gulp-sass');
+import sass from 'gulp-sass'
 const jekyll = process.platform === 'win32' ? 'jekyll.bat' : 'jekyll';
 const messages = {
     jekyllBuild: '<span style="color: grey">Running:</span> $ jekyll build'
 };
 
 // Performance workflow plugins
-const htmlmin = require('gulp-htmlmin');
-const prefix = require('gulp-autoprefixer');
-const sourcemaps = require('gulp-sourcemaps');
-const concat = require('gulp-concat');
-const uglify = require('gulp-uglify');
-// const critical = require('critical');
+// const htmlmin = require('gulp-htmlmin');
+import htmlmin from 'gulp-htmlmin'
+// const prefix = require('gulp-autoprefixer');
+import prefix from 'gulp-autoprefixer'
+// const sourcemaps = require('gulp-sourcemaps');
+import sourcemaps from 'gulp-sourcemaps'
+// const concat = require('gulp-concat');
+import concat from 'gulp-concat'
+// const uglify = require('gulp-uglify');
+import uglify from 'gulp-uglify'
 
 // Image Generation TODO
-const responsive = require('gulp-responsive');
-const $ = require('gulp-load-plugins')();
-const rename = require('gulp-rename');
-const imagemin = require('gulp-imagemin');
+// const responsive = require('gulp-responsive');
+import responsive from 'gulp-responsive'
+// const $ = require('gulp-load-plugins')(); // WTF?
+import gulp_plugins from 'gulp-load-plugins'
+// const $ = gulp_plugins()
+// const rename = require('gulp-rename');
+import rename from 'gulp-rename'
+// const imagemin = require('gulp-imagemin');
+import imagemin from 'gulp-imagemin'
 
 const src = {
   css: '_sass/main.scss',
