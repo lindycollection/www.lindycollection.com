@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Sleek is a modern Jekyll theme focused on speed performance & SEO best practices.",
   "main": "gulpfile.js",
+  "type": "module",
   "dependencies": {
     "breakpoint-sass": "^2.7.1",
     "fg-loadcss": "^1.3.1",
