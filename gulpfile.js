@@ -104,7 +104,6 @@ gulp.task('sass', function() {
 // });
 
 
-gulp.task('default', ['sass', 'img']);
 
 // Minify HTML
 gulp.task('html', function() {
@@ -119,7 +118,7 @@ gulp.task('html', function() {
 // Images
 gulp.task('img', function() {
   return gulp.src('_original_assets/*.{png,jpg}')
-    .pipe($.responsive({
+    .pipe(responsive({
       // For all the images in the folder
       '*': [{
         width: 230,
@@ -166,3 +165,5 @@ gulp.task('img', function() {
     .pipe(imagemin())
     .pipe(gulp.dest('assets/img/posts/'));
 });
+
+gulp.task('default', gulp.series('sass', 'img'));
