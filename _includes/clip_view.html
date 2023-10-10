@@ -49,12 +49,12 @@
 {% for ci in clip_infos %}
 {% comment %} Capturing to avoid printing the clip number {% endcomment %}
 {% capture _ %}{% increment clip_num %}{% endcapture %}
-<h3> {{ ci.title }} </h3>
 
 {% if ci.youtube_id %}
+<h3><a href="https://youtube.com/watch?v={{ci.youtube_id}}">{{ ci.title }} - YouTube Video</a></h3>
 {% include youtube_player.html id=clip_num clip_info=ci %}
 {% elsif ci.youtube_playlist %}
-<p> Playlist mode</p>
+<h3><a href="https://youtube.com/playlist?list={{ci.youtube_playlist}}">{{ ci.title }} - YouTube Playlist</a></h3>
  {% capture yt_argument%}videoseries?list={{ci.youtube_playlist}}{% endcapture %}
  {% include youtube_player.html id=yt_argument clip_info=ci %}
 {% else %}
