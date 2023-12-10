@@ -3,6 +3,7 @@ layout: post
 title: "The Shim Sham"
 clips: [
     frankie_erin_shim_sham_color,
+    leonard_reed_interview,
     frankie_erin_shim_sham,
     frankie_chazz_shim_sham,
     wnh_2018_shim_sham,
@@ -14,9 +15,9 @@ clips: [
 
 This is the Shim Sham
 
-Choreographed by Willie Bryant and Leonard Reed
+Choreographed by Willie Bryant and [Leonard Reed](/historical_clips/leonard_reed)
 
-This version was popularized by Frankie Manning. 
+This version was popularized by [Frankie Manning](/historical_clips/frankie_manning).
 
 It's commonly performed to 
 
