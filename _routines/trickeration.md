@@ -6,7 +6,7 @@ clips: [global_trickeration_project, adam_norma_herrang_trickeration, sats2018_t
 
 The Trickeration
 
-A routine choreographed by [Norma Miller](https://en.wikipedia.org/wiki/Norma_Miller).
+A routine choreographed by [Norma Miller](/historical_clips/norma_miller).
 
 It's been a common but challenging routine for lindy hoppers world wide.
 
