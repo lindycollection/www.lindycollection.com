@@ -6,7 +6,8 @@ clips: [
     first_stops_nils_bianca,
     first_stops_nils_bianca_tutorial,
     wnh_2017_first_stops,
-    lindy_ladder_first_stops]
+    lindy_ladder_first_stops,
+    first_stops_time2swing]
 ---
 
 The First Stops routine was an early routine created at the Savoy Ballroom as an ensamble routine. 
