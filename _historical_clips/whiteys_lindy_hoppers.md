@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Whitey's Lindy Hoppers"
-clips: [frankie_congeroos_1948, frankie_chazz_shim_sham, frankie_erin_shim_sham_color, frankie_erin_shim_sham]
+clips: [frankie_chazz_shim_sham, frankie_erin_shim_sham_color, frankie_erin_shim_sham]
 ---
 
 Whitey's Lindy Hoppers was one of the most famous groups that helped create and popularize the dance of Lindy Hop.
