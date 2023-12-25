@@ -2,7 +2,7 @@
 layout: post
 title: "Frankie Manning"
 clips: [
-    frankie_congeroos_1948, frankie_chazz_shim_sham, frankie_erin_shim_sham_color, frankie_erin_shim_sham, swingbud_frankie_tribute,
+    frankie_chazz_shim_sham, frankie_erin_shim_sham_color, frankie_erin_shim_sham, swingbud_frankie_tribute,
     wild_week_1995_frankie_dawn_chazz,
     frankie_norma_1980s,
     frankie_norma_peabody,
