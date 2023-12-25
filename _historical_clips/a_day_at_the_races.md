@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "A Day at the Races"
-clips: [a_day_at_the_races_lindy_recoloized]
+clips: [a_day_at_the_races_lindy_recoloized, adatr_all_gods_children]
 ---
 
 A Day at the Races was a 1937 film featuring a promenant Lindy Hop clip.
