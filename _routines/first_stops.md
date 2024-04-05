@@ -2,8 +2,9 @@
 layout: post
 title: "First Stops"
 clips: [
-    harlem_hotshots_first_stops,
     first_stops_nils_bianca,
+    sats_2024_stops_routine,
+    harlem_hotshots_first_stops,
     first_stops_nils_bianca_tutorial,
     wnh_2017_first_stops,
     lindy_ladder_first_stops,
