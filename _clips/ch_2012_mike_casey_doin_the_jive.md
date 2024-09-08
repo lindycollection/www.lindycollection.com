@@ -4,6 +4,6 @@ clip_type: tutorial
 layout: post
 title: 'Camp Hollywood 2012: Doin'' the Jive Routine - Mike & Casey'
 youtube_id: cTxXFO4FOO4
-
+event: camp_hollywood
 ---
 

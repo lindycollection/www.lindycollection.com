@@ -58,3 +58,5 @@ collections:
     output: true
   routines:
     output: true
+  events:
+    output: true

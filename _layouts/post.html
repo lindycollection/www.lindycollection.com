@@ -57,8 +57,10 @@ layout: compress
 
         {{ content }}
 
-
         {% include clip_view.html clips=page.clips %}
+        {% if page.crossref %}
+          {% include crossref.html type=page.crossref crossref_id=page.crossref_id %}
+        {% endif %} 
       </article>
       <div class="post-content controls__inner">
         <div class="controls__item prev">
