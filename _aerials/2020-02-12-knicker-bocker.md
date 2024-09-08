@@ -1,7 +1,9 @@
 ---
 layout: post
 title: "Knicker Bocker"
-clips: [kbt, kenny_delilah_knicker_bocker]
+clips: [kbt, kenny_delilah_knicker_bocker,
+    ch_2024_laura_aj_knicker_bocker,
+    ]
 ---
 
 
