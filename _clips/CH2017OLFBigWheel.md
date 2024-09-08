@@ -5,4 +5,5 @@ youtube_id: "P4daXwKm3TU"
 start_time: "260"
 end_time: "265"
 clip_id: 'ch_2017_big_wheel'
+event: camp_hollywood
 ---

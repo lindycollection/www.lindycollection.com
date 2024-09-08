@@ -1,0 +1,69 @@
+Top of crossref
+<script>
+  /* 2. This code loads the IFrame Player API code asynchronously. */
+  var tag = document.createElement('script');
+
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  var players = {};
+
+  var ytplayers = {};
+
+  function onYouTubeIframeAPIReady() {
+    for (var p in players) {
+        var player_events = {
+                'onReady': players[p]['onReady'],
+                'onStateChange': players[p]['onStateChange']
+            };
+        var player_vars = {
+                'playsinline': 1,
+                'rel': 0,
+            };
+        if (players[p]['startSeconds']) {
+          player_vars['start'] = players[p]['startSeconds'];
+        }
+        if (players[p]['endSeconds']) {
+          player_vars['end'] = players[p]['endSeconds'];
+        }
+        ytplayers[p] = new YT.Player(p, {
+            videoId: players[p]['video_id'],
+            playerVars: player_vars,
+            events: player_events
+        });
+    }
+  }
+
+</script>
+
+
+<h2> Cross References </h2>
+
+{% assign clip_infos = site.clips | where: include.type, include.crossref_id %}
+
+
+{% if clip_infos.size == 0 %}
+<h3>Failed to find clip with reference: {{include.crossref_id}}</h3>
+{% endif %}
+{% for ci in clip_infos %}
+{% comment %} Capturing to avoid printing the clip number {% endcomment %}
+{% capture _ %}{% increment clip_num %}{% endcapture %}
+
+{% if ci.youtube_id %}
+<h3><a href="https://youtube.com/watch?v={{ci.youtube_id}}">{{ ci.title }} - YouTube Video</a></h3>
+{% include youtube_player.html id=clip_num clip_info=ci %}
+{% elsif ci.youtube_playlist %}
+<h3><a href="https://youtube.com/playlist?list={{ci.youtube_playlist}}">{{ ci.title }} - YouTube Playlist</a></h3>
+ {% capture yt_argument%}videoseries?list={{ci.youtube_playlist}}{% endcapture %}
+ {% include youtube_player.html id=yt_argument clip_info=ci %}
+{% else %}
+<p>No Youtube ID or Playlist</p>
+{% endif %}
+
+<div>
+{{ci.content}}
+</div>
+
+{% endfor %}
+
