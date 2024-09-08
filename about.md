@@ -15,7 +15,7 @@ This dance has evolved and grown and it's important to not just know what's happ
 
 Lists of Aerials:
 
-- [The Home of Happy Feet](https://thehomeofhappyfeet.com/swing-aerial-safety-running-a-swing-team-part-10/)
+- [The Home of Happy Feet](https://thehomeofhappyfeet.com/swing-aerial-safety-running-a-swing-team-part-10/) Offline!!! In internet archive: http://web.archive.org/web/20240325175021/https://thehomeofhappyfeet.com/swing-aerial-safety-running-a-swing-team-part-10/
 - [Lindy Hop Moves](http://lindyhopmoves.com/more-lindy-hop/aerials/)
 
 WNH Links: https://wednesdaynighthop.com/links
@@ -71,3 +71,21 @@ Carla and Steve early competitions: https://youtu.be/-TCRKK4LqAU https://www.you
 
 RHS: https://www.youtube.com/watch?v=f-3cMoPMb34
 
+## Camp Hollywood 2024
+
+OLF https://www.youtube.com/watch?v=ZarMsJhDzM4
+Amateur OLF https://www.youtube.com/watch?v=USQlDaRYiKE
+
+Open Lindy Teams: 
+https://www.youtube.com/watch?v=wQZCvdya4nw
+https://www.youtube.com/watch?v=uo5P5wxNfFI
+https://www.youtube.com/watch?v=V1L70_0R5DM
+https://www.youtube.com/watch?v=EqRYPPXDRgY
+https://www.youtube.com/watch?v=5zUTdsnDPRk
+
+## Camp Hollywood 2023
+
+OLF https://www.youtube.com/watch?v=5zUTdsnDPRk
+
+CH 2022 OLF https://www.youtube.com/watch?v=TjFEiIElpqU
+CH 2019 OLF https://www.youtube.com/watch?v=HPVLZcOGt_M
