@@ -31,7 +31,16 @@
       <h2>{{ post.title | strip_html | truncate: 50 }}</h2>
       {% assign date_format = site.sleek.date_format | default: "%b %-d, %Y" %}
       <span class="post-card__meta">
-        {{ post.clips | size }} Clips
+        {% assign clip_count = post.clips | size %}
+        {% if post.crossref %} 
+          {% assign crossref_clip_count = site.clips | where: post.crossref, post.crossref_id | size %}
+        {% else %}
+          {% assign crossref_clip_count = 0 %}
+        {% endif %}
+
+
+        {% if post.clips %} {{ clip_count | plus:  crossref_clip_count  }} Clips {% endif %}
+
       </span>
     </div>
     {% if post.summary %}
