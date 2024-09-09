@@ -7,6 +7,8 @@ clips: [
     lindy_ladder_judo,
     swingindenver_trip_flip_recap_sving,
     ]
+redirect_from:
+  - /aerials/2020-02-24-trip-flip/
 ---
 
 
