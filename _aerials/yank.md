@@ -2,6 +2,8 @@
 layout: post
 title: "Yank Flip"
 clips: [shimmytown_yank]
+redirect_from:
+  - /aerials/2020-02-24-yank-flip/
 ---
 
 
