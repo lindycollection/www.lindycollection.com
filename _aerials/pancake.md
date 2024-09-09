@@ -4,6 +4,7 @@ title: "Pancake"
 clips: [
     hellzapoppin_pancake,
     ch_2024_pancake,
+    ch_2024_jm_sv_pancake,
     ]
 redirect_from:
   - /aerials/2020-02-12-pancake/
