@@ -5,9 +5,9 @@ jobs:
   build:
     name: Check Jekyll Build
     runs-on: ubuntu-latest
-    # strategy:
-    #   matrix:
-    #     python-version: [3.x]
+    strategy:
+      matrix:
+        python-version: [3.x]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
