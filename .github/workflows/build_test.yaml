@@ -20,6 +20,22 @@ jobs:
       run: pip install ghrocker
     - name: Invoke ghrocker to test regular build
       run: ghrocker . --build --mode non-interactive
+  check_image_and_css_generation:
+    name: Check Image and CSS Generation
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10']
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Prerequisites
+      run: sudo apt-get install python3-setuptools
+    - name: Install ghrocker
+      run: pip install ghrocker
     - name: Make sure that image and css generation can be run
       # TODO(tfoote) needs debug command synatax added to ghrocker
       run: rocker --user --volume=${{ github.workspace }}:/tmp/jekyll -- ubuntu:jammy /tmp/jekyll/rebuild_css_and_images.bash
