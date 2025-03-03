@@ -9,7 +9,9 @@ clips: [
     wnh_2018_al_leon,
     wnh_2016_al_leon,
     kevin_jo_al_leon,
-    joe_demers_al_leon]
+    joe_demers_al_leon,
+    harlem_hotshots_al_leon_shim_sham,
+    ]
 ---
 
 
