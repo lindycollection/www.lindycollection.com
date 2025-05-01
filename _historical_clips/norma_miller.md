@@ -48,7 +48,8 @@ clips: [
     norma_whose_got_the_beat,
     sats2018_trickeration,
     norma_millers_lindy_hoppers,
-    norma_rtsf_2018_swinging_frankies_way
+    norma_rtsf_2018_swinging_frankies_way,
+    frankie_norma_1908_northern_lights,
     ]
 ---
 

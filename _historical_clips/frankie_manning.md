@@ -56,7 +56,8 @@ clips: [
     frankie_paulette,
     frankie_sea_2003,
     frankie_sing_1997,
-    frankie_herrang_1992
+    frankie_herrang_1992,
+    frankie_norma_1908_northern_lights,
     ]
 ---
 
