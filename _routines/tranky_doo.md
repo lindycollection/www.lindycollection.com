@@ -20,6 +20,8 @@ clips: [
     tranky_doo_spirit_moves,
     tranky_doo_laura_glaess,
     tranky_doo_black_bottom,
+    tranky_doo_triplestep_luzern,
+    tranky_doo_frankie_sea_jam_2007,
     ]
 ---
 
