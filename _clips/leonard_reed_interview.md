@@ -7,5 +7,5 @@ youtube_id: iH10E20--5k
 
 ---
 
-This is an interview of Leonard Reed about the choreography of the classic routine the [Shim Sham](/_routines/shim_sham.md)
+This is an interview of Leonard Reed about the choreography of the classic routine the [Shim Sham](/routines/shim_sham/)
 
