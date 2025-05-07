@@ -9,4 +9,4 @@ redirect_from:
 
 The Yank Toss
 
-It's like the [Yank Flip](aerials/yank-flip) but over the head but not flipping.
+It's like the [Yank Flip](/aerials/yank-flip/) but over the head but not flipping.
