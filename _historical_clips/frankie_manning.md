@@ -71,4 +71,4 @@ Frankie was also a critical force in helping share his knowlege of Lindy Hop wit
 
 A member of  [Whitey's Lindy Hoppers](/historical_clips/whiteys_lindy_hoppers) and the Congaroos.
 
-He choreographed [Tranky Doo](/_routines/tranky_doo.md) and a variation the [Frankie Doo](/_routines/frankie_doo.md).
+He choreographed [Tranky Doo](/routines/tranky_doo/) and a variation the [Frankie Doo](/routines/frankie_doo/).
