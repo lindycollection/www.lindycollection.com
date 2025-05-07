@@ -4,7 +4,8 @@ title: "Spirit Moves"
 clips: [spirit_moves, spirit_moves_cake_walk, sprit_moves_al_leon_shim_sham
     spirit_moves_frankie_willa_mae,
     sprint_moves_disk_1,
-    sprint_moves_disk_2
+    sprint_moves_disk_2,
+    tranky_doo_spirit_moves,
     ]
 ---
 

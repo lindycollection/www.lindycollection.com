@@ -13,16 +13,46 @@ clips: [
     wnh_2014_tranky_doo,
     wnh_2012_tranky_doo,
     lindy_ladder_tranky_doo,
-    utsa_tranky_doo_tutorial]
+    utsa_tranky_doo_tutorial,
+    tranky_doo_tops_wilda,
+    tranky_doo_tops_wilder,
+    tranky_doo_al_leon,
+    tranky_doo_spirit_moves,
+    ]
 ---
 
-The Tranky Doo
+# The Tranky Doo
+
+The Tranky Doo is one of the three most common routines from the early era with the Shim Sham and the Big Apple.
+It is performed widely and well know by many dancers. 
+
 
 An early lindy hop routine which can be seen in the [Spirit Moves](/historical_clips/spirit-moves/)
+
+
+## History
+
+The Tranky Doo was choreographed by [Frankie Manning](/historical_clips/frankie_manning/) while he was in the Congaroos.
+
+[Swungover has a good history](https://swungover.wordpress.com/2017/09/25/the-mysterious-history-of-the-tranky-doo/)
+
+
+Frankie eventually created a variant which is now known as the [Frankie Doo](/_routines/frankie_doo.md).
+
+## Common Songs
+
+Originally danced to Tuxedo Junction
+
+It's now commonly danced to the Dipsy Doodle.
+
+
+## Other references
 
 [Wikipedia](https://en.wikipedia.org/wiki/Tranky_Doo)
 
 There's a brief overview of it [here]( https://www.swingornothing.com/4-jazz-routines-every-lindy-hopper-should-know-part-2-of-3/).
 
-[Swungover has a good history](https://swungover.wordpress.com/2017/09/25/the-mysterious-history-of-the-tranky-doo/)
 
+
+
+Three's a lot of 
