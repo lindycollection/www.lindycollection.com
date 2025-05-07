@@ -58,6 +58,7 @@ clips: [
     frankie_sing_1997,
     frankie_herrang_1992,
     frankie_norma_1908_northern_lights,
+    tranky_doo_frankie_sea_jam_2007,
     ]
 ---
 
@@ -68,4 +69,6 @@ Frankie was also a critical force in helping share his knowlege of Lindy Hop wit
 
 
 
-A member of  [Whitey's Lindy Hoppers](/historical_clips/whiteys_lindy_hoppers)
+A member of  [Whitey's Lindy Hoppers](/historical_clips/whiteys_lindy_hoppers) and the Congaroos.
+
+He choreographed [Tranky Doo](/_routines/tranky_doo.md) and a variation the [Frankie Doo](/_routines/frankie_doo.md).
