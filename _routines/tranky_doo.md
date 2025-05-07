@@ -18,6 +18,8 @@ clips: [
     tranky_doo_tops_wilder,
     tranky_doo_al_leon,
     tranky_doo_spirit_moves,
+    tranky_doo_laura_glaess,
+    tranky_doo_black_bottom,
     ]
 ---
 
@@ -35,6 +37,8 @@ An early lindy hop routine which can be seen in the [Spirit Moves](/historical_c
 The Tranky Doo was choreographed by [Frankie Manning](/historical_clips/frankie_manning/) while he was in the Congaroos.
 
 [Swungover has a good history](https://swungover.wordpress.com/2017/09/25/the-mysterious-history-of-the-tranky-doo/)
+
+And there's a bunch of writeup on the origins on [authenticjazzdance by Harri Heinila](https://authenticjazzdance.wordpress.com/2024/04/28/a-disputed-history-of-the-tranky-doo/).
 
 
 Frankie eventually created a variant which is now known as the [Frankie Doo](/_routines/frankie_doo.md).
