@@ -2,6 +2,7 @@
 layout: post
 title: "The Tranky Doo"
 clips: [
+    love_in_syncopation_all_dancing,
     nils_bianca_tranky_doo,
     nathan_christine_tranky, 
     harlem_hotshots_tranky_doo,
@@ -43,7 +44,7 @@ The Tranky Doo was choreographed by [Frankie Manning](/historical_clips/frankie_
 And there's a bunch of writeup on the origins on [authenticjazzdance by Harri Heinila](https://authenticjazzdance.wordpress.com/2024/04/28/a-disputed-history-of-the-tranky-doo/).
 
 
-Frankie eventually created a variant which is now known as the [Frankie Doo](/_routines/frankie_doo.md).
+Frankie eventually created a variant which is now known as the [Frankie Doo](/routines/frankie_doo/).
 
 ## Common Songs
 

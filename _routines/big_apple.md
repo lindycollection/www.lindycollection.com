@@ -16,3 +16,18 @@ And an [interview with Betty Wood](http://www.jitterbuzz.com/bwood.html) who was
 
 Whitey’s Big Apple from “Keep Punching”
 [Step List by Shesha Marvin](http://www.ocswing.com/pages/review/bigapple.pdf)
+
+There's a good overview of the dance [from a modern instructor's perspective](https://blog.straycat.me.uk/2020/09/dissecting-the-apple-part-1/)
+
+Dancers in the Keep Punching lineup are:
+
+* Mickey Jones
+* William Downes
+* [Norma Miller](/historical_clips/norma_miller)
+* George Greenidge
+* Joyce Daniels
+* Jay Daniels
+* Lucile Middleton
+* [Frankie Manning](/historical_clips/frankie_manning)
+* Wilda Crawford
+* Thomas "Tops" Lee
