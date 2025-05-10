@@ -1,7 +1,6 @@
 ---
 layout: page
 title: About
-permalink: /about/
 ---
 
 The Lindy Collection is a site dedicated to collecting Lindy Hop content from the many different sites across the web and helping people find related content.
