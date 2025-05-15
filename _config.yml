@@ -38,7 +38,7 @@ exclude:
   - scripts
 
 include: ['_pages']
-permalink: /:title
+permalink: /:title/
 
 compress_html:
   clippings: all
