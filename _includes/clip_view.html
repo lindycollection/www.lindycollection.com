@@ -56,7 +56,7 @@
 {% elsif ci.youtube_playlist %}
 <h3><a href="https://youtube.com/playlist?list={{ci.youtube_playlist}}">{{ ci.title }} - YouTube Playlist</a></h3>
  {% capture yt_argument%}videoseries?list={{ci.youtube_playlist}}{% endcapture %}
- {% include youtube_player.html id=yt_argument clip_info=ci %}
+ {% include youtube_player.html id=clip_num clip_info=yt_argument %}
 {% else %}
 <p>No Youtube ID or Playlist</p>
 {% endif %}
