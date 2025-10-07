@@ -8,16 +8,16 @@ Whitey's Lindy Hoppers was one of the most famous groups that helped create and 
 
 It included famous members including:
 
-* [Frankie Manning](/historical_clips/frankie_manning)
-* [Norma Miller](/historical_clips/norma_miller)
-* [Al Minns](/historical_clips/al_minns)
-* [Leon James](/historical_clips/leon_james)
+* [Frankie Manning](/historical_clips/frankie_manning/)
+* [Norma Miller](/historical_clips/norma_miller/)
+* [Al Minns](/historical_clips/al_minns/)
+* [Leon James](/historical_clips/leon_james/)
 
 
 Movies where they were featured:
-* [A Day at the Races](/historical_clips/a_day_at_the_races)
-* [Keep Punching](/historical_clips/keep-punching)
-* [Hellzapoppin](/historical_clips/hellzapoppin)
+* [A Day at the Races](/historical_clips/a_day_at_the_races/)
+* [Keep Punching](/historical_clips/keep-punching/)
+* [Hellzapoppin](/historical_clips/hellzapoppin/)
 
 
 [Wikipedia Article](https://en.wikipedia.org/wiki/Whitey%27s_Lindy_Hoppers)
