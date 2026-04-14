@@ -1,7 +1,11 @@
 ---
 layout: post
 title: "Whitey's Lindy Hoppers"
-clips: [a_day_at_the_races_lindy_recoloized, hellazpoppin_colorized, keep_punching_big_apple_pn]
+clips: [
+    a_day_at_the_races_lindy_recoloized,
+    hellazpoppin_colorized,
+    keep_punching_big_apple_pn,
+    film_vodvil_lets_keep_jumping]
 ---
 
 Whitey's Lindy Hoppers was one of the most famous groups that helped create and popularize the dance of Lindy Hop.
@@ -18,6 +22,7 @@ Movies where they were featured:
 * [A Day at the Races](/historical_clips/a_day_at_the_races/)
 * [Keep Punching](/historical_clips/keep-punching/)
 * [Hellzapoppin](/historical_clips/hellzapoppin/)
+* [Film Vodvil](/historical_clips/film_vodvil/)
 
 
 [Wikipedia Article](https://en.wikipedia.org/wiki/Whitey%27s_Lindy_Hoppers)
