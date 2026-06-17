@@ -23,8 +23,7 @@ layout: compress
 
     <div class="hero--small">
       <div class="hero__wrap">
-        <h1 class="her<!DOCTYPE html>
-o__title">{{ page.title }}</h1>
+        <h1 class="hero__title">{{ page.title }}</h1>
       </div>
     </div>
     <main class="site__content">
@@ -34,14 +33,16 @@ o__title">{{ page.title }}</h1>
 
           {{ content }}
 
-          {% include clip_view.html clips=page.clips %}
-
+          {% if page.clips %}
+            {% include clip_view.html clips=page.clips %}
+          {% endif %}
 
           <section class="blog">
             <div class="container">
               <div class="post-list" itemscope="" itemtype="http://schema.org/Blog">
     
-                {% for post in site.jazz %}
+                {% assign collection_posts = site[page.collection] %}
+                {% for post in collection_posts %}
                   {% include card.html %}
                 {% endfor %}
     
