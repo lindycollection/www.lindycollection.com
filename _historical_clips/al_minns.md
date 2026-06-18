@@ -3,6 +3,7 @@ layout: post
 title: "Al Minns"
 clips: [
     playboy_al_leon,
+    al_leon_party_1954,
     al_minns_interview_1,
     al_minns_interview_2,
     al_minns_interview_3,
