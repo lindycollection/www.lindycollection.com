@@ -1,6 +1,7 @@
 ---
-layout: solo_jazz
+layout: category_home
 title: Solo Jazz
+collection: jazz
 clips: [
     ilhc_2024_invitational_solo_jazz,
     ]
