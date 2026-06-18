@@ -1,7 +1,10 @@
 ---
 layout: post
 title: "Leon James"
-clips: [playboy_al_leon]
+clips: [
+    playboy_al_leon,
+    al_leon_party_1954,
+    ]
 ---
 
 Leon James
