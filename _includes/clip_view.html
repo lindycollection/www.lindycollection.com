@@ -1,4 +1,3 @@
-
 {% if include.clips %}
 
 <script>
@@ -15,25 +14,25 @@
 
   function onYouTubeIframeAPIReady() {
     for (var p in players) {
-        var player_events = {
-                'onReady': players[p]['onReady'],
-                'onStateChange': players[p]['onStateChange']
-            };
-        var player_vars = {
-                'playsinline': 1,
-                'rel': 0,
-            };
-        if (players[p]['startSeconds']) {
-          player_vars['start'] = players[p]['startSeconds'];
-        }
-        if (players[p]['endSeconds']) {
-          player_vars['end'] = players[p]['endSeconds'];
-        }
-        ytplayers[p] = new YT.Player(p, {
-            videoId: players[p]['video_id'],
-            playerVars: player_vars,
-            events: player_events
-        });
+      var player_events = {
+        'onReady': players[p]['onReady'],
+        'onStateChange': players[p]['onStateChange']
+      };
+      var player_vars = {
+        'playsinline': 1,
+        'rel': 0,
+      };
+      if (players[p]['startSeconds']) {
+        player_vars['start'] = players[p]['startSeconds'];
+      }
+      if (players[p]['endSeconds']) {
+        player_vars['end'] = players[p]['endSeconds'];
+      }
+      ytplayers[p] = new YT.Player(p, {
+        videoId: players[p]['video_id'],
+        playerVars: player_vars,
+        events: player_events
+      });
     }
   }
 
@@ -55,15 +54,37 @@
 {% include youtube_player.html id=clip_num clip_info=ci %}
 {% elsif ci.youtube_playlist %}
 <h3><a href="https://youtube.com/playlist?list={{ci.youtube_playlist}}">{{ ci.title }} - YouTube Playlist</a></h3>
- {% capture yt_argument%}videoseries?list={{ci.youtube_playlist}}{% endcapture %}
- {% include youtube_player.html id=clip_num clip_info=yt_argument %}
+{% capture yt_argument%}videoseries?list={{ci.youtube_playlist}}{% endcapture %}
+{% include youtube_player.html id=clip_num clip_info=yt_argument %}
 {% else %}
 <p>No Youtube ID or Playlist</p>
 {% endif %}
 
 <div>
-{{ci.content}}
+  {{ci.content}}
 </div>
+
+{% assign all_pages = site.documents | concat: site.pages %}
+{% assign refs = all_pages | where_exp: "item", "item.clips contains clip" %}
+{% assign has_refs = false %}
+{% for ref in refs %}
+{% if ref.url != page.url %}
+{% assign has_refs = true %}
+{% endif %}
+{% endfor %}
+
+{% if has_refs %}
+<h4>Also referenced in:</h4>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
+  {% for ref in refs %}
+  {% if ref.url != page.url %}
+  <a href="{{ site.url }}{{ site.baseurl }}{{ ref.url }}"
+    style="display: inline-block; padding: 4px 12px; background-color: #eee; border-radius: 16px; text-decoration: none; color: #333; font-size: 0.9em; border: 1px solid #ddd;">{{
+    ref.title }}</a>
+  {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
 
 {% endfor %}
 
