@@ -43,8 +43,12 @@
           <span style="margin-right: 8px;">{{ clip_count | plus: crossref_clip_count }} Clips</span>
         {% endif %}
 
-        {% assign check_str = post.id | default: post.url %}
-        {% assign backlinks = site.documents | where_exp: "doc", "doc.url != post.url and doc.collection != 'clips' and doc.content contains check_str" %}
+        {% if post.id %}
+          {% assign check_str = post.id %}
+        {% else %}
+          {% assign check_str = post.url %}
+        {% endif %}
+        {% assign backlinks = site.documents | where_exp: "doc", "doc.url != post.url" | where_exp: "doc", "doc.collection != 'clips'" | where_exp: "doc", "doc.content contains check_str" %}
         {% if backlinks.size > 0 %}
           <span>{{ backlinks.size }} Cross References</span>
         {% endif %}

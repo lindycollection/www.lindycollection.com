@@ -39,8 +39,12 @@ layout: compress
             <span>
               {{ page.clips | size }} Clips
             </span>
-        {% assign check_str = page.id | default: page.url %}
-        {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url and doc.collection != 'clips' and doc.content contains check_str" %}
+        {% if page.id %}
+          {% assign check_str = page.id %}
+        {% else %}
+          {% assign check_str = page.url %}
+        {% endif %}
+        {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.collection != 'clips'" | where_exp: "doc", "doc.content contains check_str" %}
         {% if backlinks.size > 0 %}
             <span>
               {% comment %} TODO(tfoote): Add clips back to the search when they have standalone pages {% endcomment %}

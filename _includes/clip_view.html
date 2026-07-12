@@ -64,7 +64,7 @@
   {{ci.content}}
 </div>
 
-{% assign refs = site.documents | where_exp: "item", "item.clips contains clip and item.url != page.url and item.collection != 'clips'" %}
+{% assign refs = site.documents | where_exp: "item", "item.clips contains clip" | where_exp: "item", "item.url != page.url" | where_exp: "item", "item.collection != 'clips'" %}
 
 {% if refs.size > 0 %}
 <h4>Also referenced in:</h4>
