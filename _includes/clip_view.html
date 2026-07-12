@@ -64,25 +64,17 @@
   {{ci.content}}
 </div>
 
-{% assign all_pages = site.documents | concat: site.pages %}
-{% assign refs = all_pages | where_exp: "item", "item.clips contains clip" %}
-{% assign has_refs = false %}
-{% for ref in refs %}
-{% if ref.url != page.url %}
-{% assign has_refs = true %}
-{% endif %}
-{% endfor %}
+{% assign refs = site.documents | where_exp: "item", "item.clips contains clip and item.url != page.url and item.collection != 'clips'" %}
 
-{% if has_refs %}
+{% if refs.size > 0 %}
 <h4>Also referenced in:</h4>
 <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
   {% for ref in refs %}
-  {% if ref.url != page.url %}
   <a href="{{ site.url }}{{ site.baseurl }}{{ ref.url }}"
     style="display: inline-block; padding: 4px 12px; background-color: #eee; border-radius: 16px; text-decoration: none; color: #333; font-size: 0.9em; border: 1px solid #ddd;">{{
     ref.title }}</a>
-  {% endif %}
   {% endfor %}
+  {% comment %} TODO(tfoote): Add clips back to the search when they have standalone pages {% endcomment %}
 </div>
 {% endif %}
 
