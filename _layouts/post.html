@@ -2,116 +2,123 @@
 layout: compress
 ---
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: "en-US" }}">
+<html lang="{{ page.lang | default: site.lang | default: " en-US" }}">
 
 {% include head.html %}
 
 <body class="site">
 
-{% if site.google_tag_manager %}
+  {% if site.google_tag_manager %}
 
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ site.google_tag_manager }}"
-                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ site.google_tag_manager }}" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
-{% endif %}
+  {% endif %}
 
-{% include header.html %}
+  {% include header.html %}
 
   {% if page.featured-img %}
 
   <div class="hero lazyload" fetchpriority="high" data-bg="{{site.url}}/assets/img/posts/{{page.featured-img}}.jpg">
     {% elsif page.clips %}
 
-      {% assign first_clip_name = page.clips | first %}
-      {% assign first_clip = site.clips | where: 'clip_id', first_clip_name | first %}
-  <div class="hero lazyload" fetchpriority="high" data-bg="https://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg">
-    {% else %}
-    <div class="hero dark-bg">
-      {% endif %}
-      {% include edit_on_github_hero_button.html %}
-      <div class="hero__wrap">
-        <h1 class="hero__title">{{ page.title }}</h1>
-        <p class="hero__meta">
+    {% assign first_clip_name = page.clips | first %}
+    {% assign first_clip = site.clips | where: 'clip_id', first_clip_name | first %}
+    <div class="hero lazyload" fetchpriority="high"
+      data-bg="https://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg">
+      {% else %}
+      <div class="hero dark-bg">
+        {% endif %}
+        {% include edit_on_github_hero_button.html %}
+        <div class="hero__wrap">
+          <h1 class="hero__title">{{ page.title }}</h1>
+          <p class="hero__meta">
 
             <span>
               {{ page.clips | size }} Clips
             </span>
-          <span>
-              {% assign words = content | number_of_words %}
-                {% if words < 360 %}
-                  1 min
-                {% else %}
-                  {{ words | divided_by:180 }} mins
-              {% endif %} read
-              &nbsp;
-          </span>
-        </p>
+        {% assign check_str = page.id | default: page.url %}
+        {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url and doc.collection != 'clips' and doc.content contains check_str" %}
+        {% if backlinks.size > 0 %}
+            <span style="display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px;">
+              {% comment %} TODO(tfoote): Add clips back to the search when they have standalone pages {% endcomment %}
+              Referenced in:
+              {% for bl in backlinks %}
+                <a href="{{ site.url }}{{ site.baseurl }}{{ bl.url }}" style="display: inline-block; padding: 2px 10px; background-color: rgba(255,255,255,0.15); border-radius: 16px; text-decoration: none; color: inherit; font-size: 0.9em; border: 1px solid rgba(255,255,255,0.3);">{{ bl.title }}</a>
+              {% endfor %}
+            </span>
+        {% endif %}
+          </p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <main class="site__content">
-    <div class="container">
-      <article class="post-content" itemprop="articleBody">
+    <main class="site__content">
+      <div class="container">
+        <article class="post-content" itemprop="articleBody">
 
-        {{ content }}
+          {{ content }}
 
-        {% include clip_view.html clips=page.clips %}
-        {% if page.crossref %}
+          {% include clip_view.html clips=page.clips %}
+          {% if page.crossref %}
           {% include crossref.html type=page.crossref crossref_id=page.crossref_id %}
-        {% endif %} 
-      </article>
-      <div class="post-content controls__inner">
-        <div class="controls__item prev">
-          {% if page.previous.url %}
-
-          <span>Previous</span>
-          <a href="{{page.previous.url | relative_url }}">
-                <span>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="6" height="11">
-                    <path fill="fillColor" d="M5.647 1.718c.37-.434.323-1.09-.106-1.465A1.016 1.016 0 0 0 4.095.36L.25 4.875a1.05 1.05 0 0 0 .017 1.378l3.95 4.407c.38.424 1.03.456 1.448.07a1.05 1.05 0 0 0 .07-1.468l-3.34-3.725 3.253-3.819z"/>
-                  </svg>
-              </span>
-            {{page.previous.title | strip_html | truncate: 30}}
-          </a>
           {% endif %}
-        </div>
 
-        <div class="controls__item next">
-          {% if page.next.url %}
-          <span>Next</span>
-          <a href="{{page.next.url | relative_url }}">
-            {{page.next.title | strip_html | truncate: 30}}
-            <span>
+  
+        </article>
+        <div class="post-content controls__inner">
+          <div class="controls__item prev">
+            {% if page.previous.url %}
+
+            <span>Previous</span>
+            <a href="{{page.previous.url | relative_url }}">
+              <span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="6" height="11">
-                  <path fill="#fillColor" d="M.353 9.282c-.37.434-.323 1.09.106 1.465a1.016 1.016 0 0 0 1.446-.107L5.75 6.125a1.05 1.05 0 0 0-.017-1.378L1.784.34A1.015 1.015 0 0 0 .336.27a1.05 1.05 0 0 0-.07 1.468l3.34 3.725L.353 9.282z"/>
+                  <path fill="fillColor"
+                    d="M5.647 1.718c.37-.434.323-1.09-.106-1.465A1.016 1.016 0 0 0 4.095.36L.25 4.875a1.05 1.05 0 0 0 .017 1.378l3.95 4.407c.38.424 1.03.456 1.448.07a1.05 1.05 0 0 0 .07-1.468l-3.34-3.725 3.253-3.819z" />
                 </svg>
               </span>
-          </a>
-          {% endif %}
+              {{page.previous.title | strip_html | truncate: 30}}
+            </a>
+            {% endif %}
+          </div>
+
+          <div class="controls__item next">
+            {% if page.next.url %}
+            <span>Next</span>
+            <a href="{{page.next.url | relative_url }}">
+              {{page.next.title | strip_html | truncate: 30}}
+              <span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="6" height="11">
+                  <path fill="#fillColor"
+                    d="M.353 9.282c-.37.434-.323 1.09.106 1.465a1.016 1.016 0 0 0 1.446-.107L5.75 6.125a1.05 1.05 0 0 0-.017-1.378L1.784.34A1.015 1.015 0 0 0 .336.27a1.05 1.05 0 0 0-.07 1.468l3.34 3.725L.353 9.282z" />
+                </svg>
+              </span>
+            </a>
+            {% endif %}
+          </div>
         </div>
       </div>
-    </div>
 
-    {% if site.disqus.shortname %}
+      {% if site.disqus.shortname %}
 
-    <div class="comments">
-      <div class="container">
-        <div class="post-content">
+      <div class="comments">
+        <div class="container">
+          <div class="post-content">
 
-          {% include disqus.html %}
+            {% include disqus.html %}
 
+          </div>
         </div>
       </div>
-    </div>
 
-    {% endif %}
+      {% endif %}
 
-  </main>
+    </main>
 
-  {% include footer.html %}
+    {% include footer.html %}
 
 </body>
 
