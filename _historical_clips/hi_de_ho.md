@@ -6,4 +6,4 @@ clips:
  - cab_calloway_hi_de_hi
 ---
 
-A short film featuring [Cab Calloway](/historical_clips/cab_calloway)
+A short film featuring [Cab Calloway](/historical_figures/cab_calloway)

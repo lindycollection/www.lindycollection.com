@@ -12,10 +12,10 @@ Whitey's Lindy Hoppers was one of the most famous groups that helped create and 
 
 It included famous members including:
 
-* [Frankie Manning](/historical_clips/frankie_manning/)
-* [Norma Miller](/historical_clips/norma_miller/)
-* [Al Minns](/historical_clips/al_minns/)
-* [Leon James](/historical_clips/leon_james/)
+* [Frankie Manning](/historical_figures/frankie_manning/)
+* [Norma Miller](/historical_figures/norma_miller/)
+* [Al Minns](/historical_figures/al_minns/)
+* [Leon James](/historical_figures/leon_james/)
 
 
 Movies where they were featured:
