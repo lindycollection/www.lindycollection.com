@@ -1,7 +1,7 @@
 ---
 clip_id: al_minns_sweden
 layout: post
-title: YouTube
+title: "Al Minns in Sweden"
 youtube_id: npONjnioOmI
 
 ---

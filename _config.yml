@@ -53,6 +53,7 @@ collections:
   aerials:
     output: true
   clips:
+    output: true
   jazz:
     output: true
   historical_clips:
