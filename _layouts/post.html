@@ -19,6 +19,18 @@ layout: compress
 
   {% include header.html %}
 
+  {% if page.id %}
+    {% assign check_str = page.id %}
+  {% else %}
+    {% assign check_str = page.url %}
+  {% endif %}
+  {% if page.collection == 'clips' and page.clip_id %}
+    {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.clips contains page.clip_id or doc.content contains page.clip_id" %}
+  {% else %}
+    {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.collection != 'clips'" | where_exp: "doc", "doc.content contains check_str" %}
+  {% endif %}
+
+  {% unless page.collection == 'clips' %}
   {% if page.featured-img %}
 
   <div class="hero lazyload" fetchpriority="high" data-bg="{{site.url}}/assets/img/posts/{{page.featured-img}}.jpg">
@@ -28,9 +40,6 @@ layout: compress
     {% assign first_clip = site.clips | where: 'clip_id', first_clip_name | first %}
     <div class="hero lazyload" fetchpriority="high"
       data-bg="https://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg">
-    {% elsif page.youtube_id %}
-    <div class="hero lazyload" fetchpriority="high"
-      data-bg="https://img.youtube.com/vi/{{page.youtube_id}}/hqdefault.jpg">
       {% else %}
       <div class="hero dark-bg">
         {% endif %}
@@ -43,21 +52,7 @@ layout: compress
             <span>
               {{ page.clips | size }} Clips
             </span>
-          {% elsif page.youtube_id or page.youtube_playlist %}
-            <span>
-              1 Clip
-            </span>
           {% endif %}
-        {% if page.id %}
-          {% assign check_str = page.id %}
-        {% else %}
-          {% assign check_str = page.url %}
-        {% endif %}
-        {% if page.collection == 'clips' and page.clip_id %}
-          {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.clips contains page.clip_id or doc.content contains page.clip_id" %}
-        {% else %}
-          {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.collection != 'clips'" | where_exp: "doc", "doc.content contains check_str" %}
-        {% endif %}
         {% if backlinks.size > 0 %}
             <span>
               {{ backlinks.size }} Cross References
@@ -67,10 +62,20 @@ layout: compress
         </div>
       </div>
     </div>
+  {% endunless %}
 
     <main class="site__content">
       <div class="container">
         <article class="post-content" itemprop="articleBody">
+
+          {% if page.collection == 'clips' %}
+          <div style="margin-top: 80px; margin-bottom: 24px;">
+            <h1 style="margin-bottom: 8px; font-size: 2em; color: #313237;">{{ page.title }}</h1>
+            {% if page.clip_type %}
+            <span style="display: inline-block; padding: 2px 10px; background: #edf2f7; color: #4a5568; font-size: 0.85em; border-radius: 4px; text-transform: uppercase; font-weight: bold;">{{ page.clip_type }}</span>
+            {% endif %}
+          </div>
+          {% endif %}
 
           {% if backlinks.size > 0 %}
           <div style="float: right; margin: 0 0 16px 16px; padding: 16px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; max-width: 300px; z-index: 10;">
