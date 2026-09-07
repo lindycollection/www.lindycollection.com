@@ -71,7 +71,7 @@
 <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
   {% for ref in refs %}
   <a href="{{ site.url }}{{ site.baseurl }}{{ ref.url }}"
-    style="display: inline-block; padding: 4px 12px; background-color: #eee; border-radius: 16px; text-decoration: none; color: #333; font-size: 0.9em; border: 1px solid #ddd;">{{
+    style="display: inline-block; padding: 4px 12px; background-color: #eee; border-radius: 16px; text-decoration: none; color: #333; font-size: 0.9em; border: 1px solid #ddd;">{% include collection_emoji.html collection=ref.collection %}{{
     ref.title }}</a>
   {% endfor %}
   {% comment %} TODO(tfoote): Add clips back to the search when they have standalone pages {% endcomment %}
