@@ -2,7 +2,7 @@
 clip_id: litp_box_step
 clip_type: tutorial
 layout: post
-title: YouTube
+title: "Lindy in the Park - Box Step"
 youtube_id: 1RMng7CTvs
 ---
 

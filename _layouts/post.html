@@ -28,6 +28,9 @@ layout: compress
     {% assign first_clip = site.clips | where: 'clip_id', first_clip_name | first %}
     <div class="hero lazyload" fetchpriority="high"
       data-bg="https://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg">
+    {% elsif page.youtube_id %}
+    <div class="hero lazyload" fetchpriority="high"
+      data-bg="https://img.youtube.com/vi/{{page.youtube_id}}/hqdefault.jpg">
       {% else %}
       <div class="hero dark-bg">
         {% endif %}
@@ -36,18 +39,27 @@ layout: compress
           <h1 class="hero__title">{{ page.title }}</h1>
           <p class="hero__meta">
 
+          {% if page.clips %}
             <span>
               {{ page.clips | size }} Clips
             </span>
+          {% elsif page.youtube_id or page.youtube_playlist %}
+            <span>
+              1 Clip
+            </span>
+          {% endif %}
         {% if page.id %}
           {% assign check_str = page.id %}
         {% else %}
           {% assign check_str = page.url %}
         {% endif %}
-        {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.collection != 'clips'" | where_exp: "doc", "doc.content contains check_str" %}
+        {% if page.collection == 'clips' and page.clip_id %}
+          {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.clips contains page.clip_id or doc.content contains page.clip_id" %}
+        {% else %}
+          {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.collection != 'clips'" | where_exp: "doc", "doc.content contains check_str" %}
+        {% endif %}
         {% if backlinks.size > 0 %}
             <span>
-              {% comment %} TODO(tfoote): Add clips back to the search when they have standalone pages {% endcomment %}
               {{ backlinks.size }} Cross References
             </span>
         {% endif %}
@@ -68,6 +80,51 @@ layout: compress
               <a href="{{ site.url }}{{ site.baseurl }}{{ bl.url }}" style="display: inline-block; padding: 4px 12px; background-color: #eee; border-radius: 16px; text-decoration: none; color: #333; font-size: 0.9em; border: 1px solid #ccc;">{% include collection_emoji.html collection=bl.collection %}{{ bl.title }}</a>
             {% endfor %}
             </div>
+          </div>
+          {% endif %}
+
+          {% if page.youtube_id or page.youtube_playlist %}
+          <script>
+            var tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            var players = {};
+            var ytplayers = {};
+            function onYouTubeIframeAPIReady() {
+              for (var p in players) {
+                var player_events = {
+                  'onReady': players[p]['onReady'],
+                  'onStateChange': players[p]['onStateChange']
+                };
+                var player_vars = {
+                  'playsinline': 1,
+                  'rel': 0,
+                };
+                if (players[p]['startSeconds']) {
+                  player_vars['start'] = players[p]['startSeconds'];
+                }
+                if (players[p]['endSeconds']) {
+                  player_vars['end'] = players[p]['endSeconds'];
+                }
+                ytplayers[p] = new YT.Player(p, {
+                  videoId: players[p]['video_id'],
+                  playerVars: player_vars,
+                  events: player_events
+                });
+              }
+            }
+          </script>
+
+          <div class="standalone-clip-player" style="margin-bottom: 24px;">
+            {% if page.youtube_id %}
+            <h3 style="margin-bottom: 12px;"><a href="https://youtube.com/watch?v={{page.youtube_id}}" target="_blank" rel="noopener">{{ page.title }} - Watch on YouTube</a></h3>
+            {% include youtube_player.html id=1 clip_info=page %}
+            {% elsif page.youtube_playlist %}
+            <h3 style="margin-bottom: 12px;"><a href="https://youtube.com/playlist?list={{page.youtube_playlist}}" target="_blank" rel="noopener">{{ page.title }} - Watch Playlist on YouTube</a></h3>
+            {% capture yt_argument %}videoseries?list={{page.youtube_playlist}}{% endcapture %}
+            {% include youtube_player.html id=1 clip_info=yt_argument %}
+            {% endif %}
           </div>
           {% endif %}
 

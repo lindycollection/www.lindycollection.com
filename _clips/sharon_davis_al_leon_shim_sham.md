@@ -1,7 +1,7 @@
 ---
 clip_id: sharon_davis_al_leon_shim_sham
 layout: post
-title: YouTube
+title: "Sharon Davis - Al and Leon Shim Sham"
 youtube_id: ubP_hXgKJa4
 
 ---
