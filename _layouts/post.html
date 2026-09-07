@@ -25,7 +25,9 @@ layout: compress
     {% assign check_str = page.url %}
   {% endif %}
   {% if page.collection == 'clips' and page.clip_id %}
-    {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.clips contains page.clip_id or doc.content contains page.clip_id" %}
+    {% assign bl1 = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.clips contains page.clip_id" %}
+    {% assign bl2 = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.content contains page.clip_id" %}
+    {% assign backlinks = bl1 | concat: bl2 | uniq %}
   {% else %}
     {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.collection != 'clips'" | where_exp: "doc", "doc.content contains check_str" %}
   {% endif %}
