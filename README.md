@@ -9,6 +9,10 @@ Please feel free to make suggestions I will do my best to accept things but cont
 
 
 
+## AI Agents & Automation
+
+If you are an AI agent working in this repository, please consult [`AGENTS.md`](AGENTS.md) for critical rules on using `ghrocker` to prevent file access permission contamination when running Jekyll.
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/lindycollection/www.lindycollection.com . This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
