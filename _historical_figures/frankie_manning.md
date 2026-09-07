@@ -60,6 +60,9 @@ clips: [
     frankie_norma_1908_northern_lights,
     tranky_doo_frankie_sea_jam_2007,
     ]
+redirect_from:
+  - /historical_clips/frankie_manning/
+  - /historical_clips/frankie_manning
 ---
 
 Frankie Manning was one of the early dancers in the Savoy Ballroom who helped define the Lindy Hop.

@@ -3,6 +3,9 @@ layout: post
 title: "Leonard Reed"
 clips: [leonard_reed_interview,
         leonard_reed_orpheum_1999]
+redirect_from:
+  - /historical_clips/leonard_reed/
+  - /historical_clips/leonard_reed
 ---
 
 One of the original cheoreographers of the [Shim Sham](/routines/shim_sham.md)

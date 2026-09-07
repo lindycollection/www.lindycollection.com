@@ -5,6 +5,9 @@ clips:
 - after_seben_recreation_frankie95
 layout: post
 title: Chester Whitmore
+redirect_from:
+  - /historical_clips/chester_whitmore/
+  - /historical_clips/chester_whitmore
 ---
 
 TODO reference the jazz steps videos.

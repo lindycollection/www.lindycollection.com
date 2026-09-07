@@ -5,6 +5,9 @@ clips: [
     playboy_al_leon,
     al_leon_party_1954,
     ]
+redirect_from:
+  - /historical_clips/leon_james/
+  - /historical_clips/leon_james
 ---
 
 Leon James
