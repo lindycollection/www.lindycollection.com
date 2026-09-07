@@ -10,6 +10,9 @@ clips: [
     al_minns_nbc_1980,
     al_minns_sweden,
     ]
+redirect_from:
+  - /historical_clips/al_minns/
+  - /historical_clips/al_minns
 ---
 
 Al Minns

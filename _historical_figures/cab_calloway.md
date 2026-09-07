@@ -17,6 +17,9 @@ clips:
   - cab_calloway_interview_1986
   - cab_calloway_day_at_night
   - cab_calloway_narrates_minnie_the_moocher
+redirect_from:
+  - /historical_clips/cab_calloway/
+  - /historical_clips/cab_calloway
 ---
 
 Cab Calloway was a very proliphic band leader through the era.

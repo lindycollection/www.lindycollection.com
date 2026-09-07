@@ -8,6 +8,9 @@ clips:
 - after_seben_recreation_frankie95
 layout: post
 title: Chazz Young
+redirect_from:
+  - /historical_clips/chazz_young/
+  - /historical_clips/chazz_young
 ---
 
 [Wikipedia](https://en.wikipedia.org/wiki/Chazz_Young)

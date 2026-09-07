@@ -5,6 +5,9 @@ clips:
 - after_seben_shorty_colorized
 layout: post
 title: Shorty George
+redirect_from:
+  - /historical_clips/shorty_george/
+  - /historical_clips/shorty_george
 ---
 
 Shorty George

@@ -21,6 +21,9 @@ clips: [
     dawn_life_is_what_you_make_it,
     frankie_dawn_lindyfest_2008
     ]
+redirect_from:
+  - /historical_clips/dawn_hampton/
+  - /historical_clips/dawn_hampton
 ---
 
 [Wikipedia](https://en.wikipedia.org/wiki/Dawn_Hampton)

@@ -51,6 +51,9 @@ clips: [
     norma_rtsf_2018_swinging_frankies_way,
     frankie_norma_1908_northern_lights,
     ]
+redirect_from:
+  - /historical_clips/norma_miller/
+  - /historical_clips/norma_miller
 ---
 
 Norma Miller was one of the early Lindy Hop dancers at the [Savoy Ballroom.](/historical_clips/savoy_ballroom/)
