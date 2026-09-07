@@ -35,6 +35,7 @@ def associate_clip_with_pages(clip_id, root_dir):
         'aerials': '_aerials',
         'events': '_events',
         'historical_clips': '_historical_clips',
+        'historical_figures': '_historical_figures',
         'jazz': '_jazz',
         'routines': '_routines',
     }

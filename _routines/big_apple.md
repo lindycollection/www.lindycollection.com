@@ -23,11 +23,11 @@ Dancers in the Keep Punching lineup are:
 
 * Mickey Jones
 * William Downes
-* [Norma Miller](/historical_clips/norma_miller)
+* [Norma Miller](/historical_figures/norma_miller)
 * George Greenidge
 * Joyce Daniels
 * Jay Daniels
 * Lucile Middleton
-* [Frankie Manning](/historical_clips/frankie_manning)
+* [Frankie Manning](/historical_figures/frankie_manning)
 * Wilda Crawford
 * Thomas "Tops" Lee

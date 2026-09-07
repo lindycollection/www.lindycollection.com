@@ -86,6 +86,32 @@ node_modules/gulp-cli/bin/gulp.js img
 
 The commit the resultant files.
 
+## Creating a New Collection
+
+To add a new content collection to the site:
+
+1. **Register the Collection**: Edit `_config.yml` and add the collection under `collections:` with `output: true`:
+   ```yaml
+   collections:
+     <collection_name>:
+       output: true
+   ```
+2. **Create Collection Directory**: Create a folder named `_<collection_name>/` in the repository root (e.g., `_historical_figures/`).
+3. **Create Landing Page**: Create `<collection_name>.md` at the repository root with front matter using the `category_home` layout:
+   ```markdown
+   ---
+   layout: category_home
+   title: Collection Title
+   collection: <collection_name>
+   ---
+   ```
+4. **Update Navigation Menu**: Add a link to the new collection page in `_includes/header.html`.
+5. **Set Collection Emoji**: Update `_includes/collection_emoji.html` to map `<collection_name>` to a representative emoji for cross-reference chips:
+   ```liquid
+   {% when '<collection_name>' %}emoji 
+   ```
+6. **Update Scripts**: Add `'<collection_name>': '_<collection_name>'` to `collections_map` in `scripts/add_clip.py`.
+
 ## License
 
 The theme is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

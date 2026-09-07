@@ -37,7 +37,7 @@ An early lindy hop routine which can be seen in the [Spirit Moves](/historical_c
 
 ## History
 
-The Tranky Doo was choreographed by [Frankie Manning](/historical_clips/frankie_manning/) while he was in the Congaroos.
+The Tranky Doo was choreographed by [Frankie Manning](/historical_figures/frankie_manning/) while he was in the Congaroos.
 
 [Swungover has a good history](https://swungover.wordpress.com/2017/09/25/the-mysterious-history-of-the-tranky-doo/)
 

@@ -15,6 +15,6 @@ clips: [
 ---
 
 
-This is the variation on the [Shim Sham](/routines/shim_sham) popularized by [Al Minns](/historical_clips/al_minns) and [Leon James](/historical_clips/leon_james).
+This is the variation on the [Shim Sham](/routines/shim_sham) popularized by [Al Minns](/historical_figures/al_minns) and [Leon James](/historical_figures/leon_james).
 
 There's a good summary of this version [from Cari](https://lindyaffair.wordpress.com/2013/05/22/al-leon-shim-sham-break-down/)

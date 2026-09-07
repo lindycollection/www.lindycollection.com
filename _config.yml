@@ -57,6 +57,8 @@ collections:
     output: true
   historical_clips:
     output: true
+  historical_figures:
+    output: true
   routines:
     output: true
   events:
