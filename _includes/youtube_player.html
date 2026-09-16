@@ -1,43 +1,101 @@
+{% assign start_val = include.clip_info.start_time %}
+{% assign end_val = include.clip_info.end_time %}
 
 <div class="video-container">
     <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
         <div id="videoid_{{include.id}}"></div>
 
         <script>
-          /* 3. This function creates an <iframe> (and YouTube player)
-          /    after the API code downloads. */
+          var startSeconds{{include.id}} = parseFloat("{{ start_val }}") || 0;
+          var endSeconds{{include.id}} = {% if end_val and end_val != "" %}parseFloat("{{ end_val }}"){% else %}null{% endif %};
+          var checkInterval{{include.id}} = null;
 
-
-    
-          /* 4. The API will call this function when the video player is ready.*/
           function onPlayerReady{{include.id}}(event) {
           }
-          /* Old way to seek, now using start time. This will be wanted for a repeat button.
-          // event.target.seekTo({{include.clip_info.start_time}});
-          //   event.target.pauseVideo(); */
-    
-          /* 5. The API calls this function when the player's state changes.
-          //    The function indicates that when playing a video (state=1),
-          //    the player should play for six seconds and then stop. */
-          var done{{include.id}} = false;
-          function onPlayerStateChange{{include.id}}(event) {
-            if (event.data == YT.PlayerState.PLAYING && !done{{include.id}}) {
-                {% if include.clip_info.end_time %}
-                setTimeout(stopVideo{{include.id}}, ({{include.clip_info.end_time}} - {{include.clip_info.start_time}}) * 1000);
-                {% endif %}
-              done{{include.id}} = true;
+
+          function stopAndResetVideo{{include.id}}() {
+            var player = ytplayers["videoid_{{include.id}}"];
+            if (player) {
+              if (player.pauseVideo) {
+                player.pauseVideo();
+              }
+              if (player.seekTo) {
+                player.seekTo(startSeconds{{include.id}}, true);
+              }
             }
           }
-          function stopVideo{{include.id}}() {
-            ytplayers["videoid_{{include.id}}"].stopVideo();
+
+          function onPlayerStateChange{{include.id}}(event) {
+            var player = ytplayers["videoid_{{include.id}}"];
+
+            if (event.data == YT.PlayerState.PLAYING) {
+              if (checkInterval{{include.id}}) {
+                clearInterval(checkInterval{{include.id}});
+              }
+              checkInterval{{include.id}} = setInterval(function() {
+                if (player && player.getCurrentTime) {
+                  var currentTime = player.getCurrentTime();
+                  if (endSeconds{{include.id}} !== null && currentTime >= endSeconds{{include.id}}) {
+                    stopAndResetVideo{{include.id}}();
+                    clearInterval(checkInterval{{include.id}});
+                    checkInterval{{include.id}} = null;
+                  }
+                }
+              }, 250);
+            } else {
+              if (checkInterval{{include.id}}) {
+                clearInterval(checkInterval{{include.id}});
+                checkInterval{{include.id}} = null;
+              }
+            }
+
+            if (event.data == YT.PlayerState.ENDED) {
+              if (player && player.seekTo) {
+                player.seekTo(startSeconds{{include.id}}, true);
+              }
+            } else if (event.data == YT.PlayerState.PAUSED) {
+              if (player && player.getCurrentTime && endSeconds{{include.id}} !== null) {
+                var currentTime = player.getCurrentTime();
+                if (currentTime >= endSeconds{{include.id}} - 0.5) {
+                  player.seekTo(startSeconds{{include.id}}, true);
+                }
+              }
+            }
           }
 
-          players["videoid_{{include.id}}"] = {video_id: "{{include.clip_info.youtube_id}}",
-           onReady: onPlayerReady{{include.id}},
-           onStateChange: onPlayerStateChange{{include.id}}
-          {% if include.clip_info.start_time %}, startSeconds: {{include.clip_info.start_time}}{% endif %}
-          {% if include.clip_info.end_time %}, endSeconds: {{include.clip_info.end_time}} {% endif %}
-        };
+          function restartVideo{{include.id}}() {
+            var player = ytplayers["videoid_{{include.id}}"];
+            if (player) {
+              if (player.seekTo) {
+                player.seekTo(startSeconds{{include.id}}, true);
+              }
+              if (player.playVideo) {
+                player.playVideo();
+              }
+            }
+          }
+
+          players["videoid_{{include.id}}"] = {
+            video_id: "{{include.clip_info.youtube_id}}",
+            onReady: onPlayerReady{{include.id}},
+            onStateChange: onPlayerStateChange{{include.id}}
+            {% if start_val and start_val != "" %}, startSeconds: {{start_val}}{% endif %}
+            {% if end_val and end_val != "" %}, endSeconds: {{end_val}}{% endif %}
+          };
 
     </script>
+</div>
+<div class="video-controls" style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+  <button id="restart_btn_{{include.id}}" onclick="restartVideo{{include.id}}()" class="btn-restart" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background-color: #277cea; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: background-color 0.2s;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;">
+      <polyline points="1 4 1 10 7 10"></polyline>
+      <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+    </svg>
+    <span>Restart Clip{% if start_val and start_val != "" %} (from {{ start_val }}s){% endif %}</span>
+  </button>
+  {% if start_val or end_val %}
+  <span style="font-size: 0.85rem; color: #666; font-weight: 500;">
+    Clip range: {% if start_val %}{{ start_val }}s{% else %}0s{% endif %} - {% if end_val %}{{ end_val }}s{% else %}End{% endif %}
+  </span>
+  {% endif %}
 </div>
