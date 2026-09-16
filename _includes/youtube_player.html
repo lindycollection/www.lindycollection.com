@@ -63,9 +63,13 @@
             }
           }
 
-          function restartVideo{{include.id}}() {
+          function restartVideo{{include.id}}(rate) {
+            var speed = rate || 1;
             var player = ytplayers["videoid_{{include.id}}"];
             if (player) {
+              if (player.setPlaybackRate) {
+                player.setPlaybackRate(speed);
+              }
               if (player.seekTo) {
                 player.seekTo(startSeconds{{include.id}}, true);
               }
@@ -86,13 +90,21 @@
     </script>
 </div>
 <div class="video-controls" style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-  <button id="restart_btn_{{include.id}}" onclick="restartVideo{{include.id}}()" class="btn-restart" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background-color: #277cea; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem; transition: background-color 0.2s;">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;">
-      <polyline points="1 4 1 10 7 10"></polyline>
-      <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
-    </svg>
-    <span>Restart Clip{% if start_val and start_val != "" %} (from {{ start_val }}s){% endif %}</span>
-  </button>
+  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+    <button id="restart_btn_{{include.id}}_1" onclick="restartVideo{{include.id}}(1)" class="btn-restart" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background-color: #277cea; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: background-color 0.2s;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;">
+        <polyline points="1 4 1 10 7 10"></polyline>
+        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+      </svg>
+      <span>Restart (1x)</span>
+    </button>
+    <button id="restart_btn_{{include.id}}_05" onclick="restartVideo{{include.id}}(0.5)" class="btn-restart-speed" style="display: inline-flex; align-items: center; gap: 4px; padding: 8px 12px; background-color: #edf2f7; color: #2d3748; border: 1px solid #cbd5e0; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;">
+      <span>↺ 1/2x Speed</span>
+    </button>
+    <button id="restart_btn_{{include.id}}_025" onclick="restartVideo{{include.id}}(0.25)" class="btn-restart-speed" style="display: inline-flex; align-items: center; gap: 4px; padding: 8px 12px; background-color: #edf2f7; color: #2d3748; border: 1px solid #cbd5e0; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;">
+      <span>↺ 1/4x Speed</span>
+    </button>
+  </div>
   {% if start_val or end_val %}
   <span style="font-size: 0.85rem; color: #666; font-weight: 500;">
     Clip range: {% if start_val %}{{ start_val }}s{% else %}0s{% endif %} - {% if end_val %}{{ end_val }}s{% else %}End{% endif %}
