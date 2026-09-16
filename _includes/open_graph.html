@@ -1,0 +1,94 @@
+{% comment %}
+  Dynamic Open Graph, Twitter Card, and Schema.org Metadata Injection
+{% endcomment %}
+
+{% assign og_title = page.title | default: site.title %}
+{% if page.collection == 'clips' and page.clip_type %}
+  {% assign og_clip_type_cap = page.clip_type | capitalize %}
+  {% assign og_title = og_title | append: " (" | append: og_clip_type_cap | append: ")" %}
+{% endif %}
+
+{% assign og_desc = page.description %}
+{% if og_desc == blank or og_desc == nil %}
+  {% if page.collection == 'clips' %}
+    {% assign og_desc = "Watch " | append: page.title %}
+    {% if page.clip_type %}
+      {% assign og_desc = og_desc | append: " (" | append: og_clip_type_cap | append: ")" %}
+    {% endif %}
+    {% if page.event %}
+      {% assign event_clean = page.event | replace: "_", " " | capitalize %}
+      {% assign og_desc = og_desc | append: " from " | append: event_clean %}
+    {% endif %}
+    {% assign og_desc = og_desc | append: " on Lindy Collection." %}
+  {% elsif page.clips %}
+    {% assign og_desc = page.title | append: " - A collection of " | append: page.clips.size | append: " Lindy Hop clips and resources on Lindy Collection." %}
+  {% else %}
+    {% assign og_desc = page.excerpt | strip_html | strip_newlines | truncate: 160 | default: site.description %}
+  {% endif %}
+{% endif %}
+
+{% assign og_image = nil %}
+{% if page.youtube_id %}
+  {% assign og_image = "https://img.youtube.com/vi/" | append: page.youtube_id | append: "/hqdefault.jpg" %}
+{% elsif page.clips %}
+  {% assign first_clip_id = page.clips | first %}
+  {% assign first_clip = site.clips | where: 'clip_id', first_clip_id | first %}
+  {% if first_clip and first_clip.youtube_id %}
+    {% assign og_image = "https://img.youtube.com/vi/" | append: first_clip.youtube_id | append: "/hqdefault.jpg" %}
+  {% endif %}
+{% elsif page.featured-img %}
+  {% assign featured_rel = "/assets/img/posts/" | append: page.featured-img | append: ".jpg" %}
+  {% assign og_image = featured_rel | absolute_url %}
+{% endif %}
+
+{% if og_image == nil or og_image == blank %}
+  {% assign default_rel = "/" | append: site.image %}
+  {% assign og_image = default_rel | absolute_url %}
+{% endif %}
+
+<!-- Additional Open Graph Protocol Metadata -->
+<meta property="og:title" content="{{ og_title | escape }}" />
+<meta property="og:description" content="{{ og_desc | escape }}" />
+<meta property="og:site_name" content="{{ site.title | escape }}" />
+<meta property="og:url" content="{{ page.url | absolute_url }}" />
+<meta property="og:image" content="{{ og_image }}" />
+<meta property="og:image:secure_url" content="{{ og_image }}" />
+<meta property="og:image:width" content="1280" />
+<meta property="og:image:height" content="720" />
+<meta property="og:image:alt" content="{{ og_title | escape }} preview image" />
+
+{% if page.youtube_id %}
+  <meta property="og:type" content="video.other" />
+  <meta property="og:video" content="https://www.youtube.com/embed/{{ page.youtube_id }}" />
+  <meta property="og:video:secure_url" content="https://www.youtube.com/embed/{{ page.youtube_id }}" />
+  <meta property="og:video:type" content="text/html" />
+  <meta property="og:video:width" content="1280" />
+  <meta property="og:video:height" content="720" />
+
+  <!-- Twitter Card Player -->
+  <meta name="twitter:card" content="player" />
+  <meta name="twitter:title" content="{{ og_title | escape }}" />
+  <meta name="twitter:description" content="{{ og_desc | escape }}" />
+  <meta name="twitter:image" content="{{ og_image }}" />
+  <meta name="twitter:player" content="https://www.youtube.com/embed/{{ page.youtube_id }}" />
+  <meta name="twitter:player:width" content="1280" />
+  <meta name="twitter:player:height" content="720" />
+
+  <!-- Schema.org VideoObject JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": {{ og_title | jsonify }},
+    "description": {{ og_desc | jsonify }},
+    "thumbnailUrl": [{{ og_image | jsonify }}],
+    "embedUrl": "https://www.youtube.com/embed/{{ page.youtube_id }}"
+  }
+  </script>
+{% else %}
+  <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ og_title | escape }}" />
+  <meta name="twitter:description" content="{{ og_desc | escape }}" />
+  <meta name="twitter:image" content="{{ og_image }}" />
+{% endif %}
