@@ -6,6 +6,8 @@ description: > # this means to ignore newlines until "baseurl:"
   Including vintage clips, routines, solo jazz moves, and aerials.
 baseurl: "/" # the subpath of your site, e.g. /blog
 url: "https://www.lindycollection.com"
+image: assets/img/posts/scissor_kicks_lg.jpg
+logo: assets/img/icons/apple-touch-icon.png
 # twitter_username: jan_czizikow # replace with your_twitter_username or comment to remove link from footer
 github:
   url_base: https://github.com
