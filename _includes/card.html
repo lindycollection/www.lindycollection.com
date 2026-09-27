@@ -7,11 +7,11 @@
       class="lazyload blur"
       alt="{{post.title}}"
       width="400"
-      height="250"
+      height="300"
       loading="lazy"
       decoding="async"
     />
-    <noscript><img src="{{site.url}}/assets/img/posts/{{post.featured-img}}_thumb.jpg" alt="{{ post.title }}" width="400" height="250" loading="lazy" decoding="async"></noscript>
+    <noscript><img src="{{site.url}}/assets/img/posts/{{post.featured-img}}_thumb.jpg" alt="{{ post.title }}" width="400" height="300" loading="lazy" decoding="async"></noscript>
   </figure>
   {% elsif post.clips %}
   {% assign first_clip_name = post.clips | first %}
