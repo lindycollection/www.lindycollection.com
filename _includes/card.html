@@ -2,24 +2,32 @@
   {% if post.featured-img %}
   <figure class="post-card__thumb">
     <img
-      src="{{site.url}}/assets/img/posts/{{post.featured-img}}_placehold.jpg",
+      src="{{site.url}}/assets/img/posts/{{post.featured-img}}_placehold.jpg"
       data-srcset="{{site.url}}/assets/img/posts/{{post.featured-img}}_thumb.jpg, {{site.url}}/assets/img/posts/{{post.featured-img}}_thumb@2x.jpg 2x"
       class="lazyload blur"
       alt="{{post.title}}"
+      width="400"
+      height="250"
+      loading="lazy"
+      decoding="async"
     />
-    <noscript><img src="{{site.url}}/assets/img/posts/{{post.featured-img}}_thumb.jpg" alt="{{ post.title }}"></noscript>
+    <noscript><img src="{{site.url}}/assets/img/posts/{{post.featured-img}}_thumb.jpg" alt="{{ post.title }}" width="400" height="250" loading="lazy" decoding="async"></noscript>
   </figure>
   {% elsif post.clips %}
   {% assign first_clip_name = post.clips | first %}
   {% assign first_clip = site.clips | where: 'clip_id', first_clip_name | first %}
   <figure class="post-card__thumb">
     <img
-      src="https://img.youtube.com/vi/{{first_clip.youtube_id}}/default.jpg",
+      src="https://img.youtube.com/vi/{{first_clip.youtube_id}}/default.jpg"
       data-srcset="https://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg"
       class="lazyload blur"
       alt="{{post.title}}"
+      width="480"
+      height="360"
+      loading="lazy"
+      decoding="async"
     />
-    <noscript><img src="https://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg" alt="{{ post.title }}"></noscript>
+    <noscript><img src="https://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg" alt="{{ post.title }}" width="480" height="360" loading="lazy" decoding="async"></noscript>
   </figure>
   {% else %}
   <figure class="post-card__thumb">
