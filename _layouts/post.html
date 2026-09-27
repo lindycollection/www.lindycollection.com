@@ -112,7 +112,7 @@ layout: compress
             }
           </script>
 
-          <div class="standalone-clip-player" style="width: 100%; margin-bottom: 24px; clear: both;">
+          <div class="standalone-clip-player" style="width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; margin-bottom: 24px; clear: both;">
             {% if page.youtube_id %}
             <h3 style="margin-bottom: 12px;"><a href="https://youtube.com/watch?v={{page.youtube_id}}" target="_blank" rel="noopener">{{ page.title }} - Watch on YouTube</a></h3>
             {% include youtube_player.html id=1 clip_info=page %}
