@@ -24,17 +24,8 @@
 
   {% endif %}
 
-  <style class="inlineCSS">
-
-    {% include critical.css %}
-
-  </style>
   {% if page.url == '/' or page.url == '/index.html' %}
   <link rel="preload" href="{{ '/assets/img/posts/scissor_kicks_lg.jpg' | relative_url }}" as="image" fetchpriority="high">
   {% endif %}
-  <link rel="preload" href="{{ '/assets/css/main.css' | relative_url }}" as="style" onload="this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}"></noscript>
-  <script type="text/javascript">
-   {% include loadCss.js %}
-  </script>
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 </head>
