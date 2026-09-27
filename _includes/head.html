@@ -27,5 +27,7 @@
   {% if page.url == '/' or page.url == '/index.html' %}
   <link rel="preload" href="{{ '/assets/img/posts/scissor_kicks_lg.jpg' | relative_url }}" as="image" fetchpriority="high">
   {% endif %}
-  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  <style>
+    {% include main.css %}
+  </style>
 </head>

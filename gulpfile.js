@@ -59,6 +59,7 @@ gulp.task('sass', function() {
       // onError: browserSync.notify
     }))
     .pipe(prefix())
+    .pipe(gulp.dest('_includes'))
     .pipe(sourcemaps.write('./maps'))
     .pipe(gulp.dest(dist.css))
     .pipe(gulp.dest('assets/css'));
