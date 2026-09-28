@@ -67,3 +67,5 @@ node_modules
 
 _algolia_api_key
 .jekyll-cache
+.venv/
+venv/
