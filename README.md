@@ -52,43 +52,25 @@ ghrocker ~/lindycollection/www.lindycollection.com
 
 ```
 
-## Gulp Environment
+## Build Assets (CSS & Images)
 
-There are a few site maintenace items that need to use gulp.
-Most contributors won't need to use this.
+CSS compilation and image resizing are managed by a fast Python script with incremental caching.
 
-```
-. ~/lindycollection/lc_venv/bin/activate
-ghrocker ~/lindycollection/www.lindycollection.com --debug
-sudo apt-get update && sudo apt-get install npm
-npm install .
+To rebuild CSS and generate image thumbnails:
+
+```bash
+./rebuild_css_and_images.bash
 ```
 
-Note: if you're using this environment the node_modules may cause jekyll's inode watcher to fail. You can manually trigger jekyll with `--no-watch` if you use `ghrocker ~/lindycollection/www.lindycollection.com --debug` then call `jekyll serve --no-watch` inside and manually retrigger it when changes have been made.
+Or directly via Python:
 
-### Update Formatting
-
-To update the css from the scss.
-
-With the above gulp environment
-
-```
-node_modules/gulp-cli/bin/gulp.js sass
+```bash
+python3 scripts/build_assets.py
 ```
 
-Commit the results.
+### Adding New Images
 
-
-### Updating Images
-
-If you want to add an image drop the file in the directory: 
-`assets/img/posts/` with an extension `.jpg` and then run this script to generate all the appropriate scaled copies.
-
-```
-node_modules/gulp-cli/bin/gulp.js img
-```
-
-The commit the resultant files.
+To add a new original image, place the file in `_original_assets/` and run `./rebuild_css_and_images.bash`. The script will generate all required responsive size variants in `assets/img/posts/`. On subsequent runs, unchanged images will be skipped automatically in under a second.
 
 ## Creating a New Collection
 
