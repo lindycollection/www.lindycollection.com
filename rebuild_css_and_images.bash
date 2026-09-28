@@ -4,9 +4,18 @@ set -e
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-sudo apt-get update && sudo apt-get -y install npm
-cd $SCRIPT_DIR
-CXXFLAGS="--std=c++17" npm install .
+cd "$SCRIPT_DIR"
 
-node_modules/gulp-cli/bin/gulp.js sass
-node_modules/gulp-cli/bin/gulp.js img
+if ! command -v pip &> /dev/null && ! command -v pip3 &> /dev/null; then
+    if command -v apt-get &> /dev/null; then
+        sudo apt-get update && sudo apt-get install -y python3-pip python3-venv
+    fi
+fi
+
+PIP_CMD="pip"
+if ! command -v pip &> /dev/null && command -v pip3 &> /dev/null; then
+    PIP_CMD="pip3"
+fi
+
+$PIP_CMD install -q -r scripts/requirements.txt
+python3 scripts/build_assets.py

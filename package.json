@@ -33,7 +33,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "gulp"
+    "build": "python3 scripts/build_assets.py",
+    "start": "python3 scripts/build_assets.py"
   },
   "repository": {
     "type": "git",
