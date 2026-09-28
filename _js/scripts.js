@@ -1,6 +1,7 @@
 /*eslint-env jquery*/
 
-// Jquery & Velocity JS included in GULP
+// jQuery & Velocity JS
+
 $( document ).ready( function() {
 
     toggleMobileNav();

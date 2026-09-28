@@ -30,13 +30,10 @@ markdown: kramdown
 exclude:
   - README.md
   - node_modules
-  - package.json
-  - package-lock.json
   - Gemfile
   - Gemfile.lock
   - vendor
   - npm-debug.log
-  - gulpfile.js
   - scripts
 
 include: ['_pages']
