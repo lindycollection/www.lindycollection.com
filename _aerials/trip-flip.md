@@ -2,6 +2,7 @@
 layout: post
 title: "Trip Flip"
 clips: [
+    ch2018_frankie,
     shimmytown_trip_flip,
     lindy_ladder_trip_flip,
     lindy_ladder_judo,
