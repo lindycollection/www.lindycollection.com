@@ -5,5 +5,6 @@ layout: post
 title: 'Episode #5 The Dean Collins Shim Sham'
 youtube_id: ObpzIswMVGo
 
+upload_date: "2020-06-05T14:04:40-07:00"
 ---
 

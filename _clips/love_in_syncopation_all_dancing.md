@@ -4,5 +4,6 @@ layout: post
 title: WHITEY'S LINDY HOPPERS TOPS and WILDA in "Love in Syncopation" ALL THEIR DANCING
 youtube_id: Cu9PusFHnHw
 
+upload_date: "2020-06-08T13:25:29-07:00"
 ---
 

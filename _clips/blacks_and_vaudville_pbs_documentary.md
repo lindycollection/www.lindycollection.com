@@ -5,6 +5,7 @@ layout: post
 title: 'Blacks and Vaudeville: PBS documentary'
 youtube_id: 8kbnn3E7Gp8
 
+upload_date: "2012-05-29T21:22:47-07:00"
 ---
 
 PBS two-hour documentary on "Vaudeville": the segment on Blacks and Vaudeville (19 min).

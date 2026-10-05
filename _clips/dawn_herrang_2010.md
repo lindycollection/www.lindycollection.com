@@ -4,5 +4,6 @@ layout: post
 title: "Dawn Hampton (1928\xE2\x80\x932016): jazz dancing"
 youtube_id: NP-qvDX99vw
 
+upload_date: "2016-09-26T22:33:38-07:00"
 ---
 

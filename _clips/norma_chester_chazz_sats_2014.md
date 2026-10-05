@@ -5,5 +5,6 @@ layout: post
 title: Interview With Norma Miller, Chester Whitmore, and Chazz Young (2014)
 youtube_id: _Y5plw9jy1Q
 
+upload_date: "2014-02-25T01:18:49-08:00"
 ---
 

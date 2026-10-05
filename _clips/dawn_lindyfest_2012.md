@@ -5,5 +5,6 @@ layout: post
 title: Dawn Hampton at Lindyfest 2012
 youtube_id: NS3HshBMkAY
 
+upload_date: "2012-04-30T09:07:18-07:00"
 ---
 

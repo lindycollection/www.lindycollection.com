@@ -5,5 +5,6 @@ title: Scissor Kicks
 youtube_id: jAIwJd2tQo0
 start_time: 971
 end_time: 981
+upload_date: "2017-07-25T22:09:18-07:00"
 ---
 

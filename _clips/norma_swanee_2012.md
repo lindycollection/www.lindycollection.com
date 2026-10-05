@@ -5,5 +5,6 @@ layout: post
 title: Norma Miller Full Interview by Swingin' Swanee at SwingKultur Stuttgart 2012
 youtube_id: d3vHjddCgeI
 
+upload_date: "2013-04-11T14:53:47-07:00"
 ---
 

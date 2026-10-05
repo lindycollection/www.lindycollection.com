@@ -5,6 +5,7 @@ title: Alphabetical Jazz Steps - Shish-ka-boom-ba
 youtube_id: mEWxdPTCubI
 start_time: 215
 end_time: 224
+upload_date: "2009-11-04T15:51:31-08:00"
 ---
 
 

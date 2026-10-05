@@ -5,5 +5,6 @@ layout: post
 title: 2011 Stompology Stomp-Off - Part 3
 youtube_id: _V8wkFom7FE
 
+upload_date: "2011-05-22T18:18:56-07:00"
 ---
 

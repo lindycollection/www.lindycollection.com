@@ -4,5 +4,6 @@ layout: post
 title: Lindy Hop nos anos 1980 com Frankie Manning e Norma Miller
 youtube_id: qAxK4IZmr0s
 
+upload_date: "2017-02-22T11:49:29-08:00"
 ---
 

@@ -5,5 +5,6 @@ layout: post
 title: Learn the Tranky Doo - For Lindy Hop & Swing Dance
 youtube_id: ynpK9Jf1dMU
 
+upload_date: "2021-08-30T21:20:45-07:00"
 ---
 

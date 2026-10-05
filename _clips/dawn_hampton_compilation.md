@@ -6,5 +6,6 @@ title: Dawn Hampton speaks about Music, being yourself Switch dancing, ELEF, and
   LGBTQAI+ community
 youtube_id: Ziz7QxoDLiM
 
+upload_date: "2020-03-10T15:57:50-07:00"
 ---
 

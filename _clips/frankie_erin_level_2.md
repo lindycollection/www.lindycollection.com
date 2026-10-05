@@ -5,5 +5,6 @@ layout: post
 title: Swing Lindy Hop Dance Lessons with Frankie Manning Level 2
 youtube_id: iPOZ30CcsoM
 
+upload_date: "2014-11-20T10:12:24-08:00"
 ---
 

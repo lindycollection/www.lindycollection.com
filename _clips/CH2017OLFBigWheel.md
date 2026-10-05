@@ -6,4 +6,5 @@ start_time: "260"
 end_time: "265"
 clip_id: 'ch_2017_big_wheel'
 event: camp_hollywood_2017
+upload_date: "2017-09-04T12:39:25-07:00"
 ---

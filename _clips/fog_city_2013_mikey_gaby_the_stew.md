@@ -5,5 +5,6 @@ clip_type: tutorial
 layout: post
 title: Fog City Stomp 2013 - Mikey & Gaby - The Stew
 
+upload_date: "2013-11-01T12:31:26-07:00"
 ---
 

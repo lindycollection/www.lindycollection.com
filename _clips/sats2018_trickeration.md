@@ -5,5 +5,6 @@ layout: post
 title: SATS 2018 - Queen of Swing Norma Miller, Adam Brozowski, Trickeration
 youtube_id: THdc6dN7nOY
 
+upload_date: "2019-02-01T01:32:39-08:00"
 ---
 

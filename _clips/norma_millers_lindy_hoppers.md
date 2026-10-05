@@ -4,5 +4,6 @@ layout: post
 title: 14 - Norma Miller's Lindy Hoppers
 youtube_id: aOgoBiPAE-s
 
+upload_date: "2013-12-30T13:04:16-08:00"
 ---
 

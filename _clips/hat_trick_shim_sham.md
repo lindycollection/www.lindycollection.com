@@ -4,5 +4,6 @@ layout: post
 title: Hat Trick Shim Sham Jump Session 2010
 youtube_id: DKT6QylkgDk
 
+upload_date: "2010-06-14T01:59:28-07:00"
 ---
 

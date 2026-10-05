@@ -4,6 +4,7 @@ layout: post
 title: Chester Whitmore at Frankie95 / After Seben Recreation
 youtube_id: XxZ_GFF2ElE
 
+upload_date: "2013-12-30T12:59:23-08:00"
 ---
 
 This is a recreation of the dance scene in the movie"After Seben" performed at Frankie95.

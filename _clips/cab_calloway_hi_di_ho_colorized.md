@@ -4,5 +4,6 @@ layout: post
 title: Cab Calloway's Hi-De-Ho (1935) Restored using AI
 youtube_id: 2wzQ6VNT26s
 
+upload_date: "2021-04-02T18:12:40-07:00"
 ---
 

@@ -5,5 +5,6 @@ layout: post
 title: Learn The Big Apple | Routine Breakdown | Level 6 Lesson 4 | Lindy Ladder
 youtube_id: kcGiWmwZypk
 
+upload_date: "2014-08-22T17:38:21-07:00"
 ---
 

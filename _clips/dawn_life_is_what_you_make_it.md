@@ -4,5 +4,6 @@ layout: post
 title: Life Is What You Make It - Dawn Hampton
 youtube_id: 5vDZC5fysV4
 
+upload_date: "2016-09-27T18:24:00-07:00"
 ---
 
