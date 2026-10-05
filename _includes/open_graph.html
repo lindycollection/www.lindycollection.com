@@ -83,6 +83,7 @@
     "name": {{ og_title | jsonify }},
     "description": {{ og_desc | jsonify }},
     "thumbnailUrl": [{{ og_image | jsonify }}],
+    "image": {{ og_image | jsonify }},
     "embedUrl": "https://www.youtube.com/embed/{{ page.youtube_id }}",
     "uploadDate": {{ video_upload_date | jsonify }}
   }
