@@ -5,5 +5,6 @@ layout: post
 title: Lindy in the Park - 14th Anniversary Jazz Step! - Frankie's Chase
 youtube_id: M2hwZSDfd7k
 
+upload_date: "2010-08-21T18:38:57-07:00"
 ---
 

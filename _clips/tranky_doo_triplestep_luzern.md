@@ -5,5 +5,6 @@ layout: post
 title: Tranky Doo
 youtube_id: hfLodCs4f8w
 
+upload_date: "2021-06-22T07:56:23-07:00"
 ---
 

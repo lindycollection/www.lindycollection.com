@@ -6,5 +6,6 @@ title: Learn The Tranky Doo | Routine Breakdown | Lindy Hop Swing Dance | Level 
   Lesson 5 | Shauna Marble
 youtube_id: Zv0ZSmpUWo0
 
+upload_date: "2014-10-05T20:37:09-07:00"
 ---
 

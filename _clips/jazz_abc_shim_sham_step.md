@@ -5,5 +5,6 @@ title: Alphabetical Jazz Steps - Shim Sham Step
 youtube_id: mEWxdPTCubI
 start_time: 206
 end_time: 215
+upload_date: "2009-11-04T15:51:31-08:00"
 ---
 

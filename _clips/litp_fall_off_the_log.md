@@ -5,5 +5,6 @@ layout: post
 title: Lindy in the Park Jazz Step - Fall Off the Log
 youtube_id: 2Heu34fPAZ8
 
+upload_date: "2010-03-30T21:21:26-07:00"
 ---
 

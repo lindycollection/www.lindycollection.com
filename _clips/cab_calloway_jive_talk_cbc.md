@@ -5,5 +5,6 @@ layout: post
 title: 'Cab Calloway does a lot of Jive Talk, 1977: CBC Archives | CBC'
 youtube_id: Xc1Vuq2gZrA
 
+upload_date: "2013-11-27T11:14:26-08:00"
 ---
 

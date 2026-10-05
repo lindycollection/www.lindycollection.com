@@ -163,12 +163,19 @@ if not args.clip_id:
 else:
     clip_info['youtube_id'] = args.clip_id
 
+import re
+
 url = 'https://youtube.com/watch?v=%s' % clip_info['youtube_id']
 
-page = requests.get(url)
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept-Language': 'en-US,en;q=0.9'
+}
+
+page = requests.get(url, headers=headers)
+html_str = page.text
 
 tree = html.fromstring(page.content)
-
 
 clip_info['title'] = tree.xpath('/html/head/title')[0].text
 
@@ -177,6 +184,14 @@ print("Title: %s" % clip_info['title'])
 
 if clip_info['title'].endswith(youtube_tag):
     clip_info['title'] = clip_info['title'][0:-len(youtube_tag)]
+
+upload_date_match = (re.search(r'\"uploadDate\":\"([^\"]+)\"', html_str) or
+                     re.search(r'itemprop=\"uploadDate\" content=\"([^\"]+)\"', html_str) or
+                     re.search(r'\"datePublished\":\"([^\"]+)\"', html_str))
+
+if upload_date_match:
+    clip_info['upload_date'] = upload_date_match.group(1)
+    print("Upload Date: %s" % clip_info['upload_date'])
 
 clip_info['clip_id'] = input("Please enter the clip shortname, lowercase_underscored: ")
 is_tutorial = input("Is this a tutorial [y/N]? ").lower().startswith('y')
@@ -213,10 +228,13 @@ if has_start:
         except ValueError:
             print("Invalid format. Please enter an integer or time format (MM:SS or HH:MM:SS).")
 
+if 'upload_date' not in clip_info or not clip_info['upload_date']:
+    manual_date = input("Could not automatically fetch upload_date. Enter upload date (YYYY-MM-DD or ISO 8601, press Enter to skip): ").strip()
+    if manual_date:
+        clip_info['upload_date'] = manual_date
 
 TEMPLATE="""---
-%s
----
+%s---
 
 """
 

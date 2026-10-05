@@ -4,5 +4,6 @@ layout: post
 title: RTSF 2018 - Norma Miller - singing "Swingin' Frankie's Way" (age 98)!
 youtube_id: jPKKhjAsY3g
 
+upload_date: "2018-02-12T02:35:29-08:00"
 ---
 

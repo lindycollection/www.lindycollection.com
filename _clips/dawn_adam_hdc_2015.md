@@ -4,5 +4,6 @@ layout: post
 title: Dawn Hampton dances with Adam HDC 2015
 youtube_id: SIlg6H_HvPI
 
+upload_date: "2016-09-26T05:01:45-07:00"
 ---
 

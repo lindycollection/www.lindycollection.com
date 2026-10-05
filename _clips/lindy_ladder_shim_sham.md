@@ -6,5 +6,6 @@ title: Learn the Shim Sham | Routine Breakdown | Level 4 Lesson 11 | Shauna Marb
   | Lindy Hop
 youtube_id: 488C_8mvNMQ
 
+upload_date: "2014-01-02T07:53:19-08:00"
 ---
 

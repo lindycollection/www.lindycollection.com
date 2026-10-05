@@ -5,5 +5,6 @@ layout: post
 title: Around the world dance lift tutorial
 youtube_id: hGD5Gm9Qlac
 
+upload_date: "2012-03-18T01:48:01-07:00"
 ---
 

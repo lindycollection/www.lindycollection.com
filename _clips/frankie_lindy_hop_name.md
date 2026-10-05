@@ -5,5 +5,6 @@ layout: post
 title: FRANKIE MANNING tells the story of HOW LINDY HOP GOT IT'S NAME
 youtube_id: Qgxhb0KUXE8
 
+upload_date: "2020-06-18T23:07:29-07:00"
 ---
 

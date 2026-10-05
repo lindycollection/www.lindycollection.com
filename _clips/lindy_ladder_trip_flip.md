@@ -6,5 +6,6 @@ title: The Trip Flip | Swing Dance Aerial Breakdowns (Lesson 8) | Shauna Marble 
   Lindy Hop
 youtube_id: ra8Gh_yqlQA
 
+upload_date: "2013-04-24T16:50:02-07:00"
 ---
 

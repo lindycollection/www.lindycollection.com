@@ -4,6 +4,7 @@ layout: post
 title: 'SATS 2024 - Sunday Performance - Stops Routine'
 youtube_id: zIEn8Q85w3c
 
+upload_date: "2024-03-05T10:08:13-08:00"
 ---
 
 The Sunday performace at [Swingin' at the Savoy](https://swinginatthesavoy.com/) 2024 of the Stops Routine. Which was composed of the [First Stops](/routines/first_stops) and [Second Stops](/routines/second_stops) routines back to back.

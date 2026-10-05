@@ -6,5 +6,6 @@ title: Frankie Manning - Aerial "Around the Back" (a.k.a Frankie Flip, A-Flip) @
   Dance Camp 1993
 youtube_id: OQT5TrN_zGs
 
+upload_date: "2020-03-29T05:06:40-07:00"
 ---
 

@@ -4,6 +4,7 @@ layout: post
 title: Tranky Doo
 youtube_id: kAKfCqWZN68
 
+upload_date: "2012-11-02T04:59:12-07:00"
 ---
 
 The Tranky Doo perfomed by Al Minns, Pepsi Bethel, and Leon James to the Dipsy Doodle.

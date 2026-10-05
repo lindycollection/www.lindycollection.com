@@ -3,6 +3,7 @@ layout: post
 title: "Spirit Moves"
 youtube_id: "3RZK-LyksG4"
 clip_id: 'spirit_moves'
+upload_date: "2008-09-15T19:05:12-07:00"
 ---
 
 From Part 2 of The Spirit Moves documentary by Mura Dehn from 1987.

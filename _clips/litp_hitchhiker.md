@@ -5,5 +5,6 @@ layout: post
 title: Lindy in the Park Jazz Step - The Hitchhike
 youtube_id: qlAZYcHxGAU
 
+upload_date: "2010-04-27T22:51:02-07:00"
 ---
 

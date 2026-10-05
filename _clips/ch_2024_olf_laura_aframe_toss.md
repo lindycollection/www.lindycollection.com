@@ -6,6 +6,7 @@ youtube_id: ZarMsJhDzM4
 event: camp_hollywood_2024
 start_time: 170
 end_time: 173
+upload_date: "2024-09-02T12:02:09-07:00"
 ---
 
 A variation on the A Frame with a toss.

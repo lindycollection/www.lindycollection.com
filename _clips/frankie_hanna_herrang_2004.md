@@ -5,5 +5,6 @@ title: "FRANKIE MANNING and HANNA LUNDMARK teaching CLASSIC LINDY HOP in Herr\xC
   ng 2004"
 youtube_id: nf7QJ4SkgrI
 
+upload_date: "2020-06-18T22:57:44-07:00"
 ---
 

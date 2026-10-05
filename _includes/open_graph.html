@@ -74,6 +74,7 @@
   <meta name="twitter:player:width" content="1280" />
   <meta name="twitter:player:height" content="720" />
 
+  {% assign video_upload_date = page.upload_date | default: page.date | date_to_xmlschema %}
   <!-- Schema.org VideoObject JSON-LD -->
   <script type="application/ld+json">
   {
@@ -82,7 +83,8 @@
     "name": {{ og_title | jsonify }},
     "description": {{ og_desc | jsonify }},
     "thumbnailUrl": [{{ og_image | jsonify }}],
-    "embedUrl": "https://www.youtube.com/embed/{{ page.youtube_id }}"
+    "embedUrl": "https://www.youtube.com/embed/{{ page.youtube_id }}",
+    "uploadDate": {{ video_upload_date | jsonify }}
   }
   </script>
 {% else %}

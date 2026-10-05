@@ -4,5 +4,6 @@ layout: post
 title: Lindyhop/ Tap - Frankie Manning, Dawn Hampton and Chazz Young @ Wild Week 1995
 youtube_id: Sh1XzsdU7XY
 
+upload_date: "2020-03-04T01:04:48-08:00"
 ---
 

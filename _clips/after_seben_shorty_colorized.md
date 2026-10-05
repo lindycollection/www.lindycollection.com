@@ -6,6 +6,7 @@ start_time: 112
 title: After Seben in color | AI enhanced and colorized
 youtube_id: _cyQHEqOp84
 
+upload_date: "2021-02-09T11:45:56-08:00"
 ---
 
 This is a colorized version of the dance scene in the movie "After Seben".

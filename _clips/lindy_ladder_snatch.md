@@ -6,5 +6,6 @@ title: The Snatch | Swing Dance Aerial Breakdowns (Lesson 15) | Shauna Marble | 
   Hop
 youtube_id: EYzzrei8q7s
 
+upload_date: "2014-06-22T12:17:55-07:00"
 ---
 

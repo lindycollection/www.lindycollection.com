@@ -3,6 +3,7 @@ layout: post
 title: "Hellzapoppin Rephrased"
 youtube_id: "E40IgBYVkKk"
 clip_id: 'hellzapoppin_rephrased'
+upload_date: "2019-05-18T13:21:19-07:00"
 ---
 
 This is a reedited clip which works to sync up the music as best as possible with the visuals to have the dancers on the beat.

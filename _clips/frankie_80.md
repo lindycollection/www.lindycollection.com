@@ -4,5 +4,6 @@ layout: post
 title: Frankie Manning's Memoirs  - Frankie's 80 Birthday
 youtube_id: r_FrexDZ4cs
 
+upload_date: "2009-03-17T14:59:42-07:00"
 ---
 

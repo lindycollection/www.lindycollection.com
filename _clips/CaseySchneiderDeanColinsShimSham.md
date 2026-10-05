@@ -4,5 +4,6 @@ title: "Dean Collins Shim Sham - The Classics Vintage Workshops - Casey Schneide
 youtube_id: "cjQG8YIqcM0"
 clip_id: 'casey_schneider_dc_shim_sham'
 clip_type: tutorial
+upload_date: "2012-04-25T22:17:28-07:00"
 ---
 

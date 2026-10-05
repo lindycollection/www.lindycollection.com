@@ -5,5 +5,6 @@ layout: post
 title: "Frankie Manning! \xE2\x80\xA2\xC2\_Lindy Hop in the 1980's in New York!"
 youtube_id: e00F7OimG6U
 
+upload_date: "2006-11-12T13:27:46-08:00"
 ---
 
