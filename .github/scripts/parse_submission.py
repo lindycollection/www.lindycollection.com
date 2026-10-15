@@ -3,12 +3,13 @@
 parse_submission.py
 
 Parses issue submissions for Lindy Collection, verifies CC-BY-NC-SA 4.0 license agreement,
-sanitizes metadata (ensuring no raw emails are recorded), and generates:
-1. Clip Submission:
-   - Mode 'new': Creates _clips/<clip_id>.md and _submissions/...md, and optionally associates with target page.
-   - Mode 'link-existing': Associates existing clip with target page and creates _submissions/...md.
-2. Page Body Content:
-   - Creates _submissions/<YYYY-MM-DD>-issue-<number>-<slug>.md with proposed markdown.
+sanitizes metadata (ensuring no raw emails are recorded), and executes content updates:
+1. Page Body Content:
+   - Locates existing target page markdown file from Target-Page metadata.
+   - Proposes appending the suggested markdown content to the specified page's markdown.
+2. Clip Submission:
+   - Mode 'new': Creates _clips/<clip_id>.md, and optionally associates it with target page.
+   - Mode 'link-existing': Associates existing clip with target page.
 Sets GitHub Actions step outputs for branch, commit, and PR creation.
 """
 
@@ -110,33 +111,132 @@ def write_frontmatter_file(path: str, fm_dict: dict, body: str = ""):
         f.write("\n".join(lines) + "\n\n" + (body.strip() if body else "") + "\n")
 
 
-def find_target_page_file(target_page: str):
-    """Attempt to locate the local markdown file corresponding to target_page URL."""
+def normalize_target_page(target_page: str) -> str:
+    """Normalize target page URL or path to a clean relative path string."""
     if not target_page:
-        return None
+        return ""
     cleaned = target_page.strip()
-    if '://' in cleaned:
-        cleaned = cleaned.split('://', 1)[1].split('/', 1)[-1] if '/' in cleaned.split('://', 1)[1] else ''
-    cleaned = cleaned.split('?')[0].split('#')[0].strip('/')
-    if not cleaned or cleaned.lower() == 'none':
+    if "://" in cleaned:
+        cleaned = cleaned.split("://", 1)[1]
+        cleaned = cleaned.split("/", 1)[-1] if "/" in cleaned else ""
+    cleaned = cleaned.split("?")[0].split("#")[0].strip("/")
+    if cleaned.endswith(".html"):
+        cleaned = cleaned[:-5]
+    elif cleaned.endswith(".md"):
+        cleaned = cleaned[:-3]
+    return cleaned.strip("/")
+
+
+def find_target_page_file(target_page: str, repo_dir: str = ".") -> str | None:
+    """
+    Attempt to locate the local markdown file corresponding to target_page URL or path.
+    Supports:
+    - Root pages (e.g. /historical_figures/ -> historical_figures.md, /about/ -> about.md)
+    - Collection items (e.g. /routines/big_apple/ -> _routines/big_apple.md)
+    - Aliases (e.g. /solo_jazz/apple_jacks/ -> _jazz/apple_jacks.md)
+    - Stems across collections (e.g. big_apple -> _routines/big_apple.md)
+    - Frontmatter permalinks and redirect_from lookups
+    """
+    cleaned = normalize_target_page(target_page)
+    if not cleaned or cleaned.lower() == "none":
         return None
 
-    collections = ['_routines', '_aerials', '_jazz', '_historical_clips', '_historical_figures', '_events']
-    parts = cleaned.split('/')
+    # Path traversal and security sanity checks
+    parts = [p for p in cleaned.split("/") if p]
+    if any(p == ".." for p in parts):
+        return None
+    if parts and parts[0] in [".git", ".github", "_site", "lcvenv"]:
+        return None
+
+    # 1. Direct file check with or without .md extension
+    for ext in ["", ".md"]:
+        candidate = os.path.join(repo_dir, cleaned + ext)
+        if os.path.isfile(candidate) and candidate.endswith(".md"):
+            return os.path.relpath(candidate, repo_dir)
+
+    collections = [
+        "_routines", "_aerials", "_jazz", "_historical_clips",
+        "_historical_figures", "_events", "_clips", "_posts"
+    ]
+    alias_map = {
+        "solo_jazz": "_jazz",
+        "jazz": "_jazz",
+        "historical_figures": "_historical_figures",
+        "figures": "_historical_figures",
+        "historical_clips": "_historical_clips",
+        "clips": "_clips",
+        "routines": "_routines",
+        "aerials": "_aerials",
+        "events": "_events",
+        "posts": "_posts"
+    }
+
+    # 2. Check path with collection prefix (parts >= 2)
     if len(parts) >= 2:
-        candidate = os.path.join(f"_{parts[0]}", f"{parts[1]}.md")
-        if os.path.exists(candidate):
-            return candidate
+        col_dir = alias_map.get(parts[0], f"_{parts[0]}")
+        item_path = "/".join(parts[1:])
+        candidate = os.path.join(repo_dir, col_dir, f"{item_path}.md")
+        if os.path.isfile(candidate):
+            return os.path.relpath(candidate, repo_dir)
+
+    # 3. Check single stem (parts == 1)
     elif len(parts) == 1:
         stem = parts[0]
+        # Check root page first (e.g. historical_figures.md, solo_jazz.md, about.md)
+        candidate = os.path.join(repo_dir, f"{stem}.md")
+        if os.path.isfile(candidate):
+            return os.path.relpath(candidate, repo_dir)
+        # Check inside collections
         for col in collections:
-            candidate = os.path.join(col, f"{stem}.md")
-            if os.path.exists(candidate):
-                return candidate
-        matches = glob.glob(os.path.join('_posts', f"*-{stem}.md"))
+            candidate = os.path.join(repo_dir, col, f"{stem}.md")
+            if os.path.isfile(candidate):
+                return os.path.relpath(candidate, repo_dir)
+        # Check inside posts
+        matches = glob.glob(os.path.join(repo_dir, "_posts", f"*-{stem}.md"))
         if matches:
-            return matches[0]
+            return os.path.relpath(matches[0], repo_dir)
+
+    # 4. Search frontmatter permalink: or redirect_from:
+    target_slash = f"/{cleaned}/"
+    target_no_slash = f"/{cleaned}"
+    for root, dirs, files in os.walk(repo_dir):
+        if any(p in root for p in [".git", "_site", "lcvenv", ".github"]):
+            continue
+        for f in files:
+            if f.endswith(".md"):
+                fpath = os.path.join(root, f)
+                try:
+                    with open(fpath, "r", encoding="utf-8") as fp:
+                        header = fp.read(4096)
+                    if "permalink:" in header or "redirect_from:" in header:
+                        if (f"permalink: {target_slash}" in header or f'permalink: "{target_slash}"' in header or
+                            f"permalink: {target_no_slash}" in header or f'permalink: "{target_no_slash}"' in header or
+                            f"- {target_slash}" in header or f'- "{target_slash}"' in header or
+                            f"- {target_no_slash}" in header or f'- "{target_no_slash}"' in header):
+                            return os.path.relpath(fpath, repo_dir)
+                except Exception:
+                    pass
+
     return None
+
+
+def append_content_to_file(file_path: str, content: str) -> bool:
+    """Append suggested markdown content to the end of a page markdown file."""
+    if not (file_path and os.path.exists(file_path)):
+        return False
+    with open(file_path, "r", encoding="utf-8") as f:
+        existing = f.read()
+
+    stripped_existing = existing.rstrip()
+    stripped_content = content.strip()
+    if not stripped_content:
+        return False
+
+    new_content = f"{stripped_existing}\n\n{stripped_content}\n"
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(new_content)
+    print(f"[INFO] Successfully appended content to '{file_path}'.")
+    return True
 
 
 def associate_clip_with_file(file_path: str, clip_id: str) -> bool:
@@ -146,15 +246,21 @@ def associate_clip_with_file(file_path: str, clip_id: str) -> bool:
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    parts = content.split('---', 2)
-    if len(parts) < 3 or clip_id in parts[1]:
-        return bool(clip_id in parts[1]) if len(parts) >= 3 else False
-
+    parts = content.split("---", 2)
+    if len(parts) < 3:
+        return False
     fm_raw, body = parts[1], parts[2]
+    if clip_id in fm_raw:
+        return True
+
     bracket_match = re.search(r'clips:\s*\[(.*?)\]', fm_raw, re.DOTALL)
     if bracket_match:
-        items = bracket_match.group(1).strip()
-        new_items = f"{items},\n    {clip_id}" if items else f"{clip_id}"
+        items = bracket_match.group(1)
+        stripped = items.strip().rstrip(',')
+        if "\n" in items:
+            new_items = f"\n    {stripped},\n    {clip_id},\n"
+        else:
+            new_items = f"{stripped}, {clip_id}" if stripped else f"{clip_id}"
         new_fm = fm_raw[:bracket_match.start(1)] + new_items + fm_raw[bracket_match.end(1):]
     else:
         dash_match = re.search(r'(clips:\s*\n(?:\s*-\s*[^\n]+\n)+)', fm_raw)
@@ -182,12 +288,16 @@ def parse_submission_sections(body: str) -> dict:
     }
     for line in body.split("\n"):
         stripped = line.strip()
-        if stripped in markers:
-            if current_key:
-                sections[current_key] = "\n".join(buffer).strip()
-                buffer = []
-            current_key = markers[stripped]
-        elif current_key:
+        is_marker = False
+        for m, k in markers.items():
+            if m in stripped:
+                if current_key:
+                    sections[current_key] = "\n".join(buffer).strip()
+                    buffer = []
+                current_key = k
+                is_marker = True
+                break
+        if not is_marker and current_key:
             buffer.append(line)
     if current_key and current_key not in sections:
         sections[current_key] = "\n".join(buffer).strip()
@@ -231,17 +341,14 @@ def main():
             k, v = line.split(":", 1)
             meta[k.strip().lower()] = v.strip()
 
-    ts_match = re.search(r'Timestamp:\s*([^\r\n]+)', license_text, re.IGNORECASE)
-    timestamp = ts_match.group(1).strip() if ts_match else meta.get("timestamp", datetime.now(timezone.utc).isoformat())
-    date_str = timestamp[:10] if len(timestamp) >= 10 else datetime.now(timezone.utc).strftime("%Y-%m-%d")
-
     contributor = sanitize_no_email(meta.get("contributor-name") or meta.get("contributor") or "Anonymous Contributor")
     submission_type = meta.get("submission-type", "page-content").lower()
     email_trace_id = meta.get("email-trace-id", "").strip()
-    suggested_content = sections.get("content", "")
+    suggested_content = sections.get("content", "").strip()
 
     branch_name = f"suggestion/issue-{issue_number}"
     created_files = []
+    modified_files = []
     associated_page_msg = ""
 
     # 3. Process Submission by Type
@@ -251,7 +358,7 @@ def main():
             clip_id = (meta.get("clip-id", "").lower().replace(' ', '_')) or f"clip_issue_{issue_number}"
             clip_title = meta.get("title") or meta.get("clip-title") or f"Clip Submission #{issue_number}"
             youtube_id = meta.get("youtube-id", "")
-            target_page = meta.get("target-page", "")
+            target_page_raw = meta.get("target-page", "")
 
             # Create _clips/<clip_id>.md
             clip_file = os.path.join("_clips", f"{clip_id}.md")
@@ -274,79 +381,139 @@ def main():
             write_frontmatter_file(clip_file, clip_fm, clip_body)
             created_files.append(clip_file)
 
-            # Create _submissions entry
-            sub_file = os.path.join("_submissions", f"{date_str}-issue-{issue_number}-clip-{clip_id}.md")
-            sub_fm = {
-                "submission_type": "clip", "clip_mode": "new", "clip_id": clip_id,
-                "youtube_id": youtube_id, "title": clip_title, "contributor": contributor,
-                "target_page": target_page, "timestamp": timestamp, "license": "CC-BY-NC-SA-4.0",
-                "source_issue": issue_number
-            }
-            if email_trace_id:
-                sub_fm["email_trace_id"] = email_trace_id
-            write_frontmatter_file(sub_file, sub_fm, suggested_content)
-            created_files.append(sub_file)
-
-            page_file = find_target_page_file(target_page)
-            if page_file and associate_clip_with_file(page_file, clip_id):
-                created_files.append(page_file)
-                associated_page_msg = f"- **Associated with Page:** `{page_file}`\n"
+            # Associate with target page if provided
+            if target_page_raw and target_page_raw.lower() != "none":
+                page_file = find_target_page_file(target_page_raw)
+                if page_file and associate_clip_with_file(page_file, clip_id):
+                    modified_files.append(page_file)
+                    associated_page_msg = f"- **Associated with Page:** `{page_file}`\n"
+                elif page_file:
+                    associated_page_msg = f"- **Target Page:** `{page_file}` (clip already present)\n"
+                else:
+                    associated_page_msg = f"- **Target Page:** `{target_page_raw}` (page file not found, clip created)\n"
 
             summary = f"New Clip: {clip_title} ({clip_id})"
             pr_title = f"[New Clip] {clip_title} ({clip_id}) (Closes #{issue_number})"
-            commit_msg = f"Add new clip: {clip_title} ({clip_id})\n\nContributor: {contributor}\nYouTube ID: {youtube_id}\n\nLicense: CC-BY-NC-SA-4.0"
+            commit_msg = (
+                f"Add new clip: {clip_title} ({clip_id})\n\n"
+                f"Contributor: {contributor}\n"
+                f"YouTube ID: {youtube_id}\n\n"
+                f"License: CC-BY-NC-SA-4.0"
+            )
 
-        else: # link-existing
+        else:  # link-existing
             existing_clip = meta.get("existing-clip", "").strip().strip('/')
             if existing_clip.startswith('clips/'):
                 existing_clip = existing_clip.split('/')[-1]
-            target_page = meta.get("target-page", "")
+            target_page_raw = meta.get("target-page", "")
 
-            sub_file = os.path.join("_submissions", f"{date_str}-issue-{issue_number}-link-{slugify(existing_clip)}.md")
-            sub_fm = {
-                "submission_type": "clip", "clip_mode": "link-existing", "existing_clip": existing_clip,
-                "target_page": target_page, "contributor": contributor, "timestamp": timestamp,
-                "license": "CC-BY-NC-SA-4.0", "source_issue": issue_number
-            }
-            if email_trace_id:
-                sub_fm["email_trace_id"] = email_trace_id
-            write_frontmatter_file(sub_file, sub_fm, suggested_content)
-            created_files.append(sub_file)
+            page_file = find_target_page_file(target_page_raw)
+            if not page_file:
+                print(f"[ERROR] Target page '{target_page_raw}' not found for link-existing clip.")
+                abort_comment = (
+                    f"👋 Thank you for your contribution to Lindy Collection!\n\n"
+                    f"⚠️ **Automated Pull Request Aborted: Target Page Not Found**\n\n"
+                    f"Could not locate an existing site page matching `Target-Page: {target_page_raw}` to associate with clip `{existing_clip}`.\n\n"
+                    f"Please verify the target page URL (e.g. `/routines/big_apple/`, `/historical_figures/frankie_manning/`) "
+                    f"and re-submit your suggestion using the [New Clip Form](https://www.lindycollection.com/suggest-new-clip/)."
+                )
+                post_issue_comment(github_repo, issue_number, github_token, abort_comment)
+                set_github_output("status", "aborted")
+                set_github_output("abort_reason", f"Target page '{target_page_raw}' not found")
+                sys.exit(0)
 
-            page_file = find_target_page_file(target_page)
-            if page_file and associate_clip_with_file(page_file, existing_clip):
-                created_files.append(page_file)
-                associated_page_msg = f"- **Linked to Page:** `{page_file}`\n"
+            if not associate_clip_with_file(page_file, existing_clip):
+                print(f"[ERROR] Clip '{existing_clip}' already associated with '{page_file}'.")
+                abort_comment = (
+                    f"👋 Thank you for your contribution to Lindy Collection!\n\n"
+                    f"ℹ️ **Pull Request Not Needed: Clip Already Linked**\n\n"
+                    f"The clip `{existing_clip}` is already associated with `{page_file}`."
+                )
+                post_issue_comment(github_repo, issue_number, github_token, abort_comment)
+                set_github_output("status", "aborted")
+                set_github_output("abort_reason", f"Clip '{existing_clip}' already associated with '{page_file}'")
+                sys.exit(0)
 
-            summary = f"Link Clip {existing_clip} to {target_page}"
-            pr_title = f"[Link Clip] {existing_clip} to {target_page} (Closes #{issue_number})"
-            commit_msg = f"Link existing clip {existing_clip} to {target_page}\n\nContributor: {contributor}\n\nLicense: CC-BY-NC-SA-4.0"
+            modified_files.append(page_file)
+            associated_page_msg = f"- **Linked to Page:** `{page_file}`\n"
+            summary = f"Link Clip {existing_clip} to {page_file}"
+            pr_title = f"[Link Clip] {existing_clip} to {page_file} (Closes #{issue_number})"
+            commit_msg = (
+                f"Link existing clip {existing_clip} to {page_file}\n\n"
+                f"Contributor: {contributor}\n"
+                f"Target-Page: {target_page_raw}\n\n"
+                f"License: CC-BY-NC-SA-4.0"
+            )
 
-    else: # page-content
-        target_page = sanitize_no_email(meta.get("target-page", "") or "General")
+    else:  # page-content
+        target_page_raw = sanitize_no_email(meta.get("target-page", "")).strip()
         summary = meta.get("summary", "")
         if not summary:
             clean_title = re.sub(r'^\[Site Suggestion\]\s*', '', issue_title, flags=re.IGNORECASE).strip()
             summary = clean_title or "Page content suggestion"
         summary = sanitize_no_email(summary)
 
-        sub_file = os.path.join("_submissions", f"{date_str}-issue-{issue_number}-{slugify(summary)}.md")
-        sub_fm = {
-            "submission_type": "page-content", "contributor": contributor, "target_page": target_page,
-            "summary": summary, "timestamp": timestamp, "license": "CC-BY-NC-SA-4.0",
-            "source_issue": issue_number
-        }
-        if email_trace_id:
-            sub_fm["email_trace_id"] = email_trace_id
-        write_frontmatter_file(sub_file, sub_fm, suggested_content)
-        created_files.append(sub_file)
+        page_file = find_target_page_file(target_page_raw)
+        if not page_file:
+            print(f"[ERROR] Target page '{target_page_raw}' not found.")
+            abort_comment = (
+                f"👋 Thank you for your contribution to Lindy Collection!\n\n"
+                f"⚠️ **Automated Pull Request Aborted: Target Page Not Found**\n\n"
+                f"Could not locate an existing site page matching `Target-Page: {target_page_raw}`.\n\n"
+                f"Please verify the target page URL or path (e.g. `/historical_figures/`, `/routines/big_apple/`, `/about/`) "
+                f"and re-submit your suggestion using the [Content Suggestion Form](https://www.lindycollection.com/suggest-changes/)."
+            )
+            post_issue_comment(github_repo, issue_number, github_token, abort_comment)
+            set_github_output("status", "aborted")
+            set_github_output("abort_reason", f"Target page '{target_page_raw}' not found")
+            sys.exit(0)
 
+        if not suggested_content:
+            print("[ERROR] Suggested content is empty.")
+            abort_comment = (
+                f"👋 Thank you for your contribution to Lindy Collection!\n\n"
+                f"⚠️ **Automated Pull Request Aborted: Empty Content**\n\n"
+                f"The submission did not contain any proposed markdown content to append to `{page_file}`.\n\n"
+                f"Please re-submit your suggestion using the [Content Suggestion Form](https://www.lindycollection.com/suggest-changes/)."
+            )
+            post_issue_comment(github_repo, issue_number, github_token, abort_comment)
+            set_github_output("status", "aborted")
+            set_github_output("abort_reason", "Empty suggested content")
+            sys.exit(0)
+
+        if not append_content_to_file(page_file, suggested_content):
+            print(f"[ERROR] Failed to append content to '{page_file}'.")
+            set_github_output("status", "aborted")
+            set_github_output("abort_reason", f"Failed to append content to {page_file}")
+            sys.exit(0)
+
+        modified_files.append(page_file)
+        associated_page_msg = f"- **Target Page:** `{target_page_raw}` (`{page_file}`)\n"
         pr_title = f"[Page Content] {summary} (Closes #{issue_number})"
-        commit_msg = f"Add page content suggestion for {target_page}\n\nSummary: {summary}\nContributor: {contributor}\n\nLicense: CC-BY-NC-SA-4.0"
+        commit_msg = (
+            f"Update {page_file}: {summary}\n\n"
+            f"Contributor: {contributor}\n"
+            f"Target-Page: {target_page_raw}\n\n"
+            f"License: CC-BY-NC-SA-4.0"
+        )
 
     # 4. Prepare PR Outputs
+    all_changed_files = created_files + modified_files
+    if not all_changed_files:
+        print("[ERROR] No files were created or modified.")
+        set_github_output("status", "aborted")
+        set_github_output("abort_reason", "No files created or modified")
+        sys.exit(0)
+
     email_trace_md = f"- **Email Trace ID:** `{email_trace_id}`\n" if email_trace_id else ""
-    created_files_list = "\n".join([f"  - `{p}`" for p in created_files])
+    created_list = "\n".join([f"  - `{p}` (new)" for p in created_files])
+    modified_list = "\n".join([f"  - `{p}` (modified)" for p in modified_files])
+    file_changes_md = ""
+    if created_list:
+        file_changes_md += f"{created_list}\n"
+    if modified_list:
+        file_changes_md += f"{modified_list}\n"
+
     pr_body = (
         f"Automated submission received via Issue #{issue_number}.\n\n"
         f"### Submission Details\n"
@@ -356,7 +523,7 @@ def main():
         f"- **License:** CC-BY-NC-SA-4.0 (Agreed)\n"
         f"{email_trace_md}"
         f"{associated_page_msg}"
-        f"- **Files Created / Modified:**\n{created_files_list}\n\n"
+        f"- **Files Created / Modified:**\n{file_changes_md.rstrip()}\n\n"
         f"Closes #{issue_number}"
     )
 
