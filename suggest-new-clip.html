@@ -1,0 +1,136 @@
+---
+layout: page
+title: Suggest a New Clip
+permalink: /suggest-new-clip/
+---
+
+{% include submission_styles.html %}
+
+<div class="submission-container">
+  <p class="submission-intro">
+    Suggest adding a new video clip or linking an existing clip to a dance routine, aerial, or jazz step.
+    Both technical contributors (via GitHub) and community members (via Email) can submit suggestions with mandatory <strong>CC-BY-NC-SA 4.0</strong> legal sign-off.
+  </p>
+
+  <div class="sub-nav-banner sub-nav-banner--green">
+    <span>📝</span>
+    <span>Looking to propose page text or markdown updates instead? Use the <a id="linkSwitchToChange" href="{{ '/suggest-changes/' | relative_url }}">Page Content Suggestion Form</a>.</span>
+  </div>
+
+  <form id="clipSuggestionForm" data-site-email="{{ site.email }}" data-github-repo="{{ site.github.repository }}" novalidate>
+    <!-- Mode Toggle: New Clip vs Link Existing -->
+    <div class="clip-mode-toggle" role="radiogroup" aria-label="Submission Mode">
+      <label class="clip-mode-label" for="modeNewClip">
+        <input type="radio" id="modeNewClip" name="clipMode" value="new" checked>
+        <span>Submit a New Clip</span>
+      </label>
+      <label class="clip-mode-label" for="modeLinkExisting">
+        <input type="radio" id="modeLinkExisting" name="clipMode" value="link-existing">
+        <span>Link an Existing Clip to a Page</span>
+      </label>
+    </div>
+
+    <!-- Contributor Name -->
+    <div class="submission-form-group">
+      <label for="contributorName">Contributor Name or Handle <span class="required-star">*</span></label>
+      <input type="text" id="contributorName" class="submission-input" required placeholder="e.g., FrankieManning or Jane Doe" autocomplete="name">
+      <span class="field-hint">Used for attribution on GitHub and in commit metadata.</span>
+      <span class="field-error-msg" id="err-contributorName">Please provide your name or handle.</span>
+    </div>
+
+    <!-- Target Page URL (Shared) -->
+    <div class="submission-form-group">
+      <label for="targetPage">Target Page URL <span class="required-star" id="targetPageRequiredStar" style="display: none;">*</span></label>
+      <input type="text" id="targetPage" class="submission-input" placeholder="e.g., /routines/big_apple/, /aerials/snatch/, or /solo_jazz/shim_sham/">
+      <span class="field-hint" id="targetPageHint">Page URL to associate this clip with. Pre-filled if linked from a page, or can be left blank for standalone clips.</span>
+      <span class="field-error-msg" id="err-targetPage">Please specify the target page URL to link this clip to.</span>
+    </div>
+
+    <!-- Section A: New Clip Fields -->
+    <div id="subSectionNewClip">
+      <div class="submission-form-group">
+        <label for="clipYoutubeUrl">YouTube Video URL or ID <span class="required-star">*</span></label>
+        <input type="text" id="clipYoutubeUrl" class="submission-input" placeholder="e.g., https://www.youtube.com/watch?v=dQw4w9WgXcQ or dQw4w9WgXcQ">
+        <span class="field-hint">Full YouTube link, youtu.be shortlink, or 11-character video ID. Timestamps in URL (e.g. ?t=90) auto-fill Start Time.</span>
+        <span class="field-error-msg" id="err-clipYoutubeUrl">Please provide a valid YouTube URL or video ID.</span>
+      </div>
+
+      <div class="submission-grid-2">
+        <div class="submission-form-group">
+          <label for="clipId">Clip Identifier (Filename) <span class="required-star">*</span></label>
+          <input type="text" id="clipId" class="submission-input" placeholder="e.g., frankie_manning_shim_sham_1998">
+          <span class="field-hint">Lowercase alphanumeric and underscores only. Auto-generated from title if left blank.</span>
+          <span class="field-error-msg" id="err-clipId">Please enter a valid lowercase clip identifier (e.g., my_clip_name).</span>
+        </div>
+
+        <div class="submission-form-group">
+          <label for="clipTitle">Clip Title <span class="required-star">*</span></label>
+          <input type="text" id="clipTitle" class="submission-input" placeholder="e.g., Frankie Manning & Chazz Young - Shim Sham">
+          <span class="field-hint">Descriptive title of the clip performance or instructional.</span>
+          <span class="field-error-msg" id="err-clipTitle">Please provide a descriptive title for this clip.</span>
+        </div>
+      </div>
+
+      <div class="submission-grid-2">
+        <div class="submission-form-group">
+          <label for="clipType">Clip Type</label>
+          <select id="clipType" class="submission-select">
+            <option value="">-- Optional / Select Type --</option>
+            <option value="routine">Routine</option>
+            <option value="recap">Recap / Performance</option>
+            <option value="tutorial">Tutorial / Instructional</option>
+            <option value="social">Social Dancing</option>
+            <option value="competition">Competition / Contest</option>
+            <option value="historical">Historical Archive</option>
+          </select>
+          <span class="field-hint">Categorization for filtering and display.</span>
+        </div>
+
+        <div class="submission-form-group">
+          <label for="clipEvent">Event / Location</label>
+          <input type="text" id="clipEvent" class="submission-input" placeholder="e.g., Camp Hollywood 2018 or Herräng 2004">
+          <span class="field-hint">Event where this video was recorded, if known.</span>
+        </div>
+      </div>
+
+      <div class="submission-grid-2">
+        <div class="submission-form-group">
+          <label for="clipStartTime">Start Time (seconds or mm:ss)</label>
+          <input type="text" id="clipStartTime" class="submission-input" placeholder="e.g., 45 or 1:15">
+          <span class="field-hint">Seconds or timestamp where move or routine starts.</span>
+        </div>
+
+        <div class="submission-form-group">
+          <label for="clipEndTime">End Time (seconds or mm:ss)</label>
+          <input type="text" id="clipEndTime" class="submission-input" placeholder="e.g., 120 or 2:00">
+          <span class="field-hint">Seconds or timestamp where move or routine ends.</span>
+        </div>
+      </div>
+
+      <div class="submission-form-group">
+        <label for="clipNotes">Clip Description or Notes</label>
+        <textarea id="clipNotes" class="submission-textarea" rows="4" placeholder="Optional notes describing dancers, musicians, context, choreography highlights..."></textarea>
+        <span class="field-hint">Additional context displayed in the clip markdown body.</span>
+      </div>
+    </div>
+
+    <!-- Section B: Link Existing Clip Fields -->
+    <div id="subSectionLinkExisting" style="display: none;">
+      <div class="submission-form-group">
+        <label for="existingClipName">Existing Clip ID or URL <span class="required-star">*</span></label>
+        <input type="text" id="existingClipName" class="submission-input" placeholder="e.g., al_leon_shim_sham or /clips/al_leon_shim_sham/">
+        <span class="field-hint">The identifier or URL of the existing clip in Lindy Collection that you want to link.</span>
+        <span class="field-error-msg" id="err-existingClipName">Please specify which existing clip to associate.</span>
+      </div>
+
+      <div class="submission-form-group">
+        <label for="linkNotes">Rationale or Context</label>
+        <textarea id="linkNotes" class="submission-textarea" rows="3" placeholder="Explain why this clip belongs on the target page (e.g., demonstrates variation performed at 0:45)..."></textarea>
+      </div>
+    </div>
+
+    {% include submission_actions.html %}
+  </form>
+</div>
+
+<script src="{{ '/assets/js/submission.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
