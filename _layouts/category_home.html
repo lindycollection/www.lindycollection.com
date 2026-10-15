@@ -29,13 +29,15 @@ layout: compress
     <main class="site__content">
 
       <div class="container">
-        <div class="page-content">
+        <div class="page-content" style="position: relative;">
 
           {{ content }}
 
           {% if page.clips %}
             {% include clip_view.html clips=page.clips %}
           {% endif %}
+
+          {% include action_sidebar.html %}
 
           <section class="blog">
             <div class="container">

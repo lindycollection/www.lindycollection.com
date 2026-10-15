@@ -1,4 +1,9 @@
-<h2> Cross References </h2>
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; margin-bottom: 8px;">
+  <h2 style="margin: 0;">Cross References</h2>
+  <a class="btn" style="padding: 8px 14px; border-radius: 6px; background-color: #277cea; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 6px; margin: 0;" href="{{ '/suggest-new-clip/' | relative_url }}?page={{ page.url | url_encode }}">
+    <span>+ Suggest a Clip</span>
+  </a>
+</div>
 
 {% assign clip_infos = site.clips | where: include.type, include.crossref_id %}
 
