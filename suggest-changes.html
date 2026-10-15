@@ -1,0 +1,58 @@
+---
+layout: page
+title: Suggest Content or Correction
+permalink: /suggest-changes/
+---
+
+{% include submission_styles.html %}
+
+<div class="submission-container">
+  <p class="submission-intro">
+    Propose adding new markdown content, descriptions, dancer information, or corrections to the body of any site page.
+    Both technical contributors (via GitHub) and community members (via Email) can submit suggestions with mandatory <strong>CC-BY-NC-SA 4.0</strong> legal sign-off.
+  </p>
+
+  <div class="sub-nav-banner sub-nav-banner--blue">
+    <span>🎬</span>
+    <span>Looking to submit a video clip instead? Use the dedicated <a id="linkSwitchToClip" href="{{ '/suggest-new-clip/' | relative_url }}">New Clip Submission Form</a>.</span>
+  </div>
+
+  <form id="suggestionForm" data-site-email="{{ site.email }}" data-github-repo="{{ site.github.repository }}" novalidate>
+    <!-- Contributor Name -->
+    <div class="submission-form-group">
+      <label for="contributorName">Contributor Name or Handle <span class="required-star">*</span></label>
+      <input type="text" id="contributorName" class="submission-input" required placeholder="e.g., FrankieManning or Jane Doe" autocomplete="name">
+      <span class="field-hint">Used for attribution on GitHub and in commit metadata.</span>
+      <span class="field-error-msg" id="err-contributorName">Please provide your name or handle.</span>
+    </div>
+
+    <!-- Target Page URL & Summary -->
+    <div class="submission-grid-2">
+      <div class="submission-form-group">
+        <label for="targetPage">Target Page URL or Section <span class="required-star">*</span></label>
+        <input type="text" id="targetPage" class="submission-input" required placeholder="e.g., /about/, /routines/big_apple/, or /solo_jazz/shim_sham/">
+        <span class="field-hint">URL of the page whose body you are proposing to update. Pre-filled if linked from a page.</span>
+        <span class="field-error-msg" id="err-targetPage">Please specify the target page URL.</span>
+      </div>
+
+      <div class="submission-form-group">
+        <label for="summary">Brief Summary <span class="required-star">*</span></label>
+        <input type="text" id="summary" class="submission-input" required placeholder="e.g., Add 1935 Savoy Ballroom history section">
+        <span class="field-hint">A concise summary used for the issue and Pull Request title.</span>
+        <span class="field-error-msg" id="err-summary">Please enter a brief summary of the change.</span>
+      </div>
+    </div>
+
+    <!-- Markdown Content -->
+    <div class="submission-form-group">
+      <label for="markdownContent">Proposed Markdown Content for Page Body <span class="required-star">*</span></label>
+      <textarea id="markdownContent" class="submission-textarea" rows="8" required placeholder="Type or paste the markdown text you propose adding to the page body..."></textarea>
+      <span class="field-hint">Write the text, lists, references, or links you propose adding.</span>
+      <span class="field-error-msg" id="err-markdownContent">Please provide the proposed markdown content.</span>
+    </div>
+
+    {% include submission_actions.html %}
+  </form>
+</div>
+
+<script src="{{ '/assets/js/submission.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

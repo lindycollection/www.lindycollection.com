@@ -1,0 +1,74 @@
+<!-- Mandatory CC-BY-NC-SA 4.0 License Agreement -->
+<div class="license-box" id="licenseBox">
+  <div class="license-box-header">
+    <span class="license-badge">Mandatory Legal Agreement</span>
+    <span class="license-title">CC-BY-NC-SA 4.0 Sign-Off</span>
+  </div>
+  <label class="license-label" for="ccLicense">
+    <input type="checkbox" id="ccLicense" name="ccLicense" required>
+    <span>
+      <strong>I hereby license my submission under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC-BY-NC-SA 4.0) license and confirm that I have the legal right to submit this content.</strong>
+    </span>
+  </label>
+  <div class="license-warning" id="licenseWarning">
+    ⚠️ You must agree to the CC-BY-NC-SA 4.0 license agreement above to enable submission.
+  </div>
+</div>
+
+<!-- Submission Mode Tabs -->
+<div class="tabs-nav" role="tablist">
+  <button type="button" class="tab-btn active" id="tabEmailBtn" role="tab" aria-selected="true" aria-controls="panelEmail">
+    ✉️ Tab 1: No GitHub Account (Submit via Email)
+  </button>
+  <button type="button" class="tab-btn" id="tabGithubBtn" role="tab" aria-selected="false" aria-controls="panelGithub">
+    🐙 Tab 2: I Have a GitHub Account
+  </button>
+</div>
+
+<!-- Alert / Notice Box -->
+<div id="statusAlert" class="submission-alert"></div>
+
+<!-- Tab 1: Email Mode -->
+<div class="tab-panel active" id="panelEmail" role="tabpanel" aria-labelledby="tabEmailBtn">
+  <p class="tab-description">
+    No account required. Submitting via email generates a structured payload addressed to 
+    <code>{{ site.email }}</code>, which our automated inbox bridge converts into a GitHub Issue and Pull Request.
+  </p>
+
+  <div class="actions-row">
+    <button type="button" id="btnEmailClient" class="sub-btn sub-btn-primary" disabled>
+      📬 Open Default Email App
+    </button>
+    <button type="button" id="btnGmailWeb" class="sub-btn sub-btn-dark" disabled>
+      ✉️ Open in Gmail Web
+    </button>
+    <button type="button" id="btnCopyTemplate" class="sub-btn sub-btn-outline" disabled>
+      📋 Copy Template to Clipboard
+    </button>
+  </div>
+
+  <div id="manualInstructions" class="manual-instructions">
+    <h4>📋 Manual Email Submission Instructions</h4>
+    <div class="manual-field"><strong>To:</strong> <code id="manualTo">{{ site.email }}</code></div>
+    <div class="manual-field"><strong>Subject:</strong> <code id="manualSubject"></code></div>
+    <p style="font-size: 13px; color: #475569; margin: 8px 0;">
+      The formatted template below has been copied to your clipboard. Simply paste it (<code>Ctrl+V</code> / <code>Cmd+V</code>) into your email message body and send:
+    </p>
+    <pre id="payloadPreview" class="payload-preview"></pre>
+  </div>
+</div>
+
+<!-- Tab 2: GitHub Mode -->
+<div class="tab-panel" id="panelGithub" role="tabpanel" aria-labelledby="tabGithubBtn">
+  <p class="tab-description">
+    If you have a GitHub account, you can submit directly to our repository. Clicking below opens a pre-filled 
+    GitHub Issue. Simply click <strong>"Submit new issue"</strong> on GitHub, and our GitHub Action will automatically 
+    validate the CC-BY-NC-SA 4.0 license and open a Pull Request.
+  </p>
+
+  <div class="actions-row">
+    <button type="button" id="btnGithubIssue" class="sub-btn sub-btn-primary" disabled>
+      🚀 Submit via GitHub Issue
+    </button>
+  </div>
+</div>
