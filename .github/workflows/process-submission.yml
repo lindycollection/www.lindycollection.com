@@ -1,0 +1,70 @@
+name: Process Content Submission
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  process_submission:
+    name: Validate License & Create PR
+    if: contains(github.event.issue.labels.*.name, 'content-suggestion') || startsWith(github.event.issue.title, '[Site Suggestion]')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # Security: Untrusted issue data is passed strictly via env variables to prevent shell injection
+      - name: Parse Submission & Verify License
+        id: parse
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 .github/scripts/parse_submission.py
+
+      - name: Create Branch and Commit
+        if: steps.parse.outputs.status == 'success'
+        env:
+          BRANCH_NAME: ${{ steps.parse.outputs.branch_name }}
+          COMMIT_MSG: ${{ steps.parse.outputs.commit_msg }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH_NAME"
+          git add _clips/ _submissions/ _posts/ _routines/ _aerials/ _jazz/ _events/ _historical_clips/ _historical_figures/
+          git commit -m "$COMMIT_MSG"
+          git push origin "$BRANCH_NAME" --force
+
+      - name: Open Pull Request and Comment on Issue
+        if: steps.parse.outputs.status == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          BRANCH_NAME: ${{ steps.parse.outputs.branch_name }}
+          PR_TITLE: ${{ steps.parse.outputs.pr_title }}
+          PR_BODY: ${{ steps.parse.outputs.pr_body }}
+          BASE_BRANCH: gh-pages
+        run: |
+          PR_URL=$(gh pr create \
+            --base "$BASE_BRANCH" \
+            --head "$BRANCH_NAME" \
+            --title "$PR_TITLE" \
+            --body "$PR_BODY")
+          echo "Created Pull Request: $PR_URL"
+          gh issue comment "$ISSUE_NUMBER" --body "Thank you for your contribution! A Pull Request has been automatically opened under the CC-BY-NC-SA 4.0 license: $PR_URL"
