@@ -8,7 +8,7 @@ permalink: /contributing/
 
 Thank you for considering contributing to the Lindy Collection. With many hands we can make light work. 
 
-If you have something that you'd like to see on the site please open an issue with as many details as you can provide.
+If you have something that you'd like to see on the site please open an issue with as many details as you can provide, submit text changes through our [Content Suggestion Form](/suggest-changes/), or propose video clips via our [New Clip Form](/suggest-new-clip/).
 
 If you are familiar with Jekyll Markdown GitHub pages you're also welcome to open a PR with a suggestion large or small.
 The site is still young and evolving and I don't have a lot of guidelines for what's acceptable and what's not right now.
