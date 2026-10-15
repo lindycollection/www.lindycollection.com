@@ -1,0 +1,14 @@
+[checking]
+# Suppress rate-limiting and false 403s on common bot-defensive hosts
+ignore=
+    https?://(www\.)?linkedin\.com/.*
+    https?://(www\.)?twitter\.com/.*
+    https?://(www\.)?x\.com/.*
+    https?://github\.com/.*/(commit|pull|issues)/.*
+
+[filtering]
+checkextern=1
+threads=8
+timeout=15
+
+[AnchorCheck]
