@@ -34,10 +34,10 @@ flowchart TD
     F -->|GitHub Action: issues opened| J[Validate CC-BY-NC-SA 4.0 Sign-off & Parse Metadata]
     J -->|Missing Agreement| K[Comment on Issue & Abort PR cleanly]
     
-    J -->|Valid Clip Submission| L1[Create _clips/clip_id.md & _submissions/...md]
+    J -->|Valid Clip Submission| L1[Create _clips/clip_id.md]
     L1 --> M1[Optionally update clips: list in target page]
     
-    J -->|Valid Page Content| L2[Create _submissions/YYYY-MM-DD-issue-N-slug.md]
+    J -->|Valid Page Content| L2[Append proposed content directly to target page markdown]
     
     M1 --> N[Create branch suggestion/issue-N]
     L2 --> N
@@ -68,8 +68,8 @@ Designed exclusively for submitting video clips or linking existing clips to rou
   - `linkNotes` (Optional): Rationale or placement details.
 
 **Automated PR Action**:
-- For **New Clip**: Automatically generates `_clips/<clip_id>.md` ready to be merged, writes the provenance record in `_submissions/`, and if `target_page` matches an existing page file, appends `clip_id` to that page's `clips:` frontmatter list.
-- For **Link Existing Clip**: Automatically appends the clip to `clips:` in the target page and creates a submission record.
+- For **New Clip**: Automatically generates `_clips/<clip_id>.md` ready to be merged, and if `target_page` matches an existing page file, appends `clip_id` to that page's `clips:` frontmatter list.
+- For **Link Existing Clip**: Automatically appends the clip to `clips:` in the target page's frontmatter.
 
 ### 2. 📝 Page Content Suggestion ([`/suggest-changes/`](https://www.lindycollection.com/suggest-changes/))
 Designed exclusively for proposing new markdown text for the body of any site page.
@@ -79,7 +79,7 @@ Designed exclusively for proposing new markdown text for the body of any site pa
 - `content` (Required): Proposed markdown content for the page body.
 
 **Automated PR Action**:
-- Generates `_submissions/<YYYY-MM-DD>-issue-<number>-<slug>.md` with full metadata and proposed markdown, ready for maintainer review and integration.
+- Resolves the target page matching `targetPage` (e.g., `historical_figures.md`, `_routines/big_apple.md`, `about.md`), and proposes appending the submitted markdown content directly to the target page's markdown body. Maintainers review the proposed addition as a clean GitHub PR diff directly on the target page.
 
 ---
 
@@ -170,4 +170,4 @@ In the Gmail account receiving submissions (`lindycollectionsite@gmail.com`):
 ### 2. Test Page Body Content Submission
 1. Open [`/suggest-changes/?page=/about/`](https://www.lindycollection.com/suggest-changes/?page=/about/).
 2. Propose markdown changes, accept the **CC-BY-NC-SA 4.0** license, and submit.
-3. Verify the GitHub Action creates `_submissions/...md` containing the proposed markdown.
+3. Verify the GitHub Action opens a PR proposing to append the submitted markdown directly to `about.md`.
