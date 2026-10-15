@@ -1,6 +1,11 @@
 {% if include.clips %}
 
-<h2> Clips </h2>
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; margin-bottom: 8px;">
+  <h2 style="margin: 0;">Clips</h2>
+  <a class="btn" style="padding: 8px 14px; border-radius: 6px; background-color: #277cea; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 6px; margin: 0;" href="{{ '/suggest-new-clip/' | relative_url }}?page={{ page.url | url_encode }}">
+    <span>+ Suggest a Clip</span>
+  </a>
+</div>
 <div class="clip-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 16px; margin-bottom: 32px;">
 {% for clip in include.clips %}
 {% assign clip_infos = site.clips | where: 'clip_id', clip %}

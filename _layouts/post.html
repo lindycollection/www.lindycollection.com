@@ -45,7 +45,6 @@ layout: compress
       {% else %}
       <div class="hero dark-bg">
         {% endif %}
-        {% include edit_on_github_hero_button.html %}
         <div class="hero__wrap">
           <h1 class="hero__title">{{ page.title }}</h1>
           <p class="hero__meta">
@@ -131,38 +130,7 @@ layout: compress
           {% include crossref.html type=page.crossref crossref_id=page.crossref_id %}
           {% endif %}
 
-          {% if backlinks.size > 0 %}
-          <style>
-            .backlinks-box {
-              margin: 32px 0 16px 0;
-              padding: 16px;
-              background-color: #f9f9f9;
-              border: 1px solid #ddd;
-              border-radius: 8px;
-              clear: both;
-              width: 100%;
-              box-sizing: border-box;
-            }
-            @media (min-width: 1300px) {
-              .backlinks-box {
-                position: absolute;
-                top: 80px;
-                left: calc(100% + 24px);
-                width: 200px;
-                margin: 0;
-                clear: none;
-              }
-            }
-          </style>
-          <div class="backlinks-box">
-            <h4 style="margin-top: 0; font-size: 1.1em; color: #333;">Also referenced in:</h4>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-            {% for bl in backlinks %}
-              <a href="{{ bl.url | relative_url }}" style="display: inline-block; padding: 4px 12px; background-color: #eee; border-radius: 16px; text-decoration: none; color: #333; font-size: 0.9em; border: 1px solid #ccc;">{% include collection_emoji.html collection=bl.collection %}{{ bl.title }}</a>
-            {% endfor %}
-            </div>
-          </div>
-          {% endif %}
+          {% include action_sidebar.html backlinks=backlinks top="80px" %}
 
         </article>
         <div class="post-content controls__inner">
