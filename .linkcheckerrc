@@ -3,6 +3,7 @@
 ignore=
     https?://(www\.)?linkedin\.com/.*
     https?://(www\.)?twitter\.com/.*
+    https?://(www\.)?youtube\.com/.*
     https?://(www\.)?x\.com/.*
     https?://github\.com/.*/(commit|pull|issues)/.*
 

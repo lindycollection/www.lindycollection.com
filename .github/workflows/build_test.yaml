@@ -79,6 +79,8 @@ jobs:
         python-version: '3.11'
         cache: 'pip'
         cache-dependency-path: 'requirements-dev.txt'
+    - name: Install Prerequisites
+      run: sudo apt-get install python3-setuptools
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -87,5 +89,19 @@ jobs:
       run: |
         mkdir -p ~/.config/linkchecker
         cp .linkcheckerrc ~/.config/linkchecker/linkcheckerrc
+    - name: Start Jekyll server via ghrocker
+      run: |
+        ghrocker . --name jekyll-server -d --mode non-interactive
+        for i in {1..30}; do
+          if curl -s -o /dev/null http://localhost:4000/; then
+            echo "Jekyll server is running at http://localhost:4000/"
+            break
+          fi
+          echo "Waiting for Jekyll server..."
+          sleep 1
+        done
     - name: Run link checker
-      run: python3 -m linkcheck _site
+      run: linkchecker http://localhost:4000/ --no-status
+    - name: Stop Jekyll Docker container
+      if: always()
+      run: docker rm -f jekyll-server || true
