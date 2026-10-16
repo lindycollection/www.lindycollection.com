@@ -12,7 +12,7 @@ clips: [
 
 This association formed the circuit on which black performers were able to travel and perform in the 1920 United States. 
 
-There is a [T.O.B.A. break step](/jazz/toba_break) which is very commonly danced. 
+There is a [T.O.B.A. break step](/jazz/toba_break/) which is very commonly danced. 
 
 And many of the most visible swing band leaders and musicians worked on this tour, including: Fats Waller, Louis Armstrong, Duke Ellington, Chick Webb, Cab Calloway, and Count Basie.
 
