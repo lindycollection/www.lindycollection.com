@@ -63,3 +63,7 @@ collections:
     output: true
   events:
     output: true
+
+webrick:
+  headers:
+    LinkChecker: "true"

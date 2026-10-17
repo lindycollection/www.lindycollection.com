@@ -5,6 +5,26 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${REPO_ROOT}"
 
+EXTRA_ARGS=()
+for arg in "$@"; do
+  case "$arg" in
+    -e|--external|--check-extern)
+      EXTRA_ARGS+=("--check-extern")
+      ;;
+    -h|--help)
+      echo "Usage: $(basename "$0") [-e|--external] [linkchecker_args...]"
+      echo ""
+      echo "Options:"
+      echo "  -e, --external, --check-extern  Check external links in addition to internal links"
+      echo "  -h, --help                      Show this help message"
+      exit 0
+      ;;
+    *)
+      EXTRA_ARGS+=("$arg")
+      ;;
+  esac
+done
+
 if ! command -v ghrocker &>/dev/null; then
   echo "Error: 'ghrocker' not found in PATH." >&2
   echo "Please activate your virtual environment (e.g., 'source lcvenv/bin/activate') or install dependencies with:" >&2
@@ -63,4 +83,4 @@ elif [ -f "$(dirname "$0")/../.linkcheckerrc" ]; then
 fi
 
 echo "Running LinkChecker against ${SITE_URL}..."
-linkchecker "${SITE_URL}" ${CONFIG_ARG} --no-status "$@"
+linkchecker "${SITE_URL}" ${CONFIG_ARG} --no-status "${EXTRA_ARGS[@]}"

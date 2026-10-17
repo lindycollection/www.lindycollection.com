@@ -1,10 +1,11 @@
 [checking]
-threads=8
+threads=20
 timeout=15
+maxrequestspersecond=500
 
 [filtering]
-checkextern=1
-# Suppress rate-limiting and false 403s on common bot-defensive hosts
+checkextern=0
+# Suppress rate-limiting and false 403s on common bot-defensive hosts (used when --check-extern is enabled)
 ignore=
     https?://(www\.)?linkedin\.com/.*
     https?://(www\.)?twitter\.com/.*
