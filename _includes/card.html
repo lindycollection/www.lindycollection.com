@@ -1,4 +1,4 @@
-<a class="post-card" href="{{ post.url | relative_url }}" itemprop="blogPosts" itemscope="" itemtype="http://schema.org/BlogPosting">
+<a class="post-card" href="{{ post.url | relative_url }}" itemprop="blogPosts" itemscope="" itemtype="https://schema.org/BlogPosting">
   {% if post.featured-img %}
   <figure class="post-card__thumb">
     <img
@@ -13,26 +13,40 @@
     />
     <noscript><img src="{{site.url}}/assets/img/posts/{{post.featured-img}}_thumb.jpg" alt="{{ post.title }}" width="400" height="300" loading="lazy" decoding="async"></noscript>
   </figure>
-  {% elsif post.clips %}
-  {% assign first_clip_name = post.clips | first %}
-  {% assign first_clip = site.clips | where: 'clip_id', first_clip_name | first %}
-  <figure class="post-card__thumb">
-    <img
-      src="https://img.youtube.com/vi/{{first_clip.youtube_id}}/default.jpg"
-      data-srcset="https://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg"
-      class="lazyload blur"
-      alt="{{post.title}}"
-      width="480"
-      height="360"
-      loading="lazy"
-      decoding="async"
-    />
-    <noscript><img src="https://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg" alt="{{ post.title }}" width="480" height="360" loading="lazy" decoding="async"></noscript>
-  </figure>
   {% else %}
-  <figure class="post-card__thumb">
-    <div class="dark-bg"></div>
-  </figure>
+    {% assign thumb_clip_id = nil %}
+    {% if post.clips and post.clips.size > 0 %}
+      {% assign first_clip_name = post.clips | first %}
+      {% assign first_clip = site.clips | where: 'clip_id', first_clip_name | first %}
+      {% if first_clip and first_clip.youtube_id %}
+        {% assign thumb_clip_id = first_clip.youtube_id %}
+      {% endif %}
+    {% endif %}
+    {% if thumb_clip_id == nil and post.crossref %}
+      {% assign crossref_first_clip = site.clips | where: post.crossref, post.crossref_id | first %}
+      {% if crossref_first_clip and crossref_first_clip.youtube_id %}
+        {% assign thumb_clip_id = crossref_first_clip.youtube_id %}
+      {% endif %}
+    {% endif %}
+    {% if thumb_clip_id %}
+    <figure class="post-card__thumb">
+      <img
+        src="https://img.youtube.com/vi/{{thumb_clip_id}}/default.jpg"
+        data-srcset="https://img.youtube.com/vi/{{thumb_clip_id}}/hqdefault.jpg"
+        class="lazyload blur"
+        alt="{{post.title}}"
+        width="480"
+        height="360"
+        loading="lazy"
+        decoding="async"
+      />
+      <noscript><img src="https://img.youtube.com/vi/{{thumb_clip_id}}/hqdefault.jpg" alt="{{ post.title }}" width="480" height="360" loading="lazy" decoding="async"></noscript>
+    </figure>
+    {% else %}
+    <figure class="post-card__thumb">
+      <div class="dark-bg"></div>
+    </figure>
+    {% endif %}
   {% endif %}
   <div class="post-card__inner">
     <div class="post-card__header">
