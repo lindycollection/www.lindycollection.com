@@ -16,7 +16,7 @@ clips: [
     ]
 ---
 
-A routine created for [Stompology](http://stompology.com) an annual event in Rochester New York focused on solo jazz. This version was created in 2011 combining the work from 2010.
+A routine created for [Stompology](https://stompology.com/) an annual event in Rochester New York focused on solo jazz. This version was created in 2011 combining the work from 2010.
 
 The music is: "Don't Be That Way" by Lionel Hampton
 

@@ -9,5 +9,5 @@ redirect_from:
 
 The Sugar Hill
 
-This move is sometimes done in combination following the [Blue Outlaw](aerials/blue_outlaw/).
+This move is sometimes done in combination following the [Blue Outlaw](/aerials/blue-outlaw/).
 

@@ -36,15 +36,28 @@ layout: compress
   {% if page.featured-img %}
 
   <div class="hero" fetchpriority="high" data-bg="{{site.url}}/assets/img/posts/{{page.featured-img}}.jpg">
-    {% elsif page.clips %}
-
-    {% assign first_clip_name = page.clips | first %}
-    {% assign first_clip = site.clips | where: 'clip_id', first_clip_name | first %}
+  {% else %}
+    {% assign hero_clip_id = nil %}
+    {% if page.clips and page.clips.size > 0 %}
+      {% assign first_clip_name = page.clips | first %}
+      {% assign first_clip = site.clips | where: 'clip_id', first_clip_name | first %}
+      {% if first_clip and first_clip.youtube_id %}
+        {% assign hero_clip_id = first_clip.youtube_id %}
+      {% endif %}
+    {% endif %}
+    {% if hero_clip_id == nil and page.crossref %}
+      {% assign crossref_first_clip = site.clips | where: page.crossref, page.crossref_id | first %}
+      {% if crossref_first_clip and crossref_first_clip.youtube_id %}
+        {% assign hero_clip_id = crossref_first_clip.youtube_id %}
+      {% endif %}
+    {% endif %}
+    {% if hero_clip_id %}
     <div class="hero" fetchpriority="high"
-      data-bg="https://img.youtube.com/vi/{{first_clip.youtube_id}}/hqdefault.jpg">
-      {% else %}
-      <div class="hero dark-bg">
-        {% endif %}
+      data-bg="https://img.youtube.com/vi/{{hero_clip_id}}/hqdefault.jpg">
+    {% else %}
+    <div class="hero dark-bg">
+    {% endif %}
+  {% endif %}
         <div class="hero__wrap">
           <h1 class="hero__title">{{ page.title }}</h1>
           <p class="hero__meta">
@@ -113,10 +126,10 @@ layout: compress
 
           <div class="standalone-clip-player" style="width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; margin-bottom: 24px; clear: both;">
             {% if page.youtube_id %}
-            <h3 style="margin-bottom: 12px;"><a href="https://youtube.com/watch?v={{page.youtube_id}}" target="_blank" rel="noopener">{{ page.title }} - Watch on YouTube</a></h3>
+            <h3 style="margin-bottom: 12px;"><a href="https://www.youtube.com/watch?v={{page.youtube_id}}" target="_blank" rel="noopener">{{ page.title }} - Watch on YouTube</a></h3>
             {% include youtube_player.html id=1 clip_info=page %}
             {% elsif page.youtube_playlist %}
-            <h3 style="margin-bottom: 12px;"><a href="https://youtube.com/playlist?list={{page.youtube_playlist}}" target="_blank" rel="noopener">{{ page.title }} - Watch Playlist on YouTube</a></h3>
+            <h3 style="margin-bottom: 12px;"><a href="https://www.youtube.com/playlist?list={{page.youtube_playlist}}" target="_blank" rel="noopener">{{ page.title }} - Watch Playlist on YouTube</a></h3>
             {% capture yt_argument %}videoseries?list={{page.youtube_playlist}}{% endcapture %}
             {% include youtube_player.html id=1 clip_info=yt_argument %}
             {% endif %}

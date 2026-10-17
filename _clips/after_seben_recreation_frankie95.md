@@ -8,6 +8,6 @@ upload_date: "2013-12-30T12:59:23-08:00"
 ---
 
 This is a recreation of the dance scene in the movie"After Seben" performed at Frankie95.
-This performance features [Chester Whitmore](/chester-whitmore) recreating the work of James Barton from the movie. 
-The introduction is from [Chazz Young](/chazz-young), who is pretending he's introducing the original movie clip.
+This performance features [Chester Whitmore](/historical_figures/chester_whitmore/) recreating the work of James Barton from the movie. 
+The introduction is from [Chazz Young](/historical_figures/chazz_young/), who is pretending he's introducing the original movie clip.
 

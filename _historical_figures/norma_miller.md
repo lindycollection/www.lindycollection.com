@@ -58,11 +58,11 @@ redirect_from:
 
 Norma Miller was one of the early Lindy Hop dancers at the [Savoy Ballroom.](/historical_clips/savoy_ballroom/)
 She earned the nickname 'Queen of Swing'.
-And she is very well known as the choreographer for the [Trickeration Routine](/routines/trickeration).
+And she is very well known as the choreographer for the [Trickeration Routine](/routines/trickeration/).
 
 Find out more about her on [Wikipedia](https://en.wikipedia.org/wiki/Norma_Miller) and she is featured by the [National Endowment for the Arts](https://www.arts.gov/honors/heritage/norma-miller) as well as [here](https://www.frankiemanningfoundation.org/norma-miller) by the Frankie Manning Foundation.
 
-She member of  [Whitey's Lindy Hoppers](/historical_clips/whiteys_lindy_hoppers)
+She member of  [Whitey's Lindy Hoppers](/historical_clips/whiteys_lindy_hoppers/)
 
 She appeared in several films over the years. [Here's her IMDB profile](https://www.imdb.com/name/nm0589073/). 
 

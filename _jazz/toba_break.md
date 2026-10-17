@@ -9,7 +9,7 @@ clips: [
     ]
 ---
 
-The name comes from the [Theater Owners Booking Association](/historical_clips/toba). 
+The name comes from the [Theater Owners Booking Association](/historical_clips/toba/). 
 
 There are several variations of the T. O. B. A. Break that have been used in different contexts. 
 
