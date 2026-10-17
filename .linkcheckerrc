@@ -12,7 +12,7 @@ ignore=
     https?://(www\.)?youtube\.com/.*
     https?://img\.youtube\.com/.*
     https?://youtu\.be/.*
-    https?://github\.com/.*/(commit|pull|issues)/.*
+    https?://github\.com/.*/(commit|pull|issues|blob)/.*
     https?://(www\.)?nytimes\.com/.*
     https?://(www\.)?washingtonpost\.com/.*
     https?://(www\.)?kennedy-center\.org/.*
