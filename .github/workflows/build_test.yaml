@@ -92,12 +92,14 @@ jobs:
     - name: Start Jekyll server via ghrocker
       run: |
         ghrocker . --name jekyll-server -d --mode non-interactive
-        for i in {1..30}; do
-          if curl -s -o /dev/null http://localhost:4000/; then
-            echo "Jekyll server is running at http://localhost:4000/"
+        for i in {1..120}; do
+          if curl -s -f -o /dev/null http://localhost:4000/; then
+            echo "Jekyll server is running at http://localhost:4000/ (took ${i}s)"
             break
           fi
-          echo "Waiting for Jekyll server..."
+          if (( i % 10 == 0 )); then
+            echo "Waiting for Jekyll server (${i}s elapsed)..."
+          fi
           sleep 1
         done
     - name: Run link checker

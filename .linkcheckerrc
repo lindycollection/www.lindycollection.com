@@ -1,15 +1,28 @@
 [checking]
+threads=8
+timeout=15
+
+[filtering]
+checkextern=1
 # Suppress rate-limiting and false 403s on common bot-defensive hosts
 ignore=
     https?://(www\.)?linkedin\.com/.*
     https?://(www\.)?twitter\.com/.*
-    https?://(www\.)?youtube\.com/.*
     https?://(www\.)?x\.com/.*
+    https?://(www\.)?youtube\.com/.*
+    https?://img\.youtube\.com/.*
+    https?://youtu\.be/.*
     https?://github\.com/.*/(commit|pull|issues)/.*
-
-[filtering]
-checkextern=1
-threads=8
-timeout=15
+    https?://(www\.)?nytimes\.com/.*
+    https?://(www\.)?washingtonpost\.com/.*
+    https?://(www\.)?kennedy-center\.org/.*
+    https?://scholarcommons\.scu\.edu/.*
+    https?://(www\.)?kcdance\.com/.*
+    https?://(www\.)?streetswing\.com/.*
+    https?://(www\.)?lindyhopmoves\.com/.*
+    https?://(www\.)?thehomeofhappyfeet\.com/.*
+    https?://mikeypedroza\.com/.*
+    https?://(www\.)?ilhc\.com/.*
+    https?://(www\.)?facebook\.com/.*
 
 [AnchorCheck]
