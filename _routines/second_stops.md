@@ -10,4 +10,4 @@ clips: [
 
 The Second Stops Routine was another routine created at the Savoy Ballroom. 
 
-It is second following what became called the [First Stops](/routines/first_stops) routine.
+It is second following what became called the [First Stops](/routines/first_stops/) routine.

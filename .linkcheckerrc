@@ -1,0 +1,29 @@
+[checking]
+threads=20
+timeout=15
+maxrequestspersecond=500
+
+[filtering]
+checkextern=0
+# Suppress rate-limiting and false 403s on common bot-defensive hosts (used when --check-extern is enabled)
+ignore=
+    https?://(www\.)?linkedin\.com/.*
+    https?://(www\.)?twitter\.com/.*
+    https?://(www\.)?x\.com/.*
+    https?://(www\.)?youtube\.com/.*
+    https?://img\.youtube\.com/.*
+    https?://youtu\.be/.*
+    https?://github\.com/.*/(commit|pull|issues|blob)/.*
+    https?://(www\.)?nytimes\.com/.*
+    https?://(www\.)?washingtonpost\.com/.*
+    https?://(www\.)?kennedy-center\.org/.*
+    https?://scholarcommons\.scu\.edu/.*
+    https?://(www\.)?kcdance\.com/.*
+    https?://(www\.)?streetswing\.com/.*
+    https?://(www\.)?lindyhopmoves\.com/.*
+    https?://(www\.)?thehomeofhappyfeet\.com/.*
+    https?://mikeypedroza\.com/.*
+    https?://(www\.)?ilhc\.com/.*
+    https?://(www\.)?facebook\.com/.*
+
+[AnchorCheck]

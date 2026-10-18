@@ -16,8 +16,8 @@ Hellzapoppin' is a 1941 movie which features one of the most iconic clips of Lin
 [Wikipedia entry](https://en.wikipedia.org/wiki/Hellzapoppin%27_(film))
 
 
-It was performed by [Whitey's Lindy Hoppers](/historical_clips/whiteys_lindy_hoppers)
+It was performed by [Whitey's Lindy Hoppers](/historical_clips/whiteys_lindy_hoppers/)
 
 
-[7 things you should know about Hellzapoppin](http://www.yehoodi.com/blog/2018/7/23/seven-things-you-should-know-about-hellzapoppin?rq=hellzapoppin) -- Yehoodi
+[7 things you should know about Hellzapoppin](https://www.yehoodi.com/blog/2018/7/23/seven-things-you-should-know-about-hellzapoppin?rq=hellzapoppin) -- Yehoodi
 

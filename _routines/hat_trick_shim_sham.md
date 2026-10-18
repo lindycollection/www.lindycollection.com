@@ -9,7 +9,7 @@ clips: [
 ---
 
 
-This is the variation on the [Shim Sham](/routines/shim_sham) specifically [Al & Leon Shim Sham](/routines/al_leon_shim_sham) that adds hat tricks to the choreography.
+This is the variation on the [Shim Sham](/routines/shim_sham/) specifically [Al & Leon Shim Sham](/routines/al_leon_shim_sham/) that adds hat tricks to the choreography.
 It's choreographed to Cab Calloway's Dinah.
 
 This was Choreographed by Sheha Marvin and originally performed by the Tips, Taps and Tops at Camp Jitterbug 2010. Shesha also put toghether [a full tutorial playlist in 12 parts](https://www.youtube.com/playlist?list=PL05D15E1E8CD8C39A). 

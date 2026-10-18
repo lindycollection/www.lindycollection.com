@@ -23,8 +23,8 @@ redirect_from:
 ---
 
 Cab Calloway was a very proliphic band leader through the era.
-He was well known from his time leading his eponymouns Cab Calloway Orchestra at the [Savoy Ballroom](../savoy_ballroom).
-As well as staring in the short [Hi-De-Ho](../hi_de_ho).
+He was well known from his time leading his eponymouns Cab Calloway Orchestra at the [Savoy Ballroom](/historical_clips/savoy_ballroom/).
+As well as staring in the short [Hi-De-Ho](/historical_clips/hi_de_ho/).
 
 
 ## More resources about Cab

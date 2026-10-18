@@ -15,9 +15,9 @@ clips: [
 
 This is the Shim Sham
 
-Choreographed by Willie Bryant and [Leonard Reed](/historical_figures/leonard_reed)
+Choreographed by Willie Bryant and [Leonard Reed](/historical_figures/leonard_reed/)
 
-This version was popularized by [Frankie Manning](/historical_figures/frankie_manning).
+This version was popularized by [Frankie Manning](/historical_figures/frankie_manning/).
 
 It's commonly performed to 
 
@@ -27,7 +27,7 @@ It's commonly performed to
 There's a good writeup on [Wikipedia](https://en.wikipedia.org/wiki/Shim_Sham)
 
 
-[Step list by Shesha Marvin](http://www.ocswing.com/pages/review/shimsham.pdf)
+[Step list by Shesha Marvin](https://www.ocswing.com/pages/review/shimsham.pdf)
 
 [A history of the Shim Sham from Sonny Watson](http://www.streetswing.com/histmain/z3shimsh.htm)
 

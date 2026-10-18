@@ -1,5 +1,10 @@
 name: Build Test
-on: [push, pull_request]
+'on':
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -20,6 +25,13 @@ jobs:
       run: pip install ghrocker
     - name: Invoke ghrocker to test regular build
       run: ghrocker . --build --mode non-interactive
+    - name: Upload site build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: site-build
+        path: _site/
+        retention-days: 1
+
   check_image_and_css_generation:
     name: Check Image and CSS Generation
     runs-on: ubuntu-latest
@@ -50,3 +62,48 @@ jobs:
           exit 1
         fi
 
+  check_links:
+    name: Check Links
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download site build artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: site-build
+        path: _site
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+        cache-dependency-path: 'requirements-dev.txt'
+    - name: Install Prerequisites
+      run: sudo apt-get install python3-setuptools
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-dev.txt
+    - name: Configure LinkChecker
+      run: |
+        mkdir -p ~/.config/linkchecker
+        cp .linkcheckerrc ~/.config/linkchecker/linkcheckerrc
+    - name: Start Jekyll server via ghrocker
+      run: |
+        ghrocker . --name jekyll-server -d --mode non-interactive
+        for i in {1..120}; do
+          if curl -s -f -o /dev/null http://localhost:4000/; then
+            echo "Jekyll server is running at http://localhost:4000/ (took ${i}s)"
+            break
+          fi
+          if (( i % 10 == 0 )); then
+            echo "Waiting for Jekyll server (${i}s elapsed)..."
+          fi
+          sleep 1
+        done
+    - name: Run link checker
+      run: linkchecker http://localhost:4000/ --no-status
+    - name: Stop Jekyll Docker container
+      if: always()
+      run: docker rm -f jekyll-server || true

@@ -14,8 +14,8 @@ This dance has evolved and grown and it's important to not just know what's happ
 
 Lists of Aerials:
 
-- [The Home of Happy Feet](https://thehomeofhappyfeet.com/swing-aerial-safety-running-a-swing-team-part-10/) Offline!!! In internet archive: http://web.archive.org/web/20240325175021/https://thehomeofhappyfeet.com/swing-aerial-safety-running-a-swing-team-part-10/
-- [Lindy Hop Moves](http://lindyhopmoves.com/more-lindy-hop/aerials/)
+- [The Home of Happy Feet](https://web.archive.org/web/20240325175021/https://thehomeofhappyfeet.com/swing-aerial-safety-running-a-swing-team-part-10/) (via Internet Archive)
+- [Lindy Hop Moves](https://lindyhopmoves.com/more-lindy-hop/aerials/)
 
 WNH Links: https://wednesdaynighthop.com/links
 

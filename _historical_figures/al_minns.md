@@ -19,7 +19,7 @@ Al Minns
 
 [Wikipedia](https://en.wikipedia.org/wiki/Al_Minns)
 
-A member of  [Whitey's Lindy Hoppers](/historical_clips/whiteys_lindy_hoppers)
+A member of  [Whitey's Lindy Hoppers](/historical_clips/whiteys_lindy_hoppers/)
 
 
 Biographic Articles: 
