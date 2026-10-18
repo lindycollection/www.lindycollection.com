@@ -42,7 +42,7 @@ if curl -s -f -o /dev/null "${SITE_URL}"; then
   echo "Found existing server running at ${SITE_URL}"
 else
   echo "Starting Jekyll server via ghrocker on port ${PORT}..."
-  ghrocker . --develop --name "${CONTAINER_NAME}" -d --mode non-interactive
+  ghrocker . --name "${CONTAINER_NAME}" -d --mode non-interactive
   SERVER_STARTED=true
 
   # Wait for server to become responsive (Jekyll generation takes ~60-70s)

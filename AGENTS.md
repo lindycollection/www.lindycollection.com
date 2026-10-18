@@ -26,13 +26,12 @@ This causes Docker to write build artifacts into `.jekyll-cache/`, `_site/`, and
 
 ---
 
-## 🛠️ The Solution: Always Use `ghrocker` with `--develop` (or `rocker --user`)
+## 🛠️ The Solution: Always Use `ghrocker` (or `rocker --user`)
 
 `ghrocker` (a Docker wrapper built on `rocker`) automatically injects the `--user` extension, mounting the host user's UID and GID and running containerized tasks as that user.
 
-> [!IMPORTANT]
-> **Always include the `--develop` flag** when invoking `ghrocker`.
-> `--develop` builds the container image locally to guarantee that installed Ruby gems and dependencies match the repository's `Gemfile.lock`. If `--develop` is omitted, `ghrocker` will attempt to use a prebuilt image which may have mismatched gem versions and cause build failures.
+> [!NOTE]
+> `ghrocker` now uses an up-to-date prebuilt container image with dynamic host UID:GID mapping layered automatically. The `--develop` flag is **no longer required** for standard builds. You may still pass `--develop` if you need to build the container image locally from scratch.
 
 ### 1. Python Environment Setup
 Before invoking `ghrocker`, activate the virtual environment containing `ghrocker`:
@@ -51,18 +50,18 @@ pip install ghrocker
 
 - **Build / Test Site (Non-Interactive / CI Mode)**:
   ```bash
-  ghrocker . --develop --build-only --mode non-interactive
+  ghrocker . --build-only --mode non-interactive
   ```
 
 - **Serve Site Locally (Interactive Mode)**:
   ```bash
-  ghrocker . --develop
+  ghrocker .
   ```
   *(Serves website preview at http://localhost:4000)*
 
 - **Debug / Interactive Shell**:
   ```bash
-  ghrocker . --develop --debug-inside
+  ghrocker . --debug-inside
   ```
 
 - **Running Maintenance Scripts (Gulp / Image & CSS Rebuilding)**:
@@ -95,4 +94,4 @@ If a naive `docker` invocation was accidentally executed and contaminated permis
 
 - **Jekyll Pages**: Site posts, clips, events, and pages are written in Markdown with YAML frontmatter.
 - **Styles & Assets**: SCSS styles reside in `_sass/`. Compiled CSS and image variants are generated using Gulp via `rebuild_css_and_images.bash`.
-- **Pre-Commit Check**: Before committing changes, run `ghrocker . --develop --build-only --mode non-interactive` to verify that Jekyll processes all files without permission or syntax errors.
+- **Pre-Commit Check**: Before committing changes, run `ghrocker . --build-only --mode non-interactive` to verify that Jekyll processes all files without permission or syntax errors.
