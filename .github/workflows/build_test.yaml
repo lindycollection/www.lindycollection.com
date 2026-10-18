@@ -91,7 +91,7 @@ jobs:
         cp .linkcheckerrc ~/.config/linkchecker/linkcheckerrc
     - name: Start Jekyll server via ghrocker
       run: |
-        ghrocker . --name jekyll-server -d --mode non-interactive
+        ghrocker . --serve-only --name jekyll-server -d --mode non-interactive
         for i in {1..120}; do
           if curl -s -f -o /dev/null http://localhost:4000/; then
             echo "Jekyll server is running at http://localhost:4000/ (took ${i}s)"

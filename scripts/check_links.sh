@@ -5,16 +5,21 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${REPO_ROOT}"
 
+BUILD_SITE=false
 EXTRA_ARGS=()
 for arg in "$@"; do
   case "$arg" in
+    -b|--build)
+      BUILD_SITE=true
+      ;;
     -e|--external|--check-extern)
       EXTRA_ARGS+=("--check-extern")
       ;;
     -h|--help)
-      echo "Usage: $(basename "$0") [-e|--external] [linkchecker_args...]"
+      echo "Usage: $(basename "$0") [-b|--build] [-e|--external] [linkchecker_args...]"
       echo ""
       echo "Options:"
+      echo "  -b, --build                     Build the site before checking links"
       echo "  -e, --external, --check-extern  Check external links in addition to internal links"
       echo "  -h, --help                      Show this help message"
       exit 0
@@ -41,12 +46,18 @@ SERVER_STARTED=false
 if curl -s -f -o /dev/null "${SITE_URL}"; then
   echo "Found existing server running at ${SITE_URL}"
 else
+  # Ensure site is built before serving with --serve-only
+  if [ "$BUILD_SITE" = true ] || [ ! -d "_site" ] || [ -z "$(ls -A _site 2>/dev/null)" ]; then
+    echo "Building site with ghrocker..."
+    ghrocker . --build-only --mode non-interactive
+  fi
+
   echo "Starting Jekyll server via ghrocker on port ${PORT}..."
-  ghrocker . --develop --name "${CONTAINER_NAME}" -d --mode non-interactive
+  ghrocker . --serve-only --name "${CONTAINER_NAME}" -d --mode non-interactive
   SERVER_STARTED=true
 
-  # Wait for server to become responsive (Jekyll generation takes ~60-70s)
-  echo "Waiting for Jekyll server to finish generating and become ready..."
+  # Wait for server to become responsive
+  echo "Waiting for Jekyll server to become ready..."
   SERVER_READY=false
   for i in {1..120}; do
     if curl -s -f -o /dev/null "${SITE_URL}"; then
@@ -55,7 +66,7 @@ else
       break
     fi
     if (( i % 10 == 0 )); then
-      echo "Still waiting for Jekyll build/serve (${i}s elapsed)..."
+      echo "Still waiting for Jekyll server (${i}s elapsed)..."
     fi
     sleep 1
   done
