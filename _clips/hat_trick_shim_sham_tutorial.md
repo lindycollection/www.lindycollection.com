@@ -7,5 +7,5 @@ youtube_playlist: PL05D15E1E8CD8C39A
 
 ---
 
-A full tutorial of the [Hat Trick Shim Sham](/routines/hat_trick_shim_sham) by Shesha Marvin the original choreographer in a 12 part tutorial with the first performance at the end. 
+A full tutorial of the [Hat Trick Shim Sham](/routines/hat_trick_shim_sham/) by Shesha Marvin the original choreographer in a 12 part tutorial with the first performance at the end. 
 

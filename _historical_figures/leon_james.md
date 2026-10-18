@@ -14,5 +14,5 @@ Leon James
 
 [Wikipedia](https://en.wikipedia.org/wiki/Leon_James_(dancer))
 
-A member of  [Whitey's Lindy Hoppers](/historical_clips/whiteys_lindy_hoppers)
+A member of  [Whitey's Lindy Hoppers](/historical_clips/whiteys_lindy_hoppers/)
 
