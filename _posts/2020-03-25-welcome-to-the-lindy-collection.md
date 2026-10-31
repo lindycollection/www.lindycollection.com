@@ -7,7 +7,9 @@ There are several different collections with different focuses.
 
 * [Routines](/routines/) are a common way to go a little bit deeper with Lindy Hop. They are a good way to expand your repitoir as well as perform and build community. 
 
-* [Historical Information](/historical_clips/) Another important aspect of Lindy Hop that often isn't learned about until people get more involved with the dance is the historical aspects of the dance. Understanding and knowing the origins of the dance and early contributors who created the dance that we all love now is important and I want to make sure those resources are available too. 
+* [Historical Information](/historical_clips/) Another important aspect of Lindy Hop that often isn't learned about until people get more involved with the dance is the historical aspects of the dance. There are a bunch of video clips from the early days of the dance which help us understand more about it.
+
+* [Historical Figures](/historical_figures/) Another important aspect of Lindy Hop that often isn't learned about until people get more involved with the dance is the historical aspects of the dance, and the individuals who created it. Understanding and knowing the origins of the dance and early contributors who created the dance that we all love now is important and I want to make sure those resources are available too. 
 
 * [Solo Jazz](/solo_jazz/) is an important element of Lindy Hop, it in itself is a form of dance but it forms the basis for all of our partnered dancing.
 
