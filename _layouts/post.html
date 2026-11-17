@@ -32,6 +32,11 @@ layout: compress
     {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.collection != 'clips'" | where_exp: "doc", "doc.content contains check_str" %}
   {% endif %}
 
+  {% assign same_video_clips = nil %}
+  {% if page.collection == 'clips' and page.youtube_id and page.youtube_id != "" %}
+    {% assign same_video_clips = site.clips | where: "youtube_id", page.youtube_id | where_exp: "doc", "doc.url != page.url" %}
+  {% endif %}
+
   {% unless page.collection == 'clips' %}
   {% if page.featured-img %}
 
@@ -143,7 +148,7 @@ layout: compress
           {% include crossref.html type=page.crossref crossref_id=page.crossref_id %}
           {% endif %}
 
-          {% include action_sidebar.html backlinks=backlinks top="80px" %}
+          {% include action_sidebar.html backlinks=backlinks same_video_clips=same_video_clips top="80px" %}
 
         </article>
         <div class="post-content controls__inner">
