@@ -51,18 +51,9 @@
       <svg viewBox="0 0 20 20" width="16" height="16"><path d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
     </a>
   </div>
-  {% assign has_backlinks = false %}
   {% if include.backlinks and include.backlinks.size > 0 %}
-    {% assign has_backlinks = true %}
-  {% endif %}
-  {% assign has_same_video = false %}
-  {% if include.same_video_clips and include.same_video_clips.size > 0 %}
-    {% assign has_same_video = true %}
-  {% endif %}
-  {% if has_backlinks or has_same_video %}
   <hr class="sidebar-box__divider">
   <div class="sidebar-box__refs">
-    {% if has_backlinks %}
     <div class="sidebar-box__section">
       <h4 class="sidebar-box__heading">Also referenced in:</h4>
       <div class="sidebar-box__chips">
@@ -71,76 +62,6 @@
       {% endfor %}
       </div>
     </div>
-    {% endif %}
-    {% if has_backlinks and has_same_video %}
-    <hr class="sidebar-box__divider">
-    {% endif %}
-    {% if has_same_video %}
-    <div class="sidebar-box__section">
-      <h4 class="sidebar-box__heading">Also from this video:</h4>
-      <div class="sidebar-box__chips">
-      {% assign sv_records_str = "" %}
-      {% for clip in include.same_video_clips %}
-        {% assign sv_st_str = "" %}
-        {% if clip.start_time != nil and clip.start_time != false and clip.start_time != true %}
-          {% assign sv_st_str = clip.start_time | strip %}
-        {% endif %}
-        {% if sv_st_str != "" %}
-          {% assign sv_st_num = sv_st_str | plus: 0 | floor %}
-          {% assign sv_sort_key = sv_st_num | plus: 20000000 %}
-        {% else %}
-          {% assign sv_sort_key = "10000000" %}
-        {% endif %}
-        {% assign sv_title = clip.title | strip %}
-        {% if sv_title == "" or sv_title == "YouTube" or sv_title == "YouTube Video" %}
-          {% assign sv_title = clip.clip_id | default: clip.slug | replace: "_", " " | capitalize %}
-        {% endif %}
-        {% assign sv_tie = sv_title | downcase | remove: "|||" | remove: "~~~" %}
-        {% assign sv_url_clean = clip.url | remove: "|||" | remove: "~~~" %}
-        {% assign sv_record = sv_sort_key | append: "|||" | append: sv_tie | append: "|||" | append: sv_url_clean | append: "|||" | append: forloop.index0 %}
-        {% if forloop.first %}
-          {% assign sv_records_str = sv_record %}
-        {% else %}
-          {% assign sv_records_str = sv_records_str | append: "~~~" | append: sv_record %}
-        {% endif %}
-      {% endfor %}
-      {% assign sv_records = sv_records_str | split: "~~~" | sort %}
-      {% for sv_item in sv_records %}
-        {% assign sv_parts = sv_item | split: "|||" %}
-        {% assign sv_idx = sv_parts | last | plus: 0 %}
-        {% assign sv_clip = include.same_video_clips[sv_idx] %}
-        {% if sv_clip %}
-          {% assign sv_title = sv_clip.title | strip %}
-          {% if sv_title == "" or sv_title == "YouTube" or sv_title == "YouTube Video" %}
-            {% assign sv_title = sv_clip.clip_id | default: sv_clip.slug | replace: "_", " " | capitalize %}
-          {% endif %}
-          {% assign sv_st_str = "" %}
-          {% if sv_clip.start_time != nil and sv_clip.start_time != false and sv_clip.start_time != true %}
-            {% assign sv_st_str = sv_clip.start_time | strip %}
-          {% endif %}
-          {% assign sv_time_label = "" %}
-          {% if sv_st_str != "" %}
-            {% assign sv_st_num = sv_st_str | plus: 0 | floor %}
-            {% assign sv_hours = sv_st_num | divided_by: 3600 %}
-            {% assign sv_rem = sv_st_num | modulo: 3600 %}
-            {% assign sv_mins = sv_rem | divided_by: 60 %}
-            {% assign sv_secs = sv_rem | modulo: 60 %}
-            {% if sv_hours > 0 %}
-              {% assign sv_time_label = sv_hours | append: ":" %}
-              {% if sv_mins < 10 %}{% assign sv_time_label = sv_time_label | append: "0" %}{% endif %}
-              {% assign sv_time_label = sv_time_label | append: sv_mins | append: ":" %}
-            {% else %}
-              {% assign sv_time_label = sv_mins | append: ":" %}
-            {% endif %}
-            {% if sv_secs < 10 %}{% assign sv_time_label = sv_time_label | append: "0" %}{% endif %}
-            {% assign sv_time_label = sv_time_label | append: sv_secs %}
-          {% endif %}
-        <a class="sidebar-box__chip" href="{{ sv_clip.url | relative_url }}">{% include collection_emoji.html collection='clips' %}{{ sv_title | escape }}{% if sv_time_label != "" %} ({{ sv_time_label }}){% endif %}</a>
-        {% endif %}
-      {% endfor %}
-      </div>
-    </div>
-    {% endif %}
   </div>
   <button type="button" class="sidebar-box__toggle" aria-expanded="false" hidden>Show more</button>
   {% endif %}
