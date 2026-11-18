@@ -32,6 +32,11 @@ layout: compress
     {% assign backlinks = site.documents | where_exp: "doc", "doc.url != page.url" | where_exp: "doc", "doc.collection != 'clips'" | where_exp: "doc", "doc.content contains check_str" %}
   {% endif %}
 
+  {% assign all_video_clips = nil %}
+  {% if page.collection == 'clips' and page.youtube_id and page.youtube_id != "" %}
+    {% assign all_video_clips = site.clips | where: "youtube_id", page.youtube_id %}
+  {% endif %}
+
   {% unless page.collection == 'clips' %}
   {% if page.featured-img %}
 
@@ -137,6 +142,10 @@ layout: compress
           {% endif %}
 
           {{ content }}
+
+          {% if all_video_clips and all_video_clips.size > 1 %}
+            {% include video_timeline.html clips=all_video_clips current_url=page.url %}
+          {% endif %}
 
           {% include clip_view.html clips=page.clips %}
           {% if page.crossref %}

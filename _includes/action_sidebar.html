@@ -10,6 +10,18 @@
 .sidebar-box__btn--github:hover, .sidebar-box__btn--github:focus { background-color: #1b1f23; color: #ffffff; }
 .sidebar-box__btn svg { flex-shrink: 0; fill: currentColor; }
 .sidebar-box__divider { margin: 16px 0; border: 0; border-top: 1px solid #ddd; }
+.sidebar-box__refs { max-height: 260px; overflow-y: auto; position: relative; }
+.sidebar-box__refs.is-collapsible { overflow: hidden; }
+.sidebar-box__refs.is-collapsible::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 48px; background: linear-gradient(to bottom, rgba(249, 249, 249, 0), #f9f9f9); pointer-events: none; }
+.sidebar-box__refs.is-expanded { max-height: none; overflow: visible; }
+.sidebar-box__refs.is-expanded::after { display: none; }
+.sidebar-box__heading { margin: 0 0 0.5rem 0; font-size: 1.1em; color: #333; }
+.sidebar-box__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.sidebar-box__chip { display: inline-block; max-width: 100%; box-sizing: border-box; overflow-wrap: break-word; word-wrap: break-word; padding: 4px 12px; background-color: #eee; border-radius: 16px; text-decoration: none; color: #333; font-size: 0.9em; border: 1px solid #ccc; }
+.sidebar-box__chip:hover, .sidebar-box__chip:focus { color: #333; background-color: #e2e2e2; border: 1px solid #bbb; }
+.sidebar-box__toggle { display: inline-block; margin-top: 8px; padding: 0; background: none; border: 0; color: #277cea; font-family: inherit; font-size: 0.9em; font-weight: 600; line-height: 1.4; cursor: pointer; text-decoration: none; -webkit-appearance: none; appearance: none; }
+.sidebar-box__toggle:hover, .sidebar-box__toggle:focus { color: #1a62c4; text-decoration: underline; }
+.sidebar-box__toggle[hidden] { display: none; }
 @media (min-width: 1300px) {
   .sidebar-box { position: absolute; top: {{ include.top | default: '0' }}; left: calc(100% + 24px); width: 200px; margin: 0; clear: none; }
   .sidebar-box__actions { flex-direction: column; }
@@ -41,11 +53,77 @@
   </div>
   {% if include.backlinks and include.backlinks.size > 0 %}
   <hr class="sidebar-box__divider">
-  <h4 style="margin-top: 0; font-size: 1.1em; color: #333;">Also referenced in:</h4>
-  <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-  {% for bl in include.backlinks %}
-    <a href="{{ bl.url | relative_url }}" style="display: inline-block; padding: 4px 12px; background-color: #eee; border-radius: 16px; text-decoration: none; color: #333; font-size: 0.9em; border: 1px solid #ccc;">{% include collection_emoji.html collection=bl.collection %}{{ bl.title }}</a>
-  {% endfor %}
+  <div class="sidebar-box__refs">
+    <div class="sidebar-box__section">
+      <h4 class="sidebar-box__heading">Also referenced in:</h4>
+      <div class="sidebar-box__chips">
+      {% for bl in include.backlinks %}
+        <a class="sidebar-box__chip" href="{{ bl.url | relative_url }}">{% include collection_emoji.html collection=bl.collection %}{{ bl.title | escape }}</a>
+      {% endfor %}
+      </div>
+    </div>
   </div>
+  <button type="button" class="sidebar-box__toggle" aria-expanded="false" hidden>Show more</button>
   {% endif %}
 </div>
+<script>
+(function() {
+  var boxes = document.querySelectorAll('.sidebar-box');
+  for (var i = 0; i < boxes.length; i++) {
+    (function(sidebarBox) {
+      var refsEl = sidebarBox.querySelector('.sidebar-box__refs');
+      var toggleBtn = sidebarBox.querySelector('.sidebar-box__toggle');
+      if (!refsEl || !toggleBtn) {
+        return;
+      }
+      var articleEl = sidebarBox.closest ? sidebarBox.closest('article.post-content') : null;
+      var isExpanded = false;
+
+      var syncArticleMinHeight = function() {
+        if (!articleEl) {
+          return;
+        }
+        if (isExpanded && window.innerWidth >= 1300) {
+          articleEl.style.minHeight = (sidebarBox.offsetTop + sidebarBox.offsetHeight) + 'px';
+        } else {
+          articleEl.style.minHeight = '';
+        }
+      };
+
+      var syncOverflow = function() {
+        if (isExpanded) {
+          refsEl.classList.add('is-expanded');
+          toggleBtn.hidden = false;
+          toggleBtn.textContent = 'Show less';
+          toggleBtn.setAttribute('aria-expanded', 'true');
+          syncArticleMinHeight();
+          return;
+        }
+        refsEl.classList.remove('is-expanded');
+        refsEl.classList.remove('is-collapsible');
+        if (refsEl.scrollHeight > refsEl.clientHeight + 2) {
+          refsEl.classList.add('is-collapsible');
+          toggleBtn.hidden = false;
+          toggleBtn.textContent = 'Show more';
+          toggleBtn.setAttribute('aria-expanded', 'false');
+        } else {
+          toggleBtn.hidden = true;
+          toggleBtn.setAttribute('aria-expanded', 'false');
+        }
+        syncArticleMinHeight();
+      };
+
+      toggleBtn.addEventListener('click', function() {
+        isExpanded = !isExpanded;
+        syncOverflow();
+      });
+
+      window.addEventListener('resize', function() {
+        syncOverflow();
+      });
+
+      syncOverflow();
+    })(boxes[i]);
+  }
+})();
+</script>
