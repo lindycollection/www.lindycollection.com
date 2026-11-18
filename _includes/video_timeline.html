@@ -1,40 +1,8 @@
-{% if include.clips and include.clips.size > 0 %}
+{% if include.clips and include.clips.size > 1 %}
 {% assign vt_palette = "#2563eb,#059669,#d97706,#7c3aed,#e11d48,#0d9488,#4f46e5,#ea580c,#0284c7,#c026d3" | split: "," %}
+{% assign vt_other_count = include.clips.size | minus: 1 %}
 
 {% assign vt_max_sec = 0 %}
-{% assign vt_cur_has_st = false %}
-{% assign vt_cur_has_et = false %}
-{% assign vt_cur_st = 0 %}
-{% assign vt_cur_et = 0 %}
-{% if include.current_clip %}
-  {% if include.current_clip.start_time != nil and include.current_clip.start_time != false and include.current_clip.start_time != true %}
-    {% assign vt_cur_st_raw = include.current_clip.start_time | strip %}
-    {% if vt_cur_st_raw != "" %}
-      {% assign vt_cur_has_st = true %}
-      {% assign vt_cur_st = vt_cur_st_raw | plus: 0 %}
-      {% if vt_cur_st > vt_max_sec %}
-        {% assign vt_max_sec = vt_cur_st %}
-      {% endif %}
-    {% endif %}
-  {% endif %}
-  {% if include.current_clip.end_time != nil and include.current_clip.end_time != false and include.current_clip.end_time != true %}
-    {% assign vt_cur_et_raw = include.current_clip.end_time | strip %}
-    {% if vt_cur_et_raw != "" %}
-      {% assign vt_cur_has_et = true %}
-      {% assign vt_cur_et = vt_cur_et_raw | plus: 0 %}
-      {% if vt_cur_et > vt_max_sec %}
-        {% assign vt_max_sec = vt_cur_et %}
-      {% endif %}
-    {% endif %}
-  {% endif %}
-  {% if vt_cur_has_st and vt_cur_has_et == false %}
-    {% assign vt_cur_pad = vt_cur_st | plus: 15 %}
-    {% if vt_cur_pad > vt_max_sec %}
-      {% assign vt_max_sec = vt_cur_pad %}
-    {% endif %}
-  {% endif %}
-{% endif %}
-
 {% assign vt_records_str = "" %}
 {% for clip in include.clips %}
   {% assign vt_st_str = "" %}
@@ -165,39 +133,47 @@
 .video-timeline__header { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 .video-timeline__heading { margin: 0; font-size: 1.15em; color: #313237; }
 .video-timeline__meta { display: inline-flex; align-items: center; gap: 12px; font-size: 0.82em; color: #4a5568; }
-.video-timeline__current-key { display: inline-flex; align-items: center; gap: 5px; }
-.video-timeline__current-swatch { display: inline-block; width: 12px; height: 8px; background: rgba(39, 124, 234, 0.16); border: 1px dashed #277cea; border-radius: 2px; }
+.video-timeline__current-key { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #1e293b; }
+.video-timeline__current-swatch { display: inline-block; width: 12px; height: 8px; background: #2563eb; border-radius: 3px; box-shadow: 0 0 0 1.5px #fff, 0 0 0 3px #0f172a; }
 .video-timeline__bar-wrap { position: relative; margin-bottom: 14px; }
 .video-timeline__scale { display: flex; justify-content: space-between; font-size: 0.75em; color: #4a5568; margin-bottom: 4px; font-variant-numeric: tabular-nums; user-select: none; }
 .video-timeline__track { position: relative; width: 100%; background-color: #e9eef5; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; box-sizing: border-box; }
 .video-timeline__gridline { position: absolute; top: 0; bottom: 0; width: 1px; background-color: rgba(148, 163, 184, 0.35); pointer-events: none; }
-.video-timeline__current { position: absolute; top: 0; bottom: 0; background-color: rgba(39, 124, 234, 0.14); border-left: 1.5px dashed #277cea; border-right: 1.5px dashed #277cea; pointer-events: none; z-index: 1; box-sizing: border-box; }
+.video-timeline__current-band { position: absolute; top: 0; bottom: 0; min-width: 6px; background-color: rgba(15, 23, 42, 0.08); border-left: 1px dashed rgba(15, 23, 42, 0.45); border-right: 1px dashed rgba(15, 23, 42, 0.45); pointer-events: none; z-index: 1; box-sizing: border-box; }
 .video-timeline__seg { position: absolute; height: 8px; min-width: 6px; border-radius: 4px; background-color: var(--clip-color, #2563eb); box-shadow: 0 0 0 1px #e9eef5; border: 0; border-bottom: 0; text-decoration: none; cursor: pointer; z-index: 2; transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease; box-sizing: border-box; }
 .video-timeline__seg::before { content: ""; position: absolute; top: -3px; bottom: -3px; left: -2px; right: -2px; }
 .video-timeline__seg--open { -webkit-mask-image: linear-gradient(to right, #000 0%, #000 65%, rgba(0, 0, 0, 0.35) 100%); mask-image: linear-gradient(to right, #000 0%, #000 65%, rgba(0, 0, 0, 0.35) 100%); }
+.video-timeline__seg--current { z-index: 4; cursor: default; box-shadow: 0 0 0 1.5px #fff, 0 0 0 3.5px #0f172a; -webkit-mask-image: none; mask-image: none; }
 .video-timeline__seg:hover, .video-timeline__seg:focus { border: 0; border-bottom: 0; text-decoration: none; outline: none; }
 .video-timeline.has-active .video-timeline__seg { opacity: 0.25; }
-.video-timeline.has-active .video-timeline__seg.is-active, .video-timeline__seg:hover, .video-timeline__seg:focus { opacity: 1; transform: scaleY(1.5); z-index: 6; box-shadow: 0 0 0 1.5px #fff, 0 0 6px var(--clip-color, #2563eb); -webkit-mask-image: none; mask-image: none; }
-.video-timeline__tooltip { position: absolute; bottom: calc(100% + 6px); transform: translateX(-50%); padding: 4px 8px; background-color: #1e293b; color: #fff; font-size: 0.78em; line-height: 1.3; border-radius: 4px; white-space: nowrap; max-width: 280px; overflow: hidden; text-overflow: ellipsis; pointer-events: none; z-index: 10; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); }
+.video-timeline.has-active .video-timeline__seg--current { opacity: 0.55; }
+.video-timeline.has-active .video-timeline__seg.is-active, .video-timeline__seg:hover, .video-timeline__seg:focus { opacity: 1; transform: scaleY(1.4); z-index: 6; box-shadow: 0 0 0 1.5px #fff, 0 0 6px var(--clip-color, #2563eb); -webkit-mask-image: none; mask-image: none; }
+.video-timeline.has-active .video-timeline__seg--current.is-active, .video-timeline__seg--current:hover, .video-timeline__seg--current:focus { box-shadow: 0 0 0 1.5px #fff, 0 0 0 3.5px #0f172a, 0 0 8px var(--clip-color, #2563eb); }
+.video-timeline__tooltip { position: absolute; bottom: calc(100% + 6px); transform: translateX(-50%); padding: 4px 8px; background-color: #1e293b; color: #fff; font-size: 0.78em; line-height: 1.3; border-radius: 4px; white-space: nowrap; max-width: 300px; overflow: hidden; text-overflow: ellipsis; pointer-events: none; z-index: 10; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); }
 .video-timeline__tooltip[hidden] { display: none; }
 .video-timeline__list { display: flex; flex-wrap: wrap; gap: 8px; }
 .video-timeline__item { display: inline-flex; align-items: center; gap: 7px; max-width: 100%; padding: 5px 10px; background-color: #fff; border: 1px solid #d1d5db; border-left: 4px solid var(--clip-color, #2563eb); border-radius: 6px; text-decoration: none; color: #1e293b; font-size: 0.88em; line-height: 1.3; box-sizing: border-box; transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease; }
+.video-timeline__item--current { background-color: #eef4ff; border: 1.5px solid #0f172a; border-left: 5px solid var(--clip-color, #2563eb); box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12); cursor: default; }
+.video-timeline__item--current .video-timeline__item-title { font-weight: 700; color: #0f172a; }
+.video-timeline__badge { display: inline-block; padding: 1px 6px; background-color: #0f172a; color: #fff; border-radius: 4px; font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; flex-shrink: 0; }
 .video-timeline__item:hover, .video-timeline__item:focus { color: #1e293b; background-color: #fff; border: 1px solid var(--clip-color, #2563eb); border-left: 4px solid var(--clip-color, #2563eb); text-decoration: none; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); transform: translateY(-1px); outline: none; }
-.video-timeline.has-active .video-timeline__item { opacity: 0.65; }
+.video-timeline__item--current:hover, .video-timeline__item--current:focus { background-color: #e0ecff; border: 1.5px solid #0f172a; border-left: 5px solid var(--clip-color, #2563eb); }
+.video-timeline.has-active .video-timeline__item { opacity: 0.6; }
+.video-timeline.has-active .video-timeline__item--current { opacity: 0.85; }
 .video-timeline.has-active .video-timeline__item.is-active { opacity: 1; color: #1e293b; background-color: #fff; border: 1px solid var(--clip-color, #2563eb); border-left: 4px solid var(--clip-color, #2563eb); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); transform: translateY(-1px); }
+.video-timeline.has-active .video-timeline__item--current.is-active { background-color: #e0ecff; border: 1.5px solid #0f172a; border-left: 5px solid var(--clip-color, #2563eb); }
 .video-timeline__item-title { font-weight: 500; overflow-wrap: break-word; word-wrap: break-word; }
 .video-timeline__item-time { display: inline-block; padding: 1px 6px; background-color: #edf2f7; color: #475569; border-radius: 4px; font-size: 0.85em; font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0; }
+.video-timeline__item--current .video-timeline__item-time { background-color: #dbeafe; color: #1e3a8a; font-weight: 600; }
 .video-timeline.has-active .video-timeline__item.is-active .video-timeline__item-time { background-color: var(--clip-color, #2563eb); color: #fff; }
 </style>
 
 <section class="video-timeline" aria-label="Also from this video" data-max-known="{{ vt_max_sec }}">
   <div class="video-timeline__header">
-    <h4 class="video-timeline__heading">Also from this video ({{ include.clips.size }})</h4>
+    <h4 class="video-timeline__heading">Also from this video</h4>
     <div class="video-timeline__meta">
-      {% if vt_cur_has_st or vt_cur_has_et %}
       <span class="video-timeline__current-key"><span class="video-timeline__current-swatch" aria-hidden="true"></span>Current clip</span>
-      {% endif %}
-      <span class="video-timeline__dur-note">Timeline in % of video</span>
+      <span>{{ vt_other_count }} other clip{% if vt_other_count != 1 %}s{% endif %}</span>
     </div>
   </div>
 
@@ -215,22 +191,14 @@
       <span class="video-timeline__gridline" style="left: 50%;"></span>
       <span class="video-timeline__gridline" style="left: 75%;"></span>
 
-      {% if vt_cur_has_st or vt_cur_has_et %}
-        {% assign vt_cur_left = vt_cur_st | times: 100.0 | divided_by: vt_init_dur | round: 3 %}
-        {% if vt_cur_has_et %}
-          {% assign vt_cur_span = vt_cur_et | minus: vt_cur_st %}
-        {% else %}
-          {% assign vt_cur_span = vt_init_dur | minus: vt_cur_st %}
-        {% endif %}
-        {% if vt_cur_span < 0 %}{% assign vt_cur_span = 0 %}{% endif %}
-        {% assign vt_cur_width = vt_cur_span | times: 100.0 | divided_by: vt_init_dur | round: 3 %}
-        <div class="video-timeline__current" data-start="{{ vt_cur_st }}" data-end="{% if vt_cur_has_et %}{{ vt_cur_et }}{% endif %}" style="left: {{ vt_cur_left }}%; width: {{ vt_cur_width }}%;" title="Current clip: {{ include.current_clip.title | escape }}"></div>
-      {% endif %}
-
       {% for vt_row in vt_sorted %}
         {% assign vt_parts = vt_row | split: "|||" %}
         {% assign vt_orig_idx = vt_parts | last | plus: 0 %}
         {% assign vt_clip = include.clips[vt_orig_idx] %}
+        {% assign vt_is_current = false %}
+        {% if include.current_url and vt_clip.url == include.current_url %}
+          {% assign vt_is_current = true %}
+        {% endif %}
         {% assign vt_color_idx = forloop.index0 | modulo: 10 %}
         {% assign vt_color = vt_palette[vt_color_idx] %}
         {% assign vt_lane_num = vt_item_lanes[forloop.index0] | plus: 0 %}
@@ -300,14 +268,32 @@
         {% if vt_span_sec < 0 %}{% assign vt_span_sec = 0 %}{% endif %}
         {% assign vt_width_pct = vt_span_sec | times: 100.0 | divided_by: vt_init_dur | round: 3 %}
 
-        <a class="video-timeline__seg{% unless vt_has_et %} video-timeline__seg--open{% endunless %}"
-           href="{{ vt_clip.url | relative_url }}"
-           data-clip-idx="{{ forloop.index0 }}"
-           data-start="{{ vt_st_num }}"
-           data-end="{% if vt_has_et %}{{ vt_et_num }}{% endif %}"
-           data-label="{{ vt_title | escape }} ({{ vt_range_fmt }})"
-           aria-label="{{ vt_title | escape }} ({{ vt_range_fmt }})"
-           style="top: {{ vt_top_px }}px; left: {{ vt_left_pct }}%; width: {{ vt_width_pct }}%; --clip-color: {{ vt_color }};"></a>
+        {% if vt_is_current %}
+          {% if vt_has_st or vt_has_et %}
+          <div class="video-timeline__current-band"
+               data-start="{{ vt_st_num }}"
+               data-end="{% if vt_has_et %}{{ vt_et_num }}{% endif %}"
+               style="left: {{ vt_left_pct }}%; width: {{ vt_width_pct }}%;"></div>
+          {% endif %}
+          <span class="video-timeline__seg video-timeline__seg--current{% unless vt_has_et %} video-timeline__seg--open{% endunless %}"
+                tabindex="0"
+                aria-current="true"
+                data-clip-idx="{{ forloop.index0 }}"
+                data-start="{{ vt_st_num }}"
+                data-end="{% if vt_has_et %}{{ vt_et_num }}{% endif %}"
+                data-label="Current clip: {{ vt_title | escape }} ({{ vt_range_fmt }})"
+                aria-label="Current clip: {{ vt_title | escape }} ({{ vt_range_fmt }})"
+                style="top: {{ vt_top_px }}px; left: {{ vt_left_pct }}%; width: {{ vt_width_pct }}%; --clip-color: {{ vt_color }};"></span>
+        {% else %}
+          <a class="video-timeline__seg{% unless vt_has_et %} video-timeline__seg--open{% endunless %}"
+             href="{{ vt_clip.url | relative_url }}"
+             data-clip-idx="{{ forloop.index0 }}"
+             data-start="{{ vt_st_num }}"
+             data-end="{% if vt_has_et %}{{ vt_et_num }}{% endif %}"
+             data-label="{{ vt_title | escape }} ({{ vt_range_fmt }})"
+             aria-label="{{ vt_title | escape }} ({{ vt_range_fmt }})"
+             style="top: {{ vt_top_px }}px; left: {{ vt_left_pct }}%; width: {{ vt_width_pct }}%; --clip-color: {{ vt_color }};"></a>
+        {% endif %}
       {% endfor %}
     </div>
   </div>
@@ -317,6 +303,10 @@
       {% assign vt_parts = vt_row | split: "|||" %}
       {% assign vt_orig_idx = vt_parts | last | plus: 0 %}
       {% assign vt_clip = include.clips[vt_orig_idx] %}
+      {% assign vt_is_current = false %}
+      {% if include.current_url and vt_clip.url == include.current_url %}
+        {% assign vt_is_current = true %}
+      {% endif %}
       {% assign vt_color_idx = forloop.index0 | modulo: 10 %}
       {% assign vt_color = vt_palette[vt_color_idx] %}
 
@@ -377,6 +367,17 @@
 
       {% assign vt_range_fmt = vt_st_fmt | append: " – " | append: vt_et_fmt %}
 
+      {% if vt_is_current %}
+      <span class="video-timeline__item video-timeline__item--current"
+            tabindex="0"
+            aria-current="page"
+            data-clip-idx="{{ forloop.index0 }}"
+            style="--clip-color: {{ vt_color }};">
+        <span class="video-timeline__badge">Current</span>
+        <span class="video-timeline__item-title">{{ vt_title | escape }}</span>
+        <span class="video-timeline__item-time">{{ vt_range_fmt }}</span>
+      </span>
+      {% else %}
       <a class="video-timeline__item"
          href="{{ vt_clip.url | relative_url }}"
          data-clip-idx="{{ forloop.index0 }}"
@@ -384,6 +385,7 @@
         <span class="video-timeline__item-title">{{ vt_title | escape }}</span>
         <span class="video-timeline__item-time">{{ vt_range_fmt }}</span>
       </a>
+      {% endif %}
     {% endfor %}
   </div>
 </section>
@@ -409,11 +411,20 @@
     (function(root) {
       var segs = root.querySelectorAll(".video-timeline__seg");
       var items = root.querySelectorAll(".video-timeline__item");
-      var currentBar = root.querySelector(".video-timeline__current");
+      var currentBand = root.querySelector(".video-timeline__current-band");
       var tooltip = root.querySelector(".video-timeline__tooltip");
       var endLabel = root.querySelector(".video-timeline__end-label");
       var barWrap = root.querySelector(".video-timeline__bar-wrap");
+      var curSwatch = root.querySelector(".video-timeline__current-swatch");
+      var curSeg = root.querySelector(".video-timeline__seg--current");
       var maxKnown = parseFloat(root.getAttribute("data-max-known")) || 0;
+
+      if (curSwatch && curSeg) {
+        var curColor = curSeg.style.getPropertyValue("--clip-color");
+        if (curColor) {
+          curSwatch.style.backgroundColor = curColor;
+        }
+      }
 
       var segByIdx = {};
       var itemByIdx = {};
@@ -443,7 +454,7 @@
           tooltip.hidden = false;
           var wrapWidth = barWrap.clientWidth || 1;
           var segCenter = activeSeg.offsetLeft + (activeSeg.offsetWidth / 2);
-          var tipHalf = Math.min(140, (tooltip.offsetWidth || 120) / 2);
+          var tipHalf = Math.min(150, (tooltip.offsetWidth || 130) / 2);
           var clamped = Math.max(tipHalf, Math.min(wrapWidth - tipHalf, segCenter));
           tooltip.style.left = clamped + "px";
         }
@@ -498,8 +509,8 @@
         for (var j = 0; j < segs.length; j++) {
           updateSpan(segs[j]);
         }
-        if (currentBar) {
-          updateSpan(currentBar);
+        if (currentBand) {
+          updateSpan(currentBand);
         }
         if (endLabel) {
           endLabel.textContent = "100% (" + formatTime(rawDur) + ")";
