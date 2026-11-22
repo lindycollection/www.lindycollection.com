@@ -9,7 +9,8 @@ clips: [
     al_minns_interview_3,
     al_minns_nbc_1980,
     al_minns_sweden,
-    ]
+    panel_the_pivotal_role_of_al_minns,
+]
 redirect_from:
   - /historical_clips/al_minns/
   - /historical_clips/al_minns
