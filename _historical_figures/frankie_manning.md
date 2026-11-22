@@ -66,6 +66,7 @@ clips: [
     frankieinhisownwords_hellzapoppin,
     frankie_manning_dancing_with_judy,
     frankie_manning_media_archive_big,
+    frankieinhisownwords_the_pimp_walk,
 ]
 redirect_from:
   - /historical_clips/frankie_manning/
