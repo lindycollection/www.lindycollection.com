@@ -6,6 +6,7 @@ clips:
 - norma_chazz_rtsf_2015
 - frankie_chazz_shim_sham
 - after_seben_recreation_frankie95
+  - happy_87th_birthday_chazz_young
 layout: post
 title: Chazz Young
 redirect_from:
