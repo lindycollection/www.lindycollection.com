@@ -62,6 +62,8 @@ clips: [
     frankieinhisownwords_dancing_with,
     frankieinhisownwords_lindy_hop_will_never_die,
     frankieinhisownwords_kids_dancing,
+    frankieinhisownwords_teaching_swing,
+    frankieinhisownwords_standing_up,
     frankieinhisownwords_unstiff,
     frankieinhisownwords_hellzapoppin,
     frankie_manning_dancing_with_judy,
