@@ -6,4 +6,4 @@ clip_id: 'frankieinhisownwords_the_pimp_walk'
 clip_type: 'tutorial'
 ---
 
-
+Frankie Manning teaching the Pimp Walk.
