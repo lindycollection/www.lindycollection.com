@@ -59,6 +59,7 @@ clips: [
     frankie_herrang_1992,
     frankie_norma_1908_northern_lights,
     tranky_doo_frankie_sea_jam_2007,
+    frankieinhisownwords_dancing_with,
     frankieinhisownwords_lindy_hop_will_never_die,
 ]
 redirect_from:
