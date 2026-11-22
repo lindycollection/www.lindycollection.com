@@ -62,6 +62,7 @@ clips: [
     frankieinhisownwords_dancing_with,
     frankieinhisownwords_lindy_hop_will_never_die,
     frankieinhisownwords_kids_dancing,
+    frankieinhisownwords_social_dancing,
 ]
 redirect_from:
   - /historical_clips/frankie_manning/
