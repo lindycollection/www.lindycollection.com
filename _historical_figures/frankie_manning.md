@@ -63,6 +63,13 @@ clips: [
     frankieinhisownwords_lindy_hop_will_never_die,
     frankieinhisownwords_kids_dancing,
     frankieinhisownwords_social_dancing,
+    frankieinhisownwords_teaching_swing,
+    frankieinhisownwords_standing_up,
+    frankieinhisownwords_unstiff,
+    frankieinhisownwords_hellzapoppin,
+    frankie_manning_dancing_with_judy,
+    frankie_manning_media_archive_big,
+    frankieinhisownwords_the_pimp_walk,
 ]
 redirect_from:
   - /historical_clips/frankie_manning/
