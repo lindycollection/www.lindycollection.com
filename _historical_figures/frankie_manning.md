@@ -62,6 +62,7 @@ clips: [
     frankieinhisownwords_dancing_with,
     frankieinhisownwords_lindy_hop_will_never_die,
     frankieinhisownwords_kids_dancing,
+    frankie_manning_dancing_with_judy,
     frankie_manning_media_archive_big,
 ]
 redirect_from:
