@@ -6,9 +6,48 @@ permalink: /suggest-new-clip/
 
 {% include submission_styles.html %}
 
+{% capture catalog_json %}{
+  "collections": [
+    {"id": "routines", "label": "👯 Routines"},
+    {"id": "jazz", "label": "🎷 Solo Jazz"},
+    {"id": "aerials", "label": "🤸 Aerials"},
+    {"id": "historical_figures", "label": "👤 Historical Figures"},
+    {"id": "historical_clips", "label": "📽️ Historical Clips"},
+    {"id": "events", "label": "📅 Events"}
+  ],
+  "pages": [
+    {% assign first_page = true %}
+    {% assign assoc_cols = "routines,jazz,aerials,historical_figures,historical_clips,events" | split: "," %}
+    {% for col_name in assoc_cols %}
+      {% for doc in site[col_name] %}
+        {% assign doc_stem = doc.path | split: "/" | last | replace: ".md", "" %}
+        {% unless first_page %},{% endunless %}{% assign first_page = false %}
+        {"c": {{ col_name | jsonify }}, "s": {{ doc_stem | jsonify }}, "t": {{ doc.title | default: doc_stem | jsonify }}, "u": {{ doc.url | relative_url | jsonify }}{% if doc.crossref_id %}, "eid": {{ doc.crossref_id | jsonify }}{% endif %}}
+      {% endfor %}
+    {% endfor %}
+  ],
+  "events": [
+    {% for ev in site.events %}
+      {% assign ev_stem = ev.path | split: "/" | last | replace: ".md", "" %}
+      {% assign ev_id = ev.crossref_id | default: ev_stem %}
+      {% unless forloop.first %},{% endunless %}
+      {"id": {{ ev_id | jsonify }}, "t": {{ ev.title | default: ev_id | jsonify }}, "u": {{ ev.url | relative_url | jsonify }}}
+    {% endfor %}
+  ],
+  "clips": [
+    {% for c in site.clips %}
+      {% assign c_stem = c.path | split: "/" | last | replace: ".md", "" %}
+      {% assign c_id = c.clip_id | default: c_stem %}
+      {% unless forloop.first %},{% endunless %}
+      {"id": {{ c_id | jsonify }}, "t": {{ c.title | default: c_id | jsonify }}, "u": {{ c.url | relative_url | jsonify }}{% if c.youtube_id and c.youtube_id != "" %}, "yt": {{ c.youtube_id | jsonify }}{% endif %}{% if c.start_time != nil and c.start_time != "" %}, "st": {{ c.start_time | jsonify }}{% endif %}{% if c.end_time != nil and c.end_time != "" %}, "et": {{ c.end_time | jsonify }}{% endif %}{% if c.event and c.event != "" %}, "ev": {{ c.event | jsonify }}{% endif %}{% if c.clip_type and c.clip_type != "" %}, "ct": {{ c.clip_type | jsonify }}{% endif %}{% if c.upload_date and c.upload_date != "" %}, "ud": {{ c.upload_date | jsonify }}{% endif %}}
+    {% endfor %}
+  ]
+}{% endcapture %}
+<script id="siteCatalogData" type="application/json">{{ catalog_json | replace: '</', '<\/' }}</script>
+
 <div class="submission-container">
   <p class="submission-intro">
-    Suggest adding a new video clip or linking an existing clip to a dance routine, aerial, or jazz step.
+    Paste a YouTube link below to auto-fill clip metadata, preview timestamps, and associate it with routines, solo jazz moves, aerials, historical figures, or events.
     Both technical contributors (via GitHub) and community members (via Email) can submit suggestions with mandatory <strong>CC-BY-NC-SA 4.0</strong> legal sign-off.
   </p>
 
@@ -16,6 +55,8 @@ permalink: /suggest-new-clip/
     <span>📝</span>
     <span>Looking to propose page text or markdown updates instead? Use the <a id="linkSwitchToChange" href="{{ '/suggest-changes/' | relative_url }}">Page Content Suggestion Form</a>.</span>
   </div>
+
+  <div id="refClipBanner" class="sub-nav-banner sub-nav-banner--blue" style="display: none;"></div>
 
   <form id="clipSuggestionForm" data-site-email="{{ site.email }}" data-github-repo="{{ site.github.repository }}" novalidate>
     <!-- Mode Toggle: New Clip vs Link Existing -->
@@ -30,103 +71,172 @@ permalink: /suggest-new-clip/
       </label>
     </div>
 
+    <!-- Section A (Top): YouTube URL, Auto-Preview, Auto-Filled Metadata & Timestamps -->
+    <div id="subSectionNewClip">
+      <div class="submission-form-group">
+        <div class="field-label-row">
+          <label for="clipYoutubeUrl">YouTube Video URL or ID <span class="required-star">*</span></label>
+          <button type="button" id="btnRefetchYt" class="inline-action-btn" style="display: none;" title="Re-fetch metadata from YouTube and reset auto-filled fields">↻ Reset from YouTube</button>
+        </div>
+        <input type="url" id="clipYoutubeUrl" class="submission-input" placeholder="Paste YouTube URL here — e.g., https://www.youtube.com/watch?v=... or https://youtu.be/...?t=90" autofocus>
+        <div class="yt-status-row">
+          <span id="ytFetchStatus" class="yt-fetch-status">Paste a YouTube link to automatically fetch the title, clip ID, timestamps, and preview.</span>
+        </div>
+        <span class="field-error-msg" id="err-clipYoutubeUrl">Please provide a valid YouTube URL or 11-character video ID.</span>
+      </div>
+
+      <!-- Inline Video Preview & Timestamp Picker -->
+      <div id="ytPreviewCard" class="yt-preview-card" style="display: none;">
+        <div class="yt-preview-layout">
+          <div class="yt-preview-player-wrap">
+            <div id="ytPreviewPlayer"></div>
+          </div>
+          <div class="yt-preview-controls">
+            <div id="ytMetaInfo" class="yt-meta-info">Loading video preview…</div>
+            <div class="yt-time-btns">
+              <button type="button" id="btnSetStartFromPlayer" class="yt-time-btn" disabled title="Copy current video playback position into Start Time">
+                ⏱ Set Start from Player
+              </button>
+              <button type="button" id="btnSetEndFromPlayer" class="yt-time-btn" disabled title="Copy current video playback position into End Time">
+                ⏱ Set End from Player
+              </button>
+              <button type="button" id="btnPreviewRange" class="yt-time-btn yt-time-btn--primary" disabled title="Play from Start Time and pause at End Time">
+                ▶ Preview Clip Range
+              </button>
+            </div>
+            <span class="field-hint" style="margin-top: 0;">Play or scrub the video above and click <strong>Set Start</strong> / <strong>Set End</strong> to capture exact timestamps without typing.</span>
+          </div>
+        </div>
+
+        <div id="existingVideoClipsNotice" class="yt-existing-clips" style="display: none;">
+          <span id="existingVideoClipsHeading" class="yt-existing-clips-title"></span>
+          <div id="existingVideoClipsList" class="yt-existing-list"></div>
+        </div>
+      </div>
+
+      <div class="submission-grid-2">
+        <div class="submission-form-group">
+          <label for="clipTitle">Clip Title <span class="required-star">*</span> <span id="tagAutoTitle" class="autofill-tag" style="display: none;">Auto-filled</span></label>
+          <input type="text" id="clipTitle" class="submission-input" placeholder="Auto-filled from YouTube video title">
+          <span class="field-hint">Fetched automatically from YouTube; feel free to refine for sub-clips.</span>
+          <span class="field-error-msg" id="err-clipTitle">Please provide a descriptive title for this clip.</span>
+        </div>
+
+        <div class="submission-form-group">
+          <label for="clipId">Clip Identifier (Filename) <span class="required-star">*</span> <span id="tagAutoId" class="autofill-tag" style="display: none;">Auto-filled</span></label>
+          <input type="text" id="clipId" class="submission-input" placeholder="Auto-generated lowercase_id">
+          <span class="field-hint" id="clipIdHint">Lowercase alphanumeric and underscores only. Auto-generated from title.</span>
+          <span class="field-error-msg" id="err-clipId">Please enter a unique lowercase clip identifier (letters, numbers, underscores).</span>
+        </div>
+      </div>
+
+      <div class="submission-grid-2">
+        <div class="submission-form-group">
+          <div class="field-label-row">
+            <label for="clipStartTime">Start Time (optional) <span id="tagAutoStart" class="autofill-tag" style="display: none;">From URL</span></label>
+            <button type="button" id="btnInlineSetStart" class="inline-action-btn" disabled>⏱ Current player time</button>
+          </div>
+          <input type="text" id="clipStartTime" class="submission-input" placeholder="Full video start, or e.g. 45 / 1:15">
+          <span class="field-hint">Auto-filled from <code>?t=</code> in URL, or click above while watching preview.</span>
+          <span class="field-error-msg" id="err-clipStartTime">Invalid start time. Use seconds (e.g. 90) or mm:ss (e.g. 1:30).</span>
+        </div>
+
+        <div class="submission-form-group">
+          <div class="field-label-row">
+            <label for="clipEndTime">End Time (optional) <span id="tagAutoEnd" class="autofill-tag" style="display: none;">From URL</span></label>
+            <button type="button" id="btnInlineSetEnd" class="inline-action-btn" disabled>⏱ Current player time</button>
+          </div>
+          <input type="text" id="clipEndTime" class="submission-input" placeholder="Play to end, or e.g. 120 / 2:00">
+          <span class="field-hint">Seconds or timestamp where the move or routine ends.</span>
+          <span class="field-error-msg" id="err-clipEndTime">End time must be valid (seconds or mm:ss) and after Start Time.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section B (Top): Select Existing Clip -->
+    <div id="subSectionLinkExisting" style="display: none;">
+      <div class="submission-form-group">
+        <label for="existingClipSelect">Select Existing Clip <span class="required-star">*</span></label>
+        <input type="search" id="existingClipFilter" class="submission-input existing-clip-filter" placeholder="🔍 Filter existing clips by title, clip ID, or YouTube ID…">
+        <select id="existingClipSelect" class="submission-select" aria-label="Existing Clip">
+          <option value="">-- Select an Existing Clip --</option>
+        </select>
+        <div id="existingClipCustomWrap" style="display: none; margin-top: 8px;">
+          <input type="text" id="existingClipName" class="submission-input" placeholder="Enter existing clip_id or /clips/... URL">
+        </div>
+        <span class="field-hint" id="existingClipHint">Choose a clip already in the Lindy Collection archive to link to a page below.</span>
+        <span class="field-error-msg" id="err-existingClipName">Please select or enter an existing clip to associate.</span>
+      </div>
+    </div>
+
+    <!-- Shared Page Association Dropdowns -->
+    <div id="pageAssociationSection" class="submission-form-group assoc-section-box">
+      <label for="assocPagePrimary">Associate with Page(s) <span class="required-star" id="targetPageRequiredStar" style="display: none;">*</span></label>
+      <div id="assocRowsContainer" class="assoc-rows"></div>
+      <button type="button" id="btnAddAssocRow" class="assoc-add-btn">+ Associate with another page</button>
+      <input type="hidden" id="targetPage" value="">
+      <span class="field-hint" id="targetPageHint">Select a category and page to display this clip on (pre-selected when coming from a page), or leave blank for a standalone clip.</span>
+      <span class="field-error-msg" id="err-targetPage">Please select at least one target page to link this clip to.</span>
+    </div>
+
+    <!-- Section A (Bottom): Categorization Dropdowns & Optional Notes -->
+    <div id="subSectionNewClipMeta">
+      <div class="submission-grid-2">
+        <div class="submission-form-group">
+          <label for="clipType">Clip Type <span id="tagAutoType" class="autofill-tag" style="display: none;">Suggested</span></label>
+          <select id="clipType" class="submission-select">
+            <option value="">-- Optional / Select Type --</option>
+            <option value="tutorial">Tutorial / Instructional</option>
+            <option value="interview">Interview</option>
+            <option value="competition">Competition / Contest</option>
+            <option value="performance">Performance / Showcase</option>
+            <option value="routine">Routine</option>
+            <option value="social">Social Dancing</option>
+            <option value="recap">Class Recap</option>
+            <option value="historical">Historical Archive</option>
+          </select>
+          <span class="field-hint">Categorization badge for filtering and display.</span>
+        </div>
+
+        <div class="submission-form-group">
+          <label for="clipEventSelect">Event <span id="tagAutoEvent" class="autofill-tag" style="display: none;">Suggested</span></label>
+          <select id="clipEventSelect" class="submission-select">
+            <option value="">-- Optional / Select Event --</option>
+            {% for ev in site.events reversed %}
+              {% assign ev_stem = ev.path | split: "/" | last | replace: ".md", "" %}
+              {% assign ev_id = ev.crossref_id | default: ev_stem %}
+              <option value="{{ ev_id | escape }}">{{ ev.title | default: ev_id | escape }}</option>
+            {% endfor %}
+            <option value="__custom__">Other / Enter event ID…</option>
+          </select>
+          <div id="clipEventCustomWrap" style="display: none; margin-top: 8px;">
+            <input type="text" id="clipEvent" class="submission-input" placeholder="e.g., herrang_2005 or ilhc_2023">
+          </div>
+          <span class="field-hint">Links clip to an Event page if recorded at a listed event.</span>
+        </div>
+      </div>
+
+      <div class="submission-form-group">
+        <label for="clipNotes">Clip Description or Notes (optional)</label>
+        <textarea id="clipNotes" class="submission-textarea" rows="3" placeholder="Optional notes describing dancers, musicians, context, or choreography highlights…"></textarea>
+        <span class="field-hint">Additional context displayed in the clip page body.</span>
+      </div>
+    </div>
+
+    <!-- Section B (Bottom): Rationale for Linking Existing Clip -->
+    <div id="subSectionLinkNotes" style="display: none;">
+      <div class="submission-form-group">
+        <label for="linkNotes">Rationale or Context (optional)</label>
+        <textarea id="linkNotes" class="submission-textarea" rows="3" placeholder="Optional note explaining why this clip belongs on the target page…"></textarea>
+      </div>
+    </div>
+
     <!-- Contributor Name -->
     <div class="submission-form-group">
       <label for="contributorName">Contributor Name or Handle <span class="required-star">*</span></label>
       <input type="text" id="contributorName" class="submission-input" required placeholder="e.g., FrankieManning or Jane Doe" autocomplete="name">
-      <span class="field-hint">Used for attribution on GitHub and in commit metadata.</span>
+      <span class="field-hint">Used for attribution on GitHub and in commit metadata (remembered in this browser).</span>
       <span class="field-error-msg" id="err-contributorName">Please provide your name or handle.</span>
-    </div>
-
-    <!-- Target Page URL (Shared) -->
-    <div class="submission-form-group">
-      <label for="targetPage">Target Page URL <span class="required-star" id="targetPageRequiredStar" style="display: none;">*</span></label>
-      <input type="text" id="targetPage" class="submission-input" placeholder="e.g., /routines/big_apple/, /aerials/snatch/, or /solo_jazz/shim_sham/">
-      <span class="field-hint" id="targetPageHint">Page URL to associate this clip with. Pre-filled if linked from a page, or can be left blank for standalone clips.</span>
-      <span class="field-error-msg" id="err-targetPage">Please specify the target page URL to link this clip to.</span>
-    </div>
-
-    <!-- Section A: New Clip Fields -->
-    <div id="subSectionNewClip">
-      <div class="submission-form-group">
-        <label for="clipYoutubeUrl">YouTube Video URL or ID <span class="required-star">*</span></label>
-        <input type="text" id="clipYoutubeUrl" class="submission-input" placeholder="e.g., https://www.youtube.com/watch?v=dQw4w9WgXcQ or dQw4w9WgXcQ">
-        <span class="field-hint">Full YouTube link, youtu.be shortlink, or 11-character video ID. Timestamps in URL (e.g. ?t=90) auto-fill Start Time.</span>
-        <span class="field-error-msg" id="err-clipYoutubeUrl">Please provide a valid YouTube URL or video ID.</span>
-      </div>
-
-      <div class="submission-grid-2">
-        <div class="submission-form-group">
-          <label for="clipId">Clip Identifier (Filename) <span class="required-star">*</span></label>
-          <input type="text" id="clipId" class="submission-input" placeholder="e.g., frankie_manning_shim_sham_1998">
-          <span class="field-hint">Lowercase alphanumeric and underscores only. Auto-generated from title if left blank.</span>
-          <span class="field-error-msg" id="err-clipId">Please enter a valid lowercase clip identifier (e.g., my_clip_name).</span>
-        </div>
-
-        <div class="submission-form-group">
-          <label for="clipTitle">Clip Title <span class="required-star">*</span></label>
-          <input type="text" id="clipTitle" class="submission-input" placeholder="e.g., Frankie Manning & Chazz Young - Shim Sham">
-          <span class="field-hint">Descriptive title of the clip performance or instructional.</span>
-          <span class="field-error-msg" id="err-clipTitle">Please provide a descriptive title for this clip.</span>
-        </div>
-      </div>
-
-      <div class="submission-grid-2">
-        <div class="submission-form-group">
-          <label for="clipType">Clip Type</label>
-          <select id="clipType" class="submission-select">
-            <option value="">-- Optional / Select Type --</option>
-            <option value="routine">Routine</option>
-            <option value="recap">Recap / Performance</option>
-            <option value="tutorial">Tutorial / Instructional</option>
-            <option value="social">Social Dancing</option>
-            <option value="competition">Competition / Contest</option>
-            <option value="historical">Historical Archive</option>
-          </select>
-          <span class="field-hint">Categorization for filtering and display.</span>
-        </div>
-
-        <div class="submission-form-group">
-          <label for="clipEvent">Event / Location</label>
-          <input type="text" id="clipEvent" class="submission-input" placeholder="e.g., Camp Hollywood 2018 or Herräng 2004">
-          <span class="field-hint">Event where this video was recorded, if known.</span>
-        </div>
-      </div>
-
-      <div class="submission-grid-2">
-        <div class="submission-form-group">
-          <label for="clipStartTime">Start Time (seconds or mm:ss)</label>
-          <input type="text" id="clipStartTime" class="submission-input" placeholder="e.g., 45 or 1:15">
-          <span class="field-hint">Seconds or timestamp where move or routine starts.</span>
-        </div>
-
-        <div class="submission-form-group">
-          <label for="clipEndTime">End Time (seconds or mm:ss)</label>
-          <input type="text" id="clipEndTime" class="submission-input" placeholder="e.g., 120 or 2:00">
-          <span class="field-hint">Seconds or timestamp where move or routine ends.</span>
-        </div>
-      </div>
-
-      <div class="submission-form-group">
-        <label for="clipNotes">Clip Description or Notes</label>
-        <textarea id="clipNotes" class="submission-textarea" rows="4" placeholder="Optional notes describing dancers, musicians, context, choreography highlights..."></textarea>
-        <span class="field-hint">Additional context displayed in the clip markdown body.</span>
-      </div>
-    </div>
-
-    <!-- Section B: Link Existing Clip Fields -->
-    <div id="subSectionLinkExisting" style="display: none;">
-      <div class="submission-form-group">
-        <label for="existingClipName">Existing Clip ID or URL <span class="required-star">*</span></label>
-        <input type="text" id="existingClipName" class="submission-input" placeholder="e.g., al_leon_shim_sham or /clips/al_leon_shim_sham/">
-        <span class="field-hint">The identifier or URL of the existing clip in Lindy Collection that you want to link.</span>
-        <span class="field-error-msg" id="err-existingClipName">Please specify which existing clip to associate.</span>
-      </div>
-
-      <div class="submission-form-group">
-        <label for="linkNotes">Rationale or Context</label>
-        <textarea id="linkNotes" class="submission-textarea" rows="3" placeholder="Explain why this clip belongs on the target page (e.g., demonstrates variation performed at 0:45)..."></textarea>
-      </div>
     </div>
 
     {% include submission_actions.html %}

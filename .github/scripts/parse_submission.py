@@ -93,6 +93,33 @@ def parse_time_to_seconds(time_str: str):
     return s if s.isdigit() else s
 
 
+def fetch_youtube_upload_date(youtube_id: str) -> str | None:
+    """Best-effort fetch of uploadDate from YouTube watch page (matching scripts/add_clip.py)."""
+    if not youtube_id or not re.match(r'^[A-Za-z0-9_-]{11}$', youtube_id):
+        return None
+    url = f"https://www.youtube.com/watch?v={youtube_id}"
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9"
+        }
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            html_str = resp.read().decode("utf-8", errors="ignore")
+        match = (
+            re.search(r'"uploadDate":"([^"]+)"', html_str)
+            or re.search(r'itemprop="uploadDate" content="([^"]+)"', html_str)
+            or re.search(r'"datePublished":"([^"]+)"', html_str)
+        )
+        if match:
+            return match.group(1).strip()
+    except Exception as e:
+        print(f"[INFO] Could not auto-fetch upload_date for {youtube_id}: {e}")
+    return None
+
+
 def write_frontmatter_file(path: str, fm_dict: dict, body: str = ""):
     """Write a markdown file with YAML frontmatter."""
     lines = ["---"]
@@ -239,8 +266,24 @@ def append_content_to_file(file_path: str, content: str) -> bool:
     return True
 
 
+def extract_event_crossref_id(file_path: str) -> str | None:
+    """If file_path is an event page using crossref: event, return its crossref_id."""
+    if not (file_path and os.path.exists(file_path)):
+        return None
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            parts = f.read().split("---", 2)
+        if len(parts) >= 3 and re.search(r'^\s*crossref:\s*event\s*$', parts[1], re.MULTILINE):
+            m = re.search(r'^\s*crossref_id:\s*([^\s#]+)', parts[1], re.MULTILINE)
+            if m:
+                return m.group(1).strip().strip("'\"")
+    except Exception:
+        pass
+    return None
+
+
 def associate_clip_with_file(file_path: str, clip_id: str) -> bool:
-    """Add clip_id to clips list in a page markdown frontmatter."""
+    """Add clip_id to clips list in a page markdown frontmatter. Returns True if modified."""
     if not (file_path and os.path.exists(file_path)):
         return False
     with open(file_path, "r", encoding="utf-8") as f:
@@ -250,8 +293,8 @@ def associate_clip_with_file(file_path: str, clip_id: str) -> bool:
     if len(parts) < 3:
         return False
     fm_raw, body = parts[1], parts[2]
-    if clip_id in fm_raw:
-        return True
+    if re.search(rf'(?<![\w-]){re.escape(clip_id)}(?![\w-])', fm_raw):
+        return False
 
     bracket_match = re.search(r'clips:\s*\[(.*?)\]', fm_raw, re.DOTALL)
     if bracket_match:
@@ -359,6 +402,24 @@ def main():
             clip_title = meta.get("title") or meta.get("clip-title") or f"Clip Submission #{issue_number}"
             youtube_id = meta.get("youtube-id", "")
             target_page_raw = meta.get("target-page", "")
+            target_pages = [
+                p.strip() for p in target_page_raw.split(",")
+                if p.strip() and p.strip().lower() != "none"
+            ]
+
+            event_val = meta.get("event", "").strip()
+            assoc_msgs = []
+
+            # Resolve target pages (and detect event crossref pages before writing clip frontmatter)
+            resolved_targets = []
+            for tp in target_pages:
+                pf = find_target_page_file(tp)
+                ev_crossref = extract_event_crossref_id(pf) if pf else None
+                if ev_crossref and not event_val:
+                    event_val = ev_crossref
+                    assoc_msgs.append(f"- **Associated with Event:** `{ev_crossref}` (`{pf}`)\n")
+                else:
+                    resolved_targets.append((tp, pf))
 
             # Create _clips/<clip_id>.md
             clip_file = os.path.join("_clips", f"{clip_id}.md")
@@ -370,27 +431,33 @@ def main():
             }
             if meta.get("clip-type"):
                 clip_fm["clip_type"] = f"'{meta['clip-type']}'"
-            if parse_time_to_seconds(meta.get("start-time")):
-                clip_fm["start_time"] = f"'{parse_time_to_seconds(meta['start-time'])}'"
-            if parse_time_to_seconds(meta.get("end-time")):
-                clip_fm["end_time"] = f"'{parse_time_to_seconds(meta['end-time'])}'"
-            if meta.get("event"):
-                clip_fm["event"] = meta["event"]
+            start_sec = parse_time_to_seconds(meta.get("start-time"))
+            if start_sec:
+                clip_fm["start_time"] = int(start_sec) if start_sec.isdigit() else f"'{start_sec}'"
+            end_sec = parse_time_to_seconds(meta.get("end-time"))
+            if end_sec:
+                clip_fm["end_time"] = int(end_sec) if end_sec.isdigit() else f"'{end_sec}'"
+            if event_val:
+                clip_fm["event"] = event_val
+            upload_date = meta.get("upload-date", "").strip() or fetch_youtube_upload_date(youtube_id)
+            if upload_date:
+                clip_fm["upload_date"] = upload_date
 
             clip_body = suggested_content if "No additional clip description" not in suggested_content else ""
             write_frontmatter_file(clip_file, clip_fm, clip_body)
             created_files.append(clip_file)
 
-            # Associate with target page if provided
-            if target_page_raw and target_page_raw.lower() != "none":
-                page_file = find_target_page_file(target_page_raw)
+            # Associate with target page(s) if provided
+            for tp, page_file in resolved_targets:
                 if page_file and associate_clip_with_file(page_file, clip_id):
-                    modified_files.append(page_file)
-                    associated_page_msg = f"- **Associated with Page:** `{page_file}`\n"
+                    if page_file not in modified_files:
+                        modified_files.append(page_file)
+                    assoc_msgs.append(f"- **Associated with Page:** `{page_file}`\n")
                 elif page_file:
-                    associated_page_msg = f"- **Target Page:** `{page_file}` (clip already present)\n"
+                    assoc_msgs.append(f"- **Target Page:** `{page_file}` (clip already present)\n")
                 else:
-                    associated_page_msg = f"- **Target Page:** `{target_page_raw}` (page file not found, clip created)\n"
+                    assoc_msgs.append(f"- **Target Page:** `{tp}` (page file not found, clip created)\n")
+            associated_page_msg = "".join(assoc_msgs)
 
             summary = f"New Clip: {clip_title} ({clip_id})"
             pr_title = f"[New Clip] {clip_title} ({clip_id}) (Closes #{issue_number})"
@@ -406,9 +473,22 @@ def main():
             if existing_clip.startswith('clips/'):
                 existing_clip = existing_clip.split('/')[-1]
             target_page_raw = meta.get("target-page", "")
+            target_pages = [
+                p.strip() for p in target_page_raw.split(",")
+                if p.strip() and p.strip().lower() != "none"
+            ]
 
-            page_file = find_target_page_file(target_page_raw)
-            if not page_file:
+            resolved_files = []
+            missing_targets = []
+            for tp in target_pages:
+                pf = find_target_page_file(tp)
+                if pf:
+                    if pf not in resolved_files:
+                        resolved_files.append(pf)
+                else:
+                    missing_targets.append(tp)
+
+            if not resolved_files:
                 print(f"[ERROR] Target page '{target_page_raw}' not found for link-existing clip.")
                 abort_comment = (
                     f"👋 Thank you for your contribution to Lindy Collection!\n\n"
@@ -422,24 +502,34 @@ def main():
                 set_github_output("abort_reason", f"Target page '{target_page_raw}' not found")
                 sys.exit(0)
 
-            if not associate_clip_with_file(page_file, existing_clip):
-                print(f"[ERROR] Clip '{existing_clip}' already associated with '{page_file}'.")
+            assoc_msgs = []
+            for page_file in resolved_files:
+                if associate_clip_with_file(page_file, existing_clip):
+                    modified_files.append(page_file)
+                    assoc_msgs.append(f"- **Linked to Page:** `{page_file}`\n")
+                else:
+                    assoc_msgs.append(f"- **Target Page:** `{page_file}` (clip already present)\n")
+            for tp in missing_targets:
+                assoc_msgs.append(f"- **Target Page:** `{tp}` (page file not found)\n")
+
+            if not modified_files:
+                print(f"[ERROR] Clip '{existing_clip}' already associated with {resolved_files}.")
                 abort_comment = (
                     f"👋 Thank you for your contribution to Lindy Collection!\n\n"
                     f"ℹ️ **Pull Request Not Needed: Clip Already Linked**\n\n"
-                    f"The clip `{existing_clip}` is already associated with `{page_file}`."
+                    f"The clip `{existing_clip}` is already associated with {', '.join(f'`{p}`' for p in resolved_files)}."
                 )
                 post_issue_comment(github_repo, issue_number, github_token, abort_comment)
                 set_github_output("status", "aborted")
-                set_github_output("abort_reason", f"Clip '{existing_clip}' already associated with '{page_file}'")
+                set_github_output("abort_reason", f"Clip '{existing_clip}' already associated with target page(s)")
                 sys.exit(0)
 
-            modified_files.append(page_file)
-            associated_page_msg = f"- **Linked to Page:** `{page_file}`\n"
-            summary = f"Link Clip {existing_clip} to {page_file}"
-            pr_title = f"[Link Clip] {existing_clip} to {page_file} (Closes #{issue_number})"
+            associated_page_msg = "".join(assoc_msgs)
+            pages_label = ", ".join(modified_files)
+            summary = f"Link Clip {existing_clip} to {pages_label}"
+            pr_title = f"[Link Clip] {existing_clip} to {pages_label} (Closes #{issue_number})"
             commit_msg = (
-                f"Link existing clip {existing_clip} to {page_file}\n\n"
+                f"Link existing clip {existing_clip} to {pages_label}\n\n"
                 f"Contributor: {contributor}\n"
                 f"Target-Page: {target_page_raw}\n\n"
                 f"License: CC-BY-NC-SA-4.0"

@@ -51,25 +51,25 @@ flowchart TD
 ## 📋 The Two Dedicated Submission Pages
 
 ### 1. 🎬 Clip Submission ([`/suggest-new-clip/`](https://www.lindycollection.com/suggest-new-clip/))
-Designed exclusively for submitting video clips or linking existing clips to routines, aerials, or moves.
+Designed exclusively for submitting video clips or linking existing clips to routines, aerials, solo jazz moves, historical figures, or events with client-side YouTube auto-fill.
 - **New Clip Mode**:
-  - `contributorName` (Required)
-  - `clipYoutubeUrl` / `youtube_id` (Required): Full YouTube URL or ID with auto-timestamp parsing.
-  - `clipId` (Required): Short name, lowercase_underscored (e.g. `ch_2019_basket_toss`).
-  - `clipTitle` (Required): Descriptive title.
-  - `targetPage` (Optional): Page URL to associate clip with (e.g. `/routines/big_apple/`).
-  - `clipType` (Optional): `performance`, `tutorial`, `social`, `interview`, `historical`.
-  - `startTime` / `endTime` (Optional): Seconds or `MM:SS` format (e.g. `1:30` -> `90`).
-  - `event` (Optional): Event identifier matching `_events/` (e.g. `camp_hollywood_2019`).
+  - `clipYoutubeUrl` / `youtube_id` (Required): Full YouTube URL or ID. Pasting a URL automatically fetches the video title (via YouTube oEmbed / IFrame API), generates a unique `clip_id`, extracts `?t=`/`&start=`/`&end=` timestamps, checks for existing clips on the same video, and loads an interactive preview player with one-click **Set Start / Set End** buttons.
+  - `clipTitle` (Required, Auto-filled): Descriptive title fetched from YouTube.
+  - `clipId` (Required, Auto-filled): Short name, `lowercase_underscored` (disambiguated automatically against existing clips).
+  - `startTime` / `endTime` (Optional, Auto-filled from URL or player): Seconds or `MM:SS` format (e.g. `1:30` -> `90`).
+  - `targetPage` (Optional): Category + Page dropdowns populated from site collections (supports associating with one or multiple pages, pre-selected when arriving via `?page=`).
+  - `clipType` (Optional dropdown, Auto-suggested): `tutorial`, `interview`, `competition`, `performance`, `routine`, `social`, `recap`, `historical`.
+  - `event` (Optional dropdown, Auto-suggested): Event identifier populated from `_events/` (e.g. `camp_hollywood_2024`), with custom fallback.
   - `clipNotes` (Optional): Dancer identities, combinations, or notes.
+  - `contributorName` (Required, remembered in `localStorage`).
 - **Link Existing Clip Mode**:
-  - `existingClip` (Required): Short name of clip already on site (e.g. `ch_2017_big_wheel`).
-  - `targetPage` (Required): Target page URL (e.g. `/routines/big_apple/`).
+  - `existingClip` (Required): Searchable dropdown of all clips already in `_clips/` (plus manual entry fallback).
+  - `targetPage` (Required): Category + Page dropdowns (supports one or multiple target pages).
   - `linkNotes` (Optional): Rationale or placement details.
 
 **Automated PR Action**:
-- For **New Clip**: Automatically generates `_clips/<clip_id>.md` ready to be merged, and if `target_page` matches an existing page file, appends `clip_id` to that page's `clips:` frontmatter list.
-- For **Link Existing Clip**: Automatically appends the clip to `clips:` in the target page's frontmatter.
+- For **New Clip**: Automatically generates `_clips/<clip_id>.md` (including `upload_date` from metadata or YouTube watch page) ready to be merged, and appends `clip_id` to `clips:` in each associated target page's frontmatter.
+- For **Link Existing Clip**: Automatically appends the clip to `clips:` in each target page's frontmatter.
 
 ### 2. 📝 Page Content Suggestion ([`/suggest-changes/`](https://www.lindycollection.com/suggest-changes/))
 Designed exclusively for proposing new markdown text for the body of any site page.
