@@ -7,8 +7,9 @@ clips: [
     hellzapoppin_movie,
     hellzapoppin_rephrased,
     hellzapoppin_swingcatsVB,
-    norma_on_hellzapoppin
-    ]
+    norma_on_hellzapoppin,
+    frankieinhisownwords_hellzapoppin,
+]
 ---
 
 Hellzapoppin' is a 1941 movie which features one of the most iconic clips of Lindy Hop.
