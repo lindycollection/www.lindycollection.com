@@ -61,6 +61,7 @@ clips: [
     tranky_doo_frankie_sea_jam_2007,
     frankieinhisownwords_dancing_with,
     frankieinhisownwords_lindy_hop_will_never_die,
+    frankieinhisownwords_kids_dancing,
 ]
 redirect_from:
   - /historical_clips/frankie_manning/
