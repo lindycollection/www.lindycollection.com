@@ -6,6 +6,7 @@ clips:
 - chester_whitmore_s_interview_for
 - rtsf_2023_chester_whitmore_rock
 - frankie_100_show_at_the_apollo
+  - chester_whitmore_hollywood_s_go_to
 layout: post
 title: Chester Whitmore
 redirect_from:
