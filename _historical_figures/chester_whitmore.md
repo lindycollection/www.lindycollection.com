@@ -1,5 +1,6 @@
 ---
 clips:
+  - how_can_you_grow_as_a_dancer
   - chester_whitmore_adventures_in
   - rtsf_2024_history_talk_with_chester
   - norma_chester_chazz_sats_2014
