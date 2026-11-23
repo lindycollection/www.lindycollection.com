@@ -70,6 +70,7 @@ clips: [
     frankie_manning_dancing_with_judy,
     frankie_manning_media_archive_big,
     frankieinhisownwords_the_pimp_walk,
+    frankie_manning_never_stop_swinging,
 ]
 redirect_from:
   - /historical_clips/frankie_manning/
