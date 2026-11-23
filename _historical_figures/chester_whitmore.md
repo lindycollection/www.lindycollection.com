@@ -1,5 +1,6 @@
 ---
 clips:
+  - chester_whitmore_hollywood_s_go_to
   - chester_whitmore_and_the_history_of
   - rtsf_2025_gordon_webster_chester
   - rtsf_2025_chester_whitmore_with
