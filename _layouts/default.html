@@ -19,30 +19,42 @@ layout: compress
 
     {% include header.html %}
 
-    <div class="hero" fetchpriority="high" data-bg="{{site.url}}/assets/img/posts/scissor_kicks_lg.jpg">
-      <div class="hero__wrap">
-        <h1 class="hero__title">Lindy Collection</h1>
-        <p class="hero__meta">A place for Lindy Hoppers to find resources</p>
+    <div class="home-header">
+      <div class="container">
+        <div class="home-header__inner">
+          <h1 class="home-header__title">Lindy Collection</h1>
+          <p class="home-header__subtitle">A place for Lindy Hoppers to find resources</p>
+        </div>
       </div>
     </div>
 
-    {% for post in site.posts limit: 1 %}
-    {% include post_contents.html %}
-    {% endfor %}
-
     <main class="site__content">
+      {% include homepage_showcase.html %}
+
+      {% for post in site.posts limit: 1 %}
+      <section class="home-welcome">
+        <div class="container">
+          <article class="post-content home-welcome__article" itemprop="articleBody">
+            {{ post.content }}
+            {% include clip_view.html clips=page.clips %}
+          </article>
+        </div>
+      </section>
+      {% endfor %}
+
+      {% if site.posts.size > 1 %}
       <section class="blog">
         <div class="container">
           <div class="post-list" itemscope="" itemtype="https://schema.org/Blog">
 
-            {% for post in site.posts %}
+            {% for post in site.posts offset: 1 %}
               {% include card.html %}
             {% endfor %}
 
-            <!-- {% include pagination.html %} -->
           </div>
         </div>
       </section>
+      {% endif %}
 {% comment %}
       <a href="{{ '/routines/' | relative_url }}">
       <div class="hero--small">
