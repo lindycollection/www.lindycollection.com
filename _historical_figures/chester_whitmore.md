@@ -3,6 +3,7 @@ clips:
 - norma_chester_chazz_sats_2014
 - norma_whose_got_the_beat
 - after_seben_recreation_frankie95
+  - the_history_of_the_history_of_black
 layout: post
 title: Chester Whitmore
 redirect_from:
