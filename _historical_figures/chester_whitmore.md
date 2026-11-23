@@ -1,5 +1,6 @@
 ---
 clips:
+  - chester_whitmore_adventures_in
   - rtsf_2024_history_talk_with_chester
   - norma_chester_chazz_sats_2014
   - norma_whose_got_the_beat
