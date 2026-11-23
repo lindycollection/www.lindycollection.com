@@ -1,0 +1,331 @@
+{% assign showcase_categories = "jazz|Solo Jazz|/solo_jazz/|jazz,routines|Routines|/routines/|routines,historical_clips|Historical Clips|/historical_clips/|historical-clips,historical_figures|Historical Figures|/historical_figures/|historical-figures,aerials|Aerials|/aerials/|aerials,events|Events|/events/|events" | split: "," %}
+
+<section class="home-showcase" aria-label="Explore Lindy Hop collections">
+  <div class="container">
+    <div class="home-showcase__inner">
+      {% for cat_entry in showcase_categories %}
+        {% assign cat_parts = cat_entry | split: "|" %}
+        {% assign cat_key = cat_parts[0] %}
+        {% assign cat_title = cat_parts[1] %}
+        {% assign cat_url = cat_parts[2] %}
+        {% assign cat_theme = cat_parts[3] %}
+        {% assign cat_docs = site[cat_key] %}
+
+        {% assign topic_count = 0 %}
+        {% assign category_clip_count = 0 %}
+        {% assign row0_html = "" %}
+        {% assign row1_html = "" %}
+        {% assign row0_weight = 0 %}
+        {% assign row1_weight = 2 %}
+
+        {% for doc in cat_docs %}
+          {% unless doc.layout == "redirect" %}
+            {% assign topic_count = topic_count | plus: 1 %}
+            {% if doc.clips %}
+              {% assign doc_clips_direct = doc.clips | size %}
+            {% else %}
+              {% assign doc_clips_direct = 0 %}
+            {% endif %}
+            {% if doc.crossref and doc.crossref_id %}
+              {% assign doc_clips_crossref = site.clips | where: doc.crossref, doc.crossref_id | size %}
+            {% else %}
+              {% assign doc_clips_crossref = 0 %}
+            {% endif %}
+            {% assign doc_total_clips = doc_clips_direct | plus: doc_clips_crossref %}
+            {% assign category_clip_count = category_clip_count | plus: doc_total_clips %}
+
+            {% capture chip_html %}<a class="showcase-tag" href="{{ doc.url | relative_url }}" draggable="false"><span class="showcase-tag__label">{{ doc.title | strip_html | escape }}</span>{% if doc_total_clips > 0 %}<span class="showcase-tag__count" title="{{ doc_total_clips }} {% if doc_total_clips == 1 %}clip{% else %}clips{% endif %}">{{ doc_total_clips }}</span>{% endif %}</a>{% endcapture %}
+
+            {% assign chip_weight = doc.title | size | plus: 8 %}
+            {% if row0_weight <= row1_weight %}
+              {% assign row0_html = row0_html | append: chip_html %}
+              {% assign row0_weight = row0_weight | plus: chip_weight %}
+            {% else %}
+              {% assign row1_html = row1_html | append: chip_html %}
+              {% assign row1_weight = row1_weight | plus: chip_weight %}
+            {% endif %}
+          {% endunless %}
+        {% endfor %}
+
+        {% if topic_count > 0 %}
+        <div class="showcase-section showcase-section--{{ cat_theme }}">
+          <div class="showcase-section__header">
+            <h2 class="showcase-section__title">
+              <a class="showcase-section__link" href="{{ cat_url | relative_url }}">
+                <span class="showcase-section__emoji" aria-hidden="true">{% include collection_emoji.html collection=cat_key %}</span>
+                <span>{{ cat_title }}</span>
+              </a>
+            </h2>
+            <a class="showcase-section__more" href="{{ cat_url | relative_url }}">
+              <span>{{ topic_count }} {% if topic_count == 1 %}topic{% else %}topics{% endif %} &middot; {{ category_clip_count }} {% if category_clip_count == 1 %}clip{% else %}clips{% endif %}</span>
+              <span class="showcase-section__arrow" aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+
+          <div class="showcase-carousel" data-carousel>
+            <button type="button" class="showcase-carousel__btn showcase-carousel__btn--prev" data-carousel-prev aria-label="Scroll {{ cat_title }} left" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <div class="showcase-carousel__viewport" data-carousel-viewport>
+              <div class="showcase-carousel__track">
+                <div class="showcase-carousel__row">{{ row0_html }}</div>
+                {% if row1_html != "" %}
+                <div class="showcase-carousel__row showcase-carousel__row--offset">{{ row1_html }}</div>
+                {% endif %}
+              </div>
+            </div>
+            <button type="button" class="showcase-carousel__btn showcase-carousel__btn--next" data-carousel-next aria-label="Scroll {{ cat_title }} right" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var carouselNodes = document.querySelectorAll("[data-carousel]");
+  if (!carouselNodes.length) {
+    return;
+  }
+
+  var reducedMotionQuery = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+  var prefersReducedMotion = function() {
+    return Boolean(reducedMotionQuery && reducedMotionQuery.matches);
+  };
+
+  var items = [];
+  var nowMs = function() {
+    return window.performance && performance.now ? performance.now() : Date.now();
+  };
+
+  for (var i = 0; i < carouselNodes.length; i++) {
+    (function(root, idx) {
+      var viewport = root.querySelector("[data-carousel-viewport]");
+      var prevBtn = root.querySelector("[data-carousel-prev]");
+      var nextBtn = root.querySelector("[data-carousel-next]");
+      if (!viewport || !prevBtn || !nextBtn) {
+        return;
+      }
+
+      var state = {
+        root: root,
+        viewport: viewport,
+        prevBtn: prevBtn,
+        nextBtn: nextBtn,
+        direction: 1,
+        carry: 0,
+        speed: 18 + (idx % 3) * 2.5,
+        isHovered: false,
+        isFocused: false,
+        isDragging: false,
+        isVisible: true,
+        pauseUntil: nowMs() + 700 + idx * 180,
+        updateControls: null
+      };
+
+      var updateControls = function() {
+        var maxScroll = viewport.scrollWidth - viewport.clientWidth;
+        var scrollLeft = viewport.scrollLeft;
+        var canScroll = maxScroll > 2;
+        var canLeft = canScroll && scrollLeft > 2;
+        var canRight = canScroll && scrollLeft < maxScroll - 2;
+
+        root.classList.toggle("showcase-carousel--scrollable", canScroll);
+        root.classList.toggle("showcase-carousel--left", canLeft);
+        root.classList.toggle("showcase-carousel--right", canRight);
+        prevBtn.disabled = !canLeft;
+        nextBtn.disabled = !canRight;
+      };
+
+      state.updateControls = updateControls;
+
+      var scrollByPage = function(dir) {
+        var delta = Math.max(220, Math.round(viewport.clientWidth * 0.72)) * dir;
+        state.direction = dir;
+        state.carry = 0;
+        state.pauseUntil = nowMs() + 2800;
+        if (typeof viewport.scrollBy === "function") {
+          try {
+            viewport.scrollBy({ left: delta, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+          } catch (err) {
+            viewport.scrollLeft += delta;
+          }
+        } else {
+          viewport.scrollLeft += delta;
+        }
+      };
+
+      prevBtn.addEventListener("click", function() {
+        scrollByPage(-1);
+      });
+
+      nextBtn.addEventListener("click", function() {
+        scrollByPage(1);
+      });
+
+      viewport.addEventListener("scroll", updateControls, { passive: true });
+
+      root.addEventListener("mouseenter", function() {
+        state.isHovered = true;
+      });
+
+      root.addEventListener("mouseleave", function() {
+        state.isHovered = false;
+      });
+
+      root.addEventListener("focusin", function() {
+        state.isFocused = true;
+      });
+
+      root.addEventListener("focusout", function() {
+        setTimeout(function() {
+          state.isFocused = root.contains(document.activeElement);
+        }, 0);
+      });
+
+      viewport.addEventListener("touchstart", function() {
+        state.pauseUntil = nowMs() + 3500;
+      }, { passive: true });
+
+      viewport.addEventListener("touchmove", function() {
+        state.pauseUntil = nowMs() + 3500;
+      }, { passive: true });
+
+      viewport.addEventListener("wheel", function(e) {
+        if (Math.abs(e.deltaX) > 0 || e.shiftKey) {
+          state.pauseUntil = nowMs() + 3000;
+        }
+      }, { passive: true });
+
+      var mouseDown = false;
+      var dragMoved = false;
+      var dragStartX = 0;
+      var dragStartScroll = 0;
+      var suppressClickUntil = 0;
+
+      viewport.addEventListener("mousedown", function(e) {
+        if (e.button !== 0 || viewport.scrollWidth <= viewport.clientWidth + 2) {
+          return;
+        }
+        mouseDown = true;
+        dragMoved = false;
+        dragStartX = e.clientX;
+        dragStartScroll = viewport.scrollLeft;
+      });
+
+      window.addEventListener("mousemove", function(e) {
+        if (!mouseDown) {
+          return;
+        }
+        var dx = e.clientX - dragStartX;
+        if (!dragMoved && Math.abs(dx) > 6) {
+          dragMoved = true;
+          state.isDragging = true;
+          root.classList.add("showcase-carousel--dragging");
+        }
+        if (dragMoved) {
+          viewport.scrollLeft = dragStartScroll - dx;
+          state.pauseUntil = nowMs() + 3000;
+        }
+      });
+
+      window.addEventListener("mouseup", function() {
+        if (!mouseDown) {
+          return;
+        }
+        mouseDown = false;
+        state.isDragging = false;
+        root.classList.remove("showcase-carousel--dragging");
+        if (dragMoved) {
+          suppressClickUntil = nowMs() + 140;
+          dragMoved = false;
+        }
+      });
+
+      viewport.addEventListener("click", function(e) {
+        if (nowMs() < suppressClickUntil) {
+          e.preventDefault();
+          e.stopPropagation();
+          suppressClickUntil = 0;
+        }
+      }, true);
+
+      updateControls();
+      items.push(state);
+    })(carouselNodes[i], i);
+  }
+
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function(entries) {
+      for (var j = 0; j < entries.length; j++) {
+        var entry = entries[j];
+        for (var k = 0; k < items.length; k++) {
+          if (items[k].root === entry.target) {
+            items[k].isVisible = entry.isIntersecting;
+            break;
+          }
+        }
+      }
+    }, { threshold: 0.05 });
+
+    for (var m = 0; m < items.length; m++) {
+      io.observe(items[m].root);
+    }
+  }
+
+  var syncAll = function() {
+    for (var n = 0; n < items.length; n++) {
+      items[n].updateControls();
+    }
+  };
+
+  window.addEventListener("resize", syncAll);
+  window.addEventListener("load", syncAll);
+
+  var lastFrame = nowMs();
+  var tick = function() {
+    var current = nowMs();
+    var dt = Math.min(0.05, Math.max(0, (current - lastFrame) / 1000));
+    lastFrame = current;
+
+    if (!document.hidden && !prefersReducedMotion()) {
+      for (var p = 0; p < items.length; p++) {
+        var it = items[p];
+        if (!it.isVisible || it.isHovered || it.isFocused || it.isDragging || current < it.pauseUntil) {
+          continue;
+        }
+        var maxScroll = it.viewport.scrollWidth - it.viewport.clientWidth;
+        if (maxScroll <= 2) {
+          continue;
+        }
+        if (it.direction > 0 && it.viewport.scrollLeft >= maxScroll - 1) {
+          it.direction = -1;
+          it.carry = 0;
+          it.pauseUntil = current + 1600;
+          continue;
+        }
+        if (it.direction < 0 && it.viewport.scrollLeft <= 1) {
+          it.direction = 1;
+          it.carry = 0;
+          it.pauseUntil = current + 1600;
+          continue;
+        }
+        it.carry += it.speed * dt * it.direction;
+        var step = it.carry > 0 ? Math.floor(it.carry) : Math.ceil(it.carry);
+        if (step !== 0) {
+          it.viewport.scrollLeft += step;
+          it.carry -= step;
+        }
+      }
+    }
+
+    window.requestAnimationFrame(tick);
+  };
+
+  window.requestAnimationFrame(tick);
+})();
+</script>
