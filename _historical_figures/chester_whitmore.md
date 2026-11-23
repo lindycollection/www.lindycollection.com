@@ -4,6 +4,7 @@ clips:
 - norma_whose_got_the_beat
 - after_seben_recreation_frankie95
 - frankie_100_show_at_the_apollo
+  - how_can_you_grow_as_a_dancer
 layout: post
 title: Chester Whitmore
 redirect_from:
