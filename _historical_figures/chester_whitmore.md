@@ -1,5 +1,6 @@
 ---
 clips:
+  - rtsf_2025_gordon_webster_chester
   - rtsf_2025_chester_whitmore_with
   - how_can_you_grow_as_a_dancer
   - chester_whitmore_adventures_in
