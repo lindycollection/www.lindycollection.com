@@ -1,331 +1,348 @@
+{% assign spotlight_specs = "jazz|Solo Jazz Move of the Day|jazz,historical_figures|Historical Figure of the Week|figures,routines|Routine of the Month|routines" | split: "," %}
 {% assign showcase_categories = "jazz|Solo Jazz|/solo_jazz/|jazz,routines|Routines|/routines/|routines,historical_clips|Historical Clips|/historical_clips/|historical-clips,historical_figures|Historical Figures|/historical_figures/|historical-figures,aerials|Aerials|/aerials/|aerials,events|Events|/events/|events" | split: "," %}
+{% assign build_epoch = site.time | date: "%s" | plus: 0 %}
+{% assign build_year = site.time | date: "%Y" | plus: 0 %}
+{% assign build_month = site.time | date: "%-m" | plus: 0 %}
+{% assign fallback_pixel = "/assets/img/icons/apple-touch-icon.png" | relative_url %}
 
-<section class="home-showcase" aria-label="Explore Lindy Hop collections">
+<section class="home-spotlights" aria-label="Featured highlights">
   <div class="container">
-    <div class="home-showcase__inner">
-      {% for cat_entry in showcase_categories %}
-        {% assign cat_parts = cat_entry | split: "|" %}
-        {% assign cat_key = cat_parts[0] %}
-        {% assign cat_title = cat_parts[1] %}
-        {% assign cat_url = cat_parts[2] %}
-        {% assign cat_theme = cat_parts[3] %}
-        {% assign cat_docs = site[cat_key] %}
+    <div class="home-spotlights__inner">
+      <div class="home-spotlights__grid">
+        {% capture spotlight_json_entries %}{% endcapture %}
+        {% for sp_entry in spotlight_specs %}
+          {% assign sp_parts = sp_entry | split: "|" %}
+          {% assign sp_key = sp_parts[0] %}
+          {% assign sp_label = sp_parts[1] %}
+          {% assign sp_theme = sp_parts[2] %}
+          {% assign sp_docs = site[sp_key] %}
 
-        {% assign topic_count = 0 %}
-        {% assign category_clip_count = 0 %}
-        {% assign row0_html = "" %}
-        {% assign row1_html = "" %}
-        {% assign row0_weight = 0 %}
-        {% assign row1_weight = 2 %}
+          {% assign valid_count = 0 %}
+          {% for d in sp_docs %}
+            {% unless d.layout == "redirect" %}
+              {% assign valid_count = valid_count | plus: 1 %}
+            {% endunless %}
+          {% endfor %}
 
-        {% for doc in cat_docs %}
-          {% unless doc.layout == "redirect" %}
-            {% assign topic_count = topic_count | plus: 1 %}
-            {% if doc.clips %}
-              {% assign doc_clips_direct = doc.clips | size %}
+          {% if valid_count > 0 %}
+            {% if sp_key == "jazz" %}
+              {% assign init_idx = build_epoch | divided_by: 86400 | modulo: valid_count %}
+            {% elsif sp_key == "historical_figures" %}
+              {% assign init_idx = build_epoch | divided_by: 604800 | modulo: valid_count %}
             {% else %}
-              {% assign doc_clips_direct = 0 %}
+              {% assign init_idx = build_year | times: 12 | plus: build_month | modulo: valid_count %}
             {% endif %}
-            {% if doc.crossref and doc.crossref_id %}
-              {% assign doc_clips_crossref = site.clips | where: doc.crossref, doc.crossref_id | size %}
-            {% else %}
-              {% assign doc_clips_crossref = 0 %}
-            {% endif %}
-            {% assign doc_total_clips = doc_clips_direct | plus: doc_clips_crossref %}
-            {% assign category_clip_count = category_clip_count | plus: doc_total_clips %}
 
-            {% capture chip_html %}<a class="showcase-tag" href="{{ doc.url | relative_url }}" draggable="false"><span class="showcase-tag__label">{{ doc.title | strip_html | escape }}</span>{% if doc_total_clips > 0 %}<span class="showcase-tag__count" title="{{ doc_total_clips }} {% if doc_total_clips == 1 %}clip{% else %}clips{% endif %}">{{ doc_total_clips }}</span>{% endif %}</a>{% endcapture %}
+            {% assign cur_idx = 0 %}
+            {% assign init_title = "" %}
+            {% assign init_url = "" %}
+            {% assign init_thumb = "" %}
+            {% assign init_clips = 0 %}
+            {% assign init_excerpt = "" %}
+            {% capture cat_json_items %}{% endcapture %}
 
-            {% assign chip_weight = doc.title | size | plus: 8 %}
-            {% if row0_weight <= row1_weight %}
-              {% assign row0_html = row0_html | append: chip_html %}
-              {% assign row0_weight = row0_weight | plus: chip_weight %}
-            {% else %}
-              {% assign row1_html = row1_html | append: chip_html %}
-              {% assign row1_weight = row1_weight | plus: chip_weight %}
-            {% endif %}
-          {% endunless %}
-        {% endfor %}
-
-        {% if topic_count > 0 %}
-        <div class="showcase-section showcase-section--{{ cat_theme }}">
-          <div class="showcase-section__header">
-            <h2 class="showcase-section__title">
-              <a class="showcase-section__link" href="{{ cat_url | relative_url }}">
-                <span class="showcase-section__emoji" aria-hidden="true">{% include collection_emoji.html collection=cat_key %}</span>
-                <span>{{ cat_title }}</span>
-              </a>
-            </h2>
-            <a class="showcase-section__more" href="{{ cat_url | relative_url }}">
-              <span>{{ topic_count }} {% if topic_count == 1 %}topic{% else %}topics{% endif %} &middot; {{ category_clip_count }} {% if category_clip_count == 1 %}clip{% else %}clips{% endif %}</span>
-              <span class="showcase-section__arrow" aria-hidden="true">&rarr;</span>
-            </a>
-          </div>
-
-          <div class="showcase-carousel" data-carousel>
-            <button type="button" class="showcase-carousel__btn showcase-carousel__btn--prev" data-carousel-prev aria-label="Scroll {{ cat_title }} left" disabled>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            </button>
-            <div class="showcase-carousel__viewport" data-carousel-viewport>
-              <div class="showcase-carousel__track">
-                <div class="showcase-carousel__row">{{ row0_html }}</div>
-                {% if row1_html != "" %}
-                <div class="showcase-carousel__row showcase-carousel__row--offset">{{ row1_html }}</div>
+            {% for doc in sp_docs %}
+              {% unless doc.layout == "redirect" %}
+                {% assign d_title = doc.title | strip_html | strip %}
+                {% assign d_url = doc.url | relative_url %}
+                {% if doc.clips %}
+                  {% assign d_clips_direct = doc.clips | size %}
+                {% else %}
+                  {% assign d_clips_direct = 0 %}
                 {% endif %}
+                {% if doc.crossref and doc.crossref_id %}
+                  {% assign d_clips_xref = site.clips | where: doc.crossref, doc.crossref_id | size %}
+                {% else %}
+                  {% assign d_clips_xref = 0 %}
+                {% endif %}
+                {% assign d_total_clips = d_clips_direct | plus: d_clips_xref %}
+
+                {% assign d_thumb = "" %}
+                {% if doc.featured-img and doc.featured-img != "" %}
+                  {% assign d_thumb = "/assets/img/posts/" | append: doc.featured-img | append: "_thumb.jpg" | relative_url %}
+                {% elsif doc.clips and doc.clips.size > 0 %}
+                  {% for cid in doc.clips %}
+                    {% assign c_obj = site.clips | where: "clip_id", cid | first %}
+                    {% if c_obj and c_obj.youtube_id and c_obj.youtube_id != "" %}
+                      {% assign d_thumb = "https://img.youtube.com/vi/" | append: c_obj.youtube_id | append: "/hqdefault.jpg" %}
+                      {% break %}
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+
+                {% assign raw_ex = doc.summary | default: doc.content | strip_html | strip_newlines | strip %}
+                {% assign low_ex = raw_ex | downcase %}
+                {% assign low_title = d_title | downcase %}
+                {% assign low_the_title = "the " | append: low_title %}
+                {% if raw_ex == "" or low_ex == low_title or low_ex == low_the_title %}
+                  {% assign d_excerpt = "" %}
+                {% else %}
+                  {% assign d_excerpt = raw_ex | truncatewords: 22 %}
+                {% endif %}
+
+                {% if cur_idx == init_idx %}
+                  {% assign init_title = d_title %}
+                  {% assign init_url = d_url %}
+                  {% assign init_thumb = d_thumb %}
+                  {% assign init_clips = d_total_clips %}
+                  {% assign init_excerpt = d_excerpt %}
+                {% endif %}
+
+                {% capture item_json %}{% if cur_idx > 0 %},{% endif %}{"title":{{ d_title | jsonify }},"url":{{ d_url | jsonify }},"thumb":{{ d_thumb | jsonify }},"clips":{{ d_total_clips }},"excerpt":{{ d_excerpt | jsonify }}}{% endcapture %}
+                {% assign cat_json_items = cat_json_items | append: item_json %}
+                {% assign cur_idx = cur_idx | plus: 1 %}
+              {% endunless %}
+            {% endfor %}
+
+            {% capture cat_json_pair %}{% unless forloop.first %},{% endunless %}"{{ sp_key }}":[{{ cat_json_items }}]{% endcapture %}
+            {% assign spotlight_json_entries = spotlight_json_entries | append: cat_json_pair %}
+
+            <a class="spotlight-card spotlight-card--{{ sp_theme }}" data-spotlight-card="{{ sp_key }}" href="{{ init_url }}">
+              <div class="spotlight-card__kicker">
+                <span aria-hidden="true">{% include collection_emoji.html collection=sp_key %}</span>
+                <span>{{ sp_label }}</span>
               </div>
-            </div>
-            <button type="button" class="showcase-carousel__btn showcase-carousel__btn--next" data-carousel-next aria-label="Scroll {{ cat_title }} right" disabled>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
-            </button>
+              <div class="spotlight-card__media">
+                <img class="spotlight-card__img" data-spotlight-img src="{% if init_thumb != '' %}{{ init_thumb }}{% else %}{{ fallback_pixel }}{% endif %}" alt="{{ init_title | escape }}" width="480" height="360" decoding="async"{% if init_thumb == "" %} hidden{% endif %}>
+                <div class="spotlight-card__placeholder" data-spotlight-placeholder aria-hidden="true"{% if init_thumb != "" %} hidden{% endif %}>{% include collection_emoji.html collection=sp_key %}</div>
+              </div>
+              <div class="spotlight-card__body">
+                <h2 class="spotlight-card__title" data-spotlight-title>{{ init_title | escape }}</h2>
+                <p class="spotlight-card__excerpt" data-spotlight-excerpt{% if init_excerpt == "" %} hidden{% endif %}>{{ init_excerpt | escape }}</p>
+                <div class="spotlight-card__footer">
+                  <span class="spotlight-card__count" data-spotlight-count>{{ init_clips }} {% if init_clips == 1 %}Clip{% else %}Clips{% endif %}</span>
+                  <span class="spotlight-card__cta">
+                    <span>Explore</span>
+                    <span class="spotlight-card__arrow" aria-hidden="true">&rarr;</span>
+                  </span>
+                </div>
+              </div>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="lucky-bar" role="group" aria-label="Jump to a random page">
+        <span class="lucky-bar__label">Take me to a random:</span>
+        <div class="lucky-bar__group">
+          <button type="button" class="lucky-bar__btn" data-lucky="jazz"><span aria-hidden="true">🎷</span><span>Solo Jazz</span></button>
+          <button type="button" class="lucky-bar__btn" data-lucky="routines"><span aria-hidden="true">👯</span><span>Routine</span></button>
+          <button type="button" class="lucky-bar__btn" data-lucky="historical_clips"><span aria-hidden="true">📽️</span><span>Historical Clip</span></button>
+          <button type="button" class="lucky-bar__btn" data-lucky="historical_figures"><span aria-hidden="true">👤</span><span>Historical Figure</span></button>
+          <button type="button" class="lucky-bar__btn" data-lucky="aerials"><span aria-hidden="true">🤸</span><span>Aerial</span></button>
+          <button type="button" class="lucky-bar__btn" data-lucky="events"><span aria-hidden="true">📅</span><span>Event</span></button>
+        </div>
+        <span class="lucky-bar__or">or</span>
+        <button type="button" class="lucky-bar__primary" data-lucky="all">
+          <span aria-hidden="true">🎲</span>
+          <span>I'm Feeling Lucky</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="application/json" id="lc-spotlight-data">{ {{ spotlight_json_entries }} }</script>
+<script>
+(function() {
+  var dataEl = document.getElementById("lc-spotlight-data");
+  if (!dataEl) {
+    return;
+  }
+  var catalog;
+  try {
+    catalog = JSON.parse(dataEl.textContent || dataEl.innerHTML);
+  } catch (err) {
+    return;
+  }
+
+  var gcd = function(a, b) {
+    while (b !== 0) {
+      var t = b;
+      b = a % b;
+      a = t;
+    }
+    return a;
+  };
+
+  var pickRotatingIndex = function(periodNum, count, salt) {
+    if (count <= 1) {
+      return 0;
+    }
+    var step = (Math.floor(count * 0.6180339887) + salt) % count;
+    if (step < 1) {
+      step = 1;
+    }
+    while (gcd(step, count) !== 1) {
+      step = (step + 1) % count;
+      if (step === 0) {
+        step = 1;
+      }
+    }
+    var idx = ((periodNum * step) + salt * 7) % count;
+    return idx < 0 ? idx + count : idx;
+  };
+
+  var now = new Date();
+  var dayNum = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
+  var weekNum = Math.floor((dayNum + 3) / 7);
+  var monthNum = now.getFullYear() * 12 + now.getMonth();
+
+  var schedule = [
+    { key: "jazz", period: dayNum, salt: 3 },
+    { key: "historical_figures", period: weekNum, salt: 5 },
+    { key: "routines", period: monthNum, salt: 11 }
+  ];
+
+  for (var i = 0; i < schedule.length; i++) {
+    var spec = schedule[i];
+    var list = catalog[spec.key];
+    if (!list || !list.length) {
+      continue;
+    }
+    var card = document.querySelector('[data-spotlight-card="' + spec.key + '"]');
+    if (!card) {
+      continue;
+    }
+    var chosen = list[pickRotatingIndex(spec.period, list.length, spec.salt)];
+    card.setAttribute("href", chosen.url);
+
+    var titleEl = card.querySelector("[data-spotlight-title]");
+    if (titleEl) {
+      titleEl.textContent = chosen.title;
+    }
+
+    var excerptEl = card.querySelector("[data-spotlight-excerpt]");
+    if (excerptEl) {
+      if (chosen.excerpt) {
+        excerptEl.textContent = chosen.excerpt;
+        excerptEl.hidden = false;
+      } else {
+        excerptEl.textContent = "";
+        excerptEl.hidden = true;
+      }
+    }
+
+    var countEl = card.querySelector("[data-spotlight-count]");
+    if (countEl) {
+      countEl.textContent = chosen.clips + (chosen.clips === 1 ? " Clip" : " Clips");
+    }
+
+    var imgEl = card.querySelector("[data-spotlight-img]");
+    var placeholderEl = card.querySelector("[data-spotlight-placeholder]");
+    if (imgEl && placeholderEl) {
+      if (chosen.thumb) {
+        if (imgEl.getAttribute("src") !== chosen.thumb) {
+          imgEl.setAttribute("src", chosen.thumb);
+        }
+        imgEl.setAttribute("alt", chosen.title);
+        imgEl.hidden = false;
+        placeholderEl.hidden = true;
+      } else {
+        imgEl.hidden = true;
+        placeholderEl.hidden = false;
+      }
+    }
+  }
+})();
+</script>
+
+{% assign total_categories_count = 0 %}
+{% assign total_pages_count = 0 %}
+{% capture all_sections_html %}
+  {% for cat_entry in showcase_categories %}
+    {% assign cat_parts = cat_entry | split: "|" %}
+    {% assign cat_key = cat_parts[0] %}
+    {% assign cat_title = cat_parts[1] %}
+    {% assign cat_url = cat_parts[2] %}
+    {% assign cat_theme = cat_parts[3] %}
+    {% assign cat_docs = site[cat_key] %}
+
+    {% assign topic_count = 0 %}
+    {% assign category_clip_count = 0 %}
+    {% assign tags_html = "" %}
+
+    {% for doc in cat_docs %}
+      {% unless doc.layout == "redirect" %}
+        {% assign topic_count = topic_count | plus: 1 %}
+        {% if doc.clips %}
+          {% assign doc_clips_direct = doc.clips | size %}
+        {% else %}
+          {% assign doc_clips_direct = 0 %}
+        {% endif %}
+        {% if doc.crossref and doc.crossref_id %}
+          {% assign doc_clips_crossref = site.clips | where: doc.crossref, doc.crossref_id | size %}
+        {% else %}
+          {% assign doc_clips_crossref = 0 %}
+        {% endif %}
+        {% assign doc_total_clips = doc_clips_direct | plus: doc_clips_crossref %}
+        {% assign category_clip_count = category_clip_count | plus: doc_total_clips %}
+
+        {% capture chip_html %}<a class="showcase-tag" href="{{ doc.url | relative_url }}"><span class="showcase-tag__label">{{ doc.title | strip_html | escape }}</span>{% if doc_total_clips > 0 %}<span class="showcase-tag__count" title="{{ doc_total_clips }} {% if doc_total_clips == 1 %}clip{% else %}clips{% endif %}">{{ doc_total_clips }}</span>{% endif %}</a>{% endcapture %}
+        {% assign tags_html = tags_html | append: chip_html %}
+      {% endunless %}
+    {% endfor %}
+
+    {% if topic_count > 0 %}
+      {% assign total_categories_count = total_categories_count | plus: 1 %}
+      {% assign total_pages_count = total_pages_count | plus: topic_count %}
+      <div class="showcase-section showcase-section--{{ cat_theme }}" data-category="{{ cat_key }}">
+        <div class="showcase-section__header">
+          <h2 class="showcase-section__title">
+            <a class="showcase-section__link" href="{{ cat_url | relative_url }}">
+              <span class="showcase-section__emoji" aria-hidden="true">{% include collection_emoji.html collection=cat_key %}</span>
+              <span>{{ cat_title }}</span>
+            </a>
+          </h2>
+          <a class="showcase-section__more" href="{{ cat_url | relative_url }}">
+            <span>{{ topic_count }} {% if topic_count == 1 %}topic{% else %}topics{% endif %} &middot; {{ category_clip_count }} {% if category_clip_count == 1 %}clip{% else %}clips{% endif %}</span>
+            <span class="showcase-section__arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+
+        <div class="showcase-tags-box">
+          <div class="showcase-tags">
+            {{ tags_html }}
           </div>
         </div>
-        {% endif %}
-      {% endfor %}
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+<section class="home-showcase" aria-label="All collections index">
+  <div class="container">
+    <div class="home-showcase__inner">
+      <div class="home-showcase__intro">
+        <p class="home-showcase__summary">
+          This site has {{ total_categories_count }} {% if total_categories_count == 1 %}category{% else %}categories{% endif %} with {{ total_pages_count }} total {% if total_pages_count == 1 %}page{% else %}pages{% endif %}. Here are quick links to all the pages in each category, or browse the categories for brief descriptions and thumbnails. If you have a clip, move, person, or other topic that you'd like to share with others please click any of the contribute buttons. (If you're unsure please don't hesitate to reach out by <a href="{{ '/contact/' | relative_url }}">any means listed</a>.)
+        </p>
+      </div>
+
+      {{ all_sections_html }}
     </div>
   </div>
 </section>
 
 <script>
 (function() {
-  var carouselNodes = document.querySelectorAll("[data-carousel]");
-  if (!carouselNodes.length) {
-    return;
-  }
-
-  var reducedMotionQuery = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
-  var prefersReducedMotion = function() {
-    return Boolean(reducedMotionQuery && reducedMotionQuery.matches);
-  };
-
-  var items = [];
-  var nowMs = function() {
-    return window.performance && performance.now ? performance.now() : Date.now();
-  };
-
-  for (var i = 0; i < carouselNodes.length; i++) {
-    (function(root, idx) {
-      var viewport = root.querySelector("[data-carousel-viewport]");
-      var prevBtn = root.querySelector("[data-carousel-prev]");
-      var nextBtn = root.querySelector("[data-carousel-next]");
-      if (!viewport || !prevBtn || !nextBtn) {
+  var luckyBtns = document.querySelectorAll("[data-lucky]");
+  for (var i = 0; i < luckyBtns.length; i++) {
+    luckyBtns[i].addEventListener("click", function() {
+      var cat = this.getAttribute("data-lucky");
+      var selector = (cat && cat !== "all")
+        ? '.showcase-section[data-category="' + cat + '"] .showcase-tag'
+        : ".showcase-tag";
+      var links = document.querySelectorAll(selector);
+      if (!links.length) {
         return;
       }
-
-      var state = {
-        root: root,
-        viewport: viewport,
-        prevBtn: prevBtn,
-        nextBtn: nextBtn,
-        direction: 1,
-        carry: 0,
-        speed: 18 + (idx % 3) * 2.5,
-        isHovered: false,
-        isFocused: false,
-        isDragging: false,
-        isVisible: true,
-        pauseUntil: nowMs() + 700 + idx * 180,
-        updateControls: null
-      };
-
-      var updateControls = function() {
-        var maxScroll = viewport.scrollWidth - viewport.clientWidth;
-        var scrollLeft = viewport.scrollLeft;
-        var canScroll = maxScroll > 2;
-        var canLeft = canScroll && scrollLeft > 2;
-        var canRight = canScroll && scrollLeft < maxScroll - 2;
-
-        root.classList.toggle("showcase-carousel--scrollable", canScroll);
-        root.classList.toggle("showcase-carousel--left", canLeft);
-        root.classList.toggle("showcase-carousel--right", canRight);
-        prevBtn.disabled = !canLeft;
-        nextBtn.disabled = !canRight;
-      };
-
-      state.updateControls = updateControls;
-
-      var scrollByPage = function(dir) {
-        var delta = Math.max(220, Math.round(viewport.clientWidth * 0.72)) * dir;
-        state.direction = dir;
-        state.carry = 0;
-        state.pauseUntil = nowMs() + 2800;
-        if (typeof viewport.scrollBy === "function") {
-          try {
-            viewport.scrollBy({ left: delta, behavior: prefersReducedMotion() ? "auto" : "smooth" });
-          } catch (err) {
-            viewport.scrollLeft += delta;
-          }
-        } else {
-          viewport.scrollLeft += delta;
-        }
-      };
-
-      prevBtn.addEventListener("click", function() {
-        scrollByPage(-1);
-      });
-
-      nextBtn.addEventListener("click", function() {
-        scrollByPage(1);
-      });
-
-      viewport.addEventListener("scroll", updateControls, { passive: true });
-
-      root.addEventListener("mouseenter", function() {
-        state.isHovered = true;
-      });
-
-      root.addEventListener("mouseleave", function() {
-        state.isHovered = false;
-      });
-
-      root.addEventListener("focusin", function() {
-        state.isFocused = true;
-      });
-
-      root.addEventListener("focusout", function() {
-        setTimeout(function() {
-          state.isFocused = root.contains(document.activeElement);
-        }, 0);
-      });
-
-      viewport.addEventListener("touchstart", function() {
-        state.pauseUntil = nowMs() + 3500;
-      }, { passive: true });
-
-      viewport.addEventListener("touchmove", function() {
-        state.pauseUntil = nowMs() + 3500;
-      }, { passive: true });
-
-      viewport.addEventListener("wheel", function(e) {
-        if (Math.abs(e.deltaX) > 0 || e.shiftKey) {
-          state.pauseUntil = nowMs() + 3000;
-        }
-      }, { passive: true });
-
-      var mouseDown = false;
-      var dragMoved = false;
-      var dragStartX = 0;
-      var dragStartScroll = 0;
-      var suppressClickUntil = 0;
-
-      viewport.addEventListener("mousedown", function(e) {
-        if (e.button !== 0 || viewport.scrollWidth <= viewport.clientWidth + 2) {
-          return;
-        }
-        mouseDown = true;
-        dragMoved = false;
-        dragStartX = e.clientX;
-        dragStartScroll = viewport.scrollLeft;
-      });
-
-      window.addEventListener("mousemove", function(e) {
-        if (!mouseDown) {
-          return;
-        }
-        var dx = e.clientX - dragStartX;
-        if (!dragMoved && Math.abs(dx) > 6) {
-          dragMoved = true;
-          state.isDragging = true;
-          root.classList.add("showcase-carousel--dragging");
-        }
-        if (dragMoved) {
-          viewport.scrollLeft = dragStartScroll - dx;
-          state.pauseUntil = nowMs() + 3000;
-        }
-      });
-
-      window.addEventListener("mouseup", function() {
-        if (!mouseDown) {
-          return;
-        }
-        mouseDown = false;
-        state.isDragging = false;
-        root.classList.remove("showcase-carousel--dragging");
-        if (dragMoved) {
-          suppressClickUntil = nowMs() + 140;
-          dragMoved = false;
-        }
-      });
-
-      viewport.addEventListener("click", function(e) {
-        if (nowMs() < suppressClickUntil) {
-          e.preventDefault();
-          e.stopPropagation();
-          suppressClickUntil = 0;
-        }
-      }, true);
-
-      updateControls();
-      items.push(state);
-    })(carouselNodes[i], i);
-  }
-
-  if ("IntersectionObserver" in window) {
-    var io = new IntersectionObserver(function(entries) {
-      for (var j = 0; j < entries.length; j++) {
-        var entry = entries[j];
-        for (var k = 0; k < items.length; k++) {
-          if (items[k].root === entry.target) {
-            items[k].isVisible = entry.isIntersecting;
-            break;
-          }
-        }
+      var picked = links[Math.floor(Math.random() * links.length)];
+      var href = picked.getAttribute("href");
+      if (href) {
+        window.location.href = href;
       }
-    }, { threshold: 0.05 });
-
-    for (var m = 0; m < items.length; m++) {
-      io.observe(items[m].root);
-    }
+    });
   }
-
-  var syncAll = function() {
-    for (var n = 0; n < items.length; n++) {
-      items[n].updateControls();
-    }
-  };
-
-  window.addEventListener("resize", syncAll);
-  window.addEventListener("load", syncAll);
-
-  var lastFrame = nowMs();
-  var tick = function() {
-    var current = nowMs();
-    var dt = Math.min(0.05, Math.max(0, (current - lastFrame) / 1000));
-    lastFrame = current;
-
-    if (!document.hidden && !prefersReducedMotion()) {
-      for (var p = 0; p < items.length; p++) {
-        var it = items[p];
-        if (!it.isVisible || it.isHovered || it.isFocused || it.isDragging || current < it.pauseUntil) {
-          continue;
-        }
-        var maxScroll = it.viewport.scrollWidth - it.viewport.clientWidth;
-        if (maxScroll <= 2) {
-          continue;
-        }
-        if (it.direction > 0 && it.viewport.scrollLeft >= maxScroll - 1) {
-          it.direction = -1;
-          it.carry = 0;
-          it.pauseUntil = current + 1600;
-          continue;
-        }
-        if (it.direction < 0 && it.viewport.scrollLeft <= 1) {
-          it.direction = 1;
-          it.carry = 0;
-          it.pauseUntil = current + 1600;
-          continue;
-        }
-        it.carry += it.speed * dt * it.direction;
-        var step = it.carry > 0 ? Math.floor(it.carry) : Math.ceil(it.carry);
-        if (step !== 0) {
-          it.viewport.scrollLeft += step;
-          it.carry -= step;
-        }
-      }
-    }
-
-    window.requestAnimationFrame(tick);
-  };
-
-  window.requestAnimationFrame(tick);
 })();
 </script>
