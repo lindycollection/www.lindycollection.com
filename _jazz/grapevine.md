@@ -1,5 +1,5 @@
 ---
 layout: post
 title: "Grapevine"
-clips: [jazz_abc3_grapevine]
+clips: [jazz_abc3_grapevine, socialswingtv_grapevine]
 ---

@@ -120,6 +120,39 @@ def fetch_youtube_upload_date(youtube_id: str) -> str | None:
     return None
 
 
+def parse_instagram_input(raw_id_or_url: str, raw_type: str = "") -> tuple[str, str]:
+    """
+    Normalize Instagram shortcode and media type ('reel', 'p', 'tv') from either
+    a bare shortcode or a full Instagram URL (stripping query params like ?igsh= or ?lqvp=).
+    """
+    s = (raw_id_or_url or "").strip()
+    norm_type = (raw_type or "").strip().lower()
+    if norm_type == "reels":
+        norm_type = "reel"
+    if norm_type not in ("reel", "p", "tv"):
+        norm_type = ""
+
+    if not s:
+        return "", norm_type
+
+    url_match = re.search(
+        r'(?:instagram\.com|instagr\.am)/(?:(?!p/|reel/|reels/|tv/|stories/|share/|explore/)[A-Za-z0-9._]+/)?(p|reel|reels|tv)/([A-Za-z0-9_-]+)',
+        s,
+        re.IGNORECASE,
+    )
+    if url_match:
+        extracted_type = url_match.group(1).lower()
+        if extracted_type == "reels":
+            extracted_type = "reel"
+        shortcode = url_match.group(2)
+        return shortcode, (norm_type or extracted_type or "p")
+
+    if re.match(r'^[A-Za-z0-9_-]+$', s):
+        return s, (norm_type or "p")
+
+    return "", norm_type
+
+
 def write_frontmatter_file(path: str, fm_dict: dict, body: str = ""):
     """Write a markdown file with YAML frontmatter."""
     lines = ["---"]
@@ -400,7 +433,41 @@ def main():
         if clip_mode == "new":
             clip_id = (meta.get("clip-id", "").lower().replace(' ', '_')) or f"clip_issue_{issue_number}"
             clip_title = meta.get("title") or meta.get("clip-title") or f"Clip Submission #{issue_number}"
-            youtube_id = meta.get("youtube-id", "")
+            raw_youtube = meta.get("youtube-id", "").strip()
+            raw_instagram = (meta.get("instagram-id") or meta.get("instagram-url") or "").strip()
+            raw_instagram_type = meta.get("instagram-type", "").strip()
+
+            youtube_id = ""
+            instagram_id = ""
+            instagram_type = ""
+
+            if raw_instagram:
+                instagram_id, instagram_type = parse_instagram_input(raw_instagram, raw_instagram_type)
+            elif raw_youtube and ("instagram.com" in raw_youtube.lower() or "instagr.am" in raw_youtube.lower()):
+                instagram_id, instagram_type = parse_instagram_input(raw_youtube, raw_instagram_type)
+            elif raw_youtube:
+                yt_url_m = re.search(
+                    r'(?:youtu\.be/|youtube(?:-nocookie)?\.com/(?:embed|shorts|live|v)/|[?&]v=)([A-Za-z0-9_-]{11})(?:[?&#/]|$)',
+                    raw_youtube,
+                )
+                if yt_url_m:
+                    youtube_id = yt_url_m.group(1)
+                elif re.match(r'^[A-Za-z0-9_-]{11}$', raw_youtube):
+                    youtube_id = raw_youtube
+
+            if not youtube_id and not instagram_id:
+                print("[ERROR] Missing valid YouTube-ID or Instagram-ID for new clip submission.")
+                abort_comment = (
+                    f"👋 Thank you for your contribution to Lindy Collection!\n\n"
+                    f"⚠️ **Automated Pull Request Aborted: Invalid or Missing Video Identifier**\n\n"
+                    f"New clip submissions must include either a valid 11-character `YouTube-ID` or a public `Instagram-ID` (Post/Reel shortcode).\n\n"
+                    f"Please verify your video link and re-submit using the [New Clip Form](https://www.lindycollection.com/suggest-new-clip/)."
+                )
+                post_issue_comment(github_repo, issue_number, github_token, abort_comment)
+                set_github_output("status", "aborted")
+                set_github_output("abort_reason", "Missing valid YouTube-ID or Instagram-ID")
+                sys.exit(0)
+
             target_page_raw = meta.get("target-page", "")
             target_pages = [
                 p.strip() for p in target_page_raw.split(",")
@@ -426,20 +493,28 @@ def main():
             clip_fm = {
                 "layout": "post",
                 "title": clip_title,
-                "youtube_id": youtube_id,
                 "clip_id": f"'{clip_id}'"
             }
+            if youtube_id:
+                clip_fm["youtube_id"] = youtube_id
+            elif instagram_id:
+                clip_fm["instagram_id"] = instagram_id
+                clip_fm["instagram_type"] = instagram_type or "p"
+
             if meta.get("clip-type"):
                 clip_fm["clip_type"] = f"'{meta['clip-type']}'"
-            start_sec = parse_time_to_seconds(meta.get("start-time"))
-            if start_sec:
-                clip_fm["start_time"] = int(start_sec) if start_sec.isdigit() else f"'{start_sec}'"
-            end_sec = parse_time_to_seconds(meta.get("end-time"))
-            if end_sec:
-                clip_fm["end_time"] = int(end_sec) if end_sec.isdigit() else f"'{end_sec}'"
+            if youtube_id:
+                start_sec = parse_time_to_seconds(meta.get("start-time"))
+                if start_sec:
+                    clip_fm["start_time"] = int(start_sec) if start_sec.isdigit() else f"'{start_sec}'"
+                end_sec = parse_time_to_seconds(meta.get("end-time"))
+                if end_sec:
+                    clip_fm["end_time"] = int(end_sec) if end_sec.isdigit() else f"'{end_sec}'"
             if event_val:
                 clip_fm["event"] = event_val
-            upload_date = meta.get("upload-date", "").strip() or fetch_youtube_upload_date(youtube_id)
+            upload_date = meta.get("upload-date", "").strip()
+            if not upload_date and youtube_id:
+                upload_date = fetch_youtube_upload_date(youtube_id) or ""
             if upload_date:
                 clip_fm["upload_date"] = upload_date
 
@@ -461,10 +536,15 @@ def main():
 
             summary = f"New Clip: {clip_title} ({clip_id})"
             pr_title = f"[New Clip] {clip_title} ({clip_id}) (Closes #{issue_number})"
+            source_id_line = (
+                f"YouTube ID: {youtube_id}"
+                if youtube_id
+                else f"Instagram ID: {instagram_id} ({instagram_type or 'p'})"
+            )
             commit_msg = (
                 f"Add new clip: {clip_title} ({clip_id})\n\n"
                 f"Contributor: {contributor}\n"
-                f"YouTube ID: {youtube_id}\n\n"
+                f"{source_id_line}\n\n"
                 f"License: CC-BY-NC-SA-4.0"
             )
 

@@ -63,9 +63,14 @@
                 {% elsif doc.clips and doc.clips.size > 0 %}
                   {% for cid in doc.clips %}
                     {% assign c_obj = site.clips | where: "clip_id", cid | first %}
-                    {% if c_obj and c_obj.youtube_id and c_obj.youtube_id != "" %}
-                      {% assign d_thumb = "https://img.youtube.com/vi/" | append: c_obj.youtube_id | append: "/hqdefault.jpg" %}
-                      {% break %}
+                    {% if c_obj %}
+                      {% if c_obj.featured-img and c_obj.featured-img != "" %}
+                        {% assign d_thumb = "/assets/img/posts/" | append: c_obj.featured-img | append: "_thumb.jpg" | relative_url %}
+                        {% break %}
+                      {% elsif c_obj.youtube_id and c_obj.youtube_id != "" %}
+                        {% assign d_thumb = "https://img.youtube.com/vi/" | append: c_obj.youtube_id | append: "/hqdefault.jpg" %}
+                        {% break %}
+                      {% endif %}
                     {% endif %}
                   {% endfor %}
                 {% endif %}

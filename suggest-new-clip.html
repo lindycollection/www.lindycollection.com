@@ -39,7 +39,7 @@ permalink: /suggest-new-clip/
       {% assign c_stem = c.path | split: "/" | last | replace: ".md", "" %}
       {% assign c_id = c.clip_id | default: c_stem %}
       {% unless forloop.first %},{% endunless %}
-      {"id": {{ c_id | jsonify }}, "t": {{ c.title | default: c_id | jsonify }}, "u": {{ c.url | relative_url | jsonify }}{% if c.youtube_id and c.youtube_id != "" %}, "yt": {{ c.youtube_id | jsonify }}{% endif %}{% if c.start_time != nil and c.start_time != "" %}, "st": {{ c.start_time | jsonify }}{% endif %}{% if c.end_time != nil and c.end_time != "" %}, "et": {{ c.end_time | jsonify }}{% endif %}{% if c.event and c.event != "" %}, "ev": {{ c.event | jsonify }}{% endif %}{% if c.clip_type and c.clip_type != "" %}, "ct": {{ c.clip_type | jsonify }}{% endif %}{% if c.upload_date and c.upload_date != "" %}, "ud": {{ c.upload_date | jsonify }}{% endif %}}
+      {"id": {{ c_id | jsonify }}, "t": {{ c.title | default: c_id | jsonify }}, "u": {{ c.url | relative_url | jsonify }}{% if c.youtube_id and c.youtube_id != "" %}, "yt": {{ c.youtube_id | jsonify }}{% endif %}{% if c.instagram_id and c.instagram_id != "" %}, "ig": {{ c.instagram_id | jsonify }}{% endif %}{% if c.instagram_type and c.instagram_type != "" %}, "igt": {{ c.instagram_type | jsonify }}{% endif %}{% if c.start_time != nil and c.start_time != "" %}, "st": {{ c.start_time | jsonify }}{% endif %}{% if c.end_time != nil and c.end_time != "" %}, "et": {{ c.end_time | jsonify }}{% endif %}{% if c.event and c.event != "" %}, "ev": {{ c.event | jsonify }}{% endif %}{% if c.clip_type and c.clip_type != "" %}, "ct": {{ c.clip_type | jsonify }}{% endif %}{% if c.upload_date and c.upload_date != "" %}, "ud": {{ c.upload_date | jsonify }}{% endif %}}
     {% endfor %}
   ]
 }{% endcapture %}
@@ -47,7 +47,7 @@ permalink: /suggest-new-clip/
 
 <div class="submission-container">
   <p class="submission-intro">
-    Paste a YouTube link below to auto-fill clip metadata, preview timestamps, and associate it with routines, solo jazz moves, aerials, historical figures, or events.
+    Paste a YouTube or Instagram link below to preview the clip, fill metadata, and associate it with routines, solo jazz moves, aerials, historical figures, or events.
     Both technical contributors (via GitHub) and community members (via Email) can submit suggestions with mandatory <strong>CC-BY-NC-SA 4.0</strong> legal sign-off.
   </p>
 
@@ -71,29 +71,30 @@ permalink: /suggest-new-clip/
       </label>
     </div>
 
-    <!-- Section A (Top): YouTube URL, Auto-Preview, Auto-Filled Metadata & Timestamps -->
+    <!-- Section A (Top): Video URL (YouTube or Instagram), Auto-Preview, Metadata & Timestamps -->
     <div id="subSectionNewClip">
       <div class="submission-form-group">
         <div class="field-label-row">
-          <label for="clipYoutubeUrl">YouTube Video URL or ID <span class="required-star">*</span></label>
-          <button type="button" id="btnRefetchYt" class="inline-action-btn" style="display: none;" title="Re-fetch metadata from YouTube and reset auto-filled fields">↻ Reset from YouTube</button>
+          <label for="clipYoutubeUrl">Video URL (YouTube or Instagram) <span class="required-star">*</span></label>
+          <button type="button" id="btnRefetchYt" class="inline-action-btn" style="display: none;" title="Re-fetch metadata from URL and reset auto-filled fields">↻ Reset from URL</button>
         </div>
-        <input type="url" id="clipYoutubeUrl" class="submission-input" placeholder="Paste YouTube URL here — e.g., https://www.youtube.com/watch?v=... or https://youtu.be/...?t=90" autofocus>
+        <input type="url" id="clipYoutubeUrl" class="submission-input" placeholder="Paste YouTube or Instagram URL — e.g., https://www.youtube.com/watch?v=... or https://www.instagram.com/reel/..." autofocus>
         <div class="yt-status-row">
-          <span id="ytFetchStatus" class="yt-fetch-status">Paste a YouTube link to automatically fetch the title, clip ID, timestamps, and preview.</span>
+          <span id="ytFetchStatus" class="yt-fetch-status">Paste a YouTube or Instagram link to preview the clip and fill metadata.</span>
         </div>
-        <span class="field-error-msg" id="err-clipYoutubeUrl">Please provide a valid YouTube URL or 11-character video ID.</span>
+        <span class="field-error-msg" id="err-clipYoutubeUrl">Please provide a valid YouTube URL/ID or public Instagram Post/Reel URL.</span>
       </div>
 
       <!-- Inline Video Preview & Timestamp Picker -->
       <div id="ytPreviewCard" class="yt-preview-card" style="display: none;">
         <div class="yt-preview-layout">
-          <div class="yt-preview-player-wrap">
+          <div id="ytPreviewPlayerWrap" class="yt-preview-player-wrap">
             <div id="ytPreviewPlayer"></div>
           </div>
+          <div id="igPreviewWrap" class="ig-preview-player-wrap" style="display: none;"></div>
           <div class="yt-preview-controls">
             <div id="ytMetaInfo" class="yt-meta-info">Loading video preview…</div>
-            <div class="yt-time-btns">
+            <div id="ytTimeBtns" class="yt-time-btns">
               <button type="button" id="btnSetStartFromPlayer" class="yt-time-btn" disabled title="Copy current video playback position into Start Time">
                 ⏱ Set Start from Player
               </button>
@@ -104,7 +105,7 @@ permalink: /suggest-new-clip/
                 ▶ Preview Clip Range
               </button>
             </div>
-            <span class="field-hint" style="margin-top: 0;">Play or scrub the video above and click <strong>Set Start</strong> / <strong>Set End</strong> to capture exact timestamps without typing.</span>
+            <span id="ytTimeHint" class="field-hint" style="margin-top: 0;">Play or scrub the video above and click <strong>Set Start</strong> / <strong>Set End</strong> to capture exact timestamps without typing.</span>
           </div>
         </div>
 
@@ -117,8 +118,8 @@ permalink: /suggest-new-clip/
       <div class="submission-grid-2">
         <div class="submission-form-group">
           <label for="clipTitle">Clip Title <span class="required-star">*</span> <span id="tagAutoTitle" class="autofill-tag" style="display: none;">Auto-filled</span></label>
-          <input type="text" id="clipTitle" class="submission-input" placeholder="Auto-filled from YouTube video title">
-          <span class="field-hint">Fetched automatically from YouTube; feel free to refine for sub-clips.</span>
+          <input type="text" id="clipTitle" class="submission-input" placeholder="Auto-filled when available, or enter descriptive title">
+          <span class="field-hint">Fetched automatically from YouTube (or enter a descriptive title for Instagram clips).</span>
           <span class="field-error-msg" id="err-clipTitle">Please provide a descriptive title for this clip.</span>
         </div>
 
@@ -130,7 +131,7 @@ permalink: /suggest-new-clip/
         </div>
       </div>
 
-      <div class="submission-grid-2">
+      <div id="ytTimestampFieldsRow" class="submission-grid-2">
         <div class="submission-form-group">
           <div class="field-label-row">
             <label for="clipStartTime">Start Time (optional) <span id="tagAutoStart" class="autofill-tag" style="display: none;">From URL</span></label>
@@ -157,7 +158,7 @@ permalink: /suggest-new-clip/
     <div id="subSectionLinkExisting" style="display: none;">
       <div class="submission-form-group">
         <label for="existingClipSelect">Select Existing Clip <span class="required-star">*</span></label>
-        <input type="search" id="existingClipFilter" class="submission-input existing-clip-filter" placeholder="🔍 Filter existing clips by title, clip ID, or YouTube ID…">
+        <input type="search" id="existingClipFilter" class="submission-input existing-clip-filter" placeholder="🔍 Filter existing clips by title, clip ID, YouTube ID, or Instagram ID…">
         <select id="existingClipSelect" class="submission-select" aria-label="Existing Clip">
           <option value="">-- Select an Existing Clip --</option>
         </select>

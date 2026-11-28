@@ -33,6 +33,7 @@
   const clipById = new Map();
   const clipByNormPath = new Map();
   const clipsByYoutubeId = new Map();
+  const clipsByInstagramId = new Map();
   const existingClipIdsSet = new Set();
 
   function normalizeLookupPath(raw) {
@@ -99,11 +100,15 @@
         if (!clipsByYoutubeId.has(c.yt)) clipsByYoutubeId.set(c.yt, []);
         clipsByYoutubeId.get(c.yt).push(c);
       }
+      if (c.ig) {
+        if (!clipsByInstagramId.has(c.ig)) clipsByInstagramId.set(c.ig, []);
+        clipsByInstagramId.get(c.ig).push(c);
+      }
     });
   }
 
   // ---------------------------------------------------------------------------
-  // 3. Time & YouTube URL Parsing Helpers
+  // 3. Time & Media (YouTube / Instagram) URL Parsing Helpers
   // ---------------------------------------------------------------------------
   function parseTimestampToken(raw) {
     if (raw === null || raw === undefined) return null;
@@ -137,12 +142,65 @@
     return `${mins}:${pad2(rem)}`;
   }
 
-  function parseYoutubeInput(raw) {
+  function parseMediaInput(raw) {
     const trimmed = String(raw || '').trim();
-    if (!trimmed) return { videoId: null, startSec: null, endSec: null };
+    const emptyResult = {
+      platform: null,
+      videoId: null,
+      instagramId: null,
+      instagramType: null,
+      authorHint: '',
+      startSec: null,
+      endSec: null,
+      unsupportedReason: ''
+    };
+    if (!trimmed) return emptyResult;
+
+    // Check for Instagram URLs first
+    if (/(?:^|\/\/|(?:www\.|m\.))(?:instagram\.com|instagr\.am)\//i.test(trimmed)) {
+      let pathname = '';
+      try {
+        const urlCandidate = /^[a-z]+:\/\//i.test(trimmed) ? trimmed : 'https://' + trimmed;
+        const u = new URL(urlCandidate);
+        pathname = u.pathname || '';
+      } catch (e) {
+        pathname = trimmed.split('?')[0].split('#')[0];
+      }
+
+      if (/\/stories\//i.test(pathname)) {
+        return Object.assign({}, emptyResult, {
+          unsupportedReason: 'Instagram Stories expire after 24 hours and cannot be embedded. Please provide a public Instagram Post or Reel URL.'
+        });
+      }
+      if (/\/share\//i.test(pathname)) {
+        return Object.assign({}, emptyResult, {
+          unsupportedReason: 'This is an Instagram /share/ redirect link. Please open it in your browser and copy the resolved instagram.com/reel/... or /p/... URL.'
+        });
+      }
+
+      const igMatch = pathname.match(/^\/(?:([A-Za-z0-9._]+)\/)?(p|reel|reels|tv)\/([A-Za-z0-9_-]+)(?:\/|$)/i);
+      if (igMatch) {
+        const rawUser = igMatch[1] || '';
+        const reservedSegments = new Set(['p', 'reel', 'reels', 'tv', 'explore', 'stories', 'share']);
+        const authorHint = (rawUser && !reservedSegments.has(rawUser.toLowerCase())) ? rawUser : '';
+        let igType = igMatch[2].toLowerCase();
+        if (igType === 'reels') igType = 'reel';
+        return {
+          platform: 'instagram',
+          videoId: null,
+          instagramId: igMatch[3],
+          instagramType: igType,
+          authorHint: authorHint,
+          startSec: null,
+          endSec: null,
+          unsupportedReason: ''
+        };
+      }
+      return emptyResult;
+    }
 
     if (/^[A-Za-z0-9_-]{11}$/.test(trimmed)) {
-      return { videoId: trimmed, startSec: null, endSec: null };
+      return Object.assign({}, emptyResult, { platform: 'youtube', videoId: trimmed });
     }
 
     let videoId = null;
@@ -161,6 +219,8 @@
         break;
       }
     }
+
+    if (!videoId) return emptyResult;
 
     try {
       const urlCandidate = /^[a-z]+:\/\//i.test(trimmed) ? trimmed : 'https://' + trimmed;
@@ -190,7 +250,12 @@
       }
     }
 
-    return { videoId, startSec, endSec };
+    return Object.assign({}, emptyResult, {
+      platform: 'youtube',
+      videoId: videoId,
+      startSec: startSec,
+      endSec: endSec
+    });
   }
 
   // ---------------------------------------------------------------------------
@@ -275,10 +340,13 @@
   }
 
   // ---------------------------------------------------------------------------
-  // 6. Clip Form Logic: Dropdowns, YouTube Auto-Fetch & Preview Player
+  // 6. Clip Form Logic: Dropdowns, Media Auto-Fetch & Preview Player
   // ---------------------------------------------------------------------------
+  let currentPlatform = '';
   let currentUploadDate = '';
   let currentYoutubeId = '';
+  let currentInstagramId = '';
+  let currentInstagramType = 'p';
   let getSelectedTargetUrls = () => {
     const t = document.getElementById('targetPage');
     return t && t.value.trim() ? [t.value.trim()] : [];
@@ -298,7 +366,12 @@
     const ytFetchStatus = document.getElementById('ytFetchStatus');
     const btnRefetchYt = document.getElementById('btnRefetchYt');
     const ytPreviewCard = document.getElementById('ytPreviewCard');
+    const ytPreviewPlayerWrap = document.getElementById('ytPreviewPlayerWrap');
+    const igPreviewWrap = document.getElementById('igPreviewWrap');
     const ytMetaInfo = document.getElementById('ytMetaInfo');
+    const ytTimeBtns = document.getElementById('ytTimeBtns');
+    const ytTimeHint = document.getElementById('ytTimeHint');
+    const ytTimestampFieldsRow = document.getElementById('ytTimestampFieldsRow');
     const existingClipsNotice = document.getElementById('existingVideoClipsNotice');
     const existingClipsHeading = document.getElementById('existingVideoClipsHeading');
     const existingClipsList = document.getElementById('existingVideoClipsList');
@@ -359,7 +432,10 @@
       const rawTitle = (titleInput ? titleInput.value.trim() : '');
       if (!rawTitle) return '';
 
-      const videoHasClips = !!(currentYoutubeId && clipsByYoutubeId.has(currentYoutubeId));
+      const videoHasClips = !!(
+        (currentYoutubeId && clipsByYoutubeId.has(currentYoutubeId)) ||
+        (currentInstagramId && clipsByInstagramId.has(currentInstagramId))
+      );
       const assocSlug = toCleanSlug(getPrimaryAssocSlug(), 20);
       let base = toCleanSlug(rawTitle, 36);
       if (!base) base = 'clip';
@@ -369,7 +445,7 @@
         candidate = toCleanSlug(base, 26) + '_' + assocSlug;
       }
 
-      if (existingClipIdsSet.has(candidate) && startInput && startInput.value.trim()) {
+      if (currentPlatform === 'youtube' && existingClipIdsSet.has(candidate) && startInput && startInput.value.trim()) {
         const stSec = parseTimestampToken(startInput.value);
         if (!Number.isNaN(stSec) && stSec !== null && stSec > 0) {
           candidate = toCleanSlug(candidate, 32) + '_' + stSec + 's';
@@ -701,7 +777,7 @@
       let singleMatchId = '';
       catalog.clips.forEach(c => {
         if (q) {
-          const hay = `${c.t || ''} ${c.id || ''} ${c.yt || ''}`.toLowerCase();
+          const hay = `${c.t || ''} ${c.id || ''} ${c.yt || ''} ${c.ig || ''}`.toLowerCase();
           if (!hay.includes(q)) return;
         }
         const opt = document.createElement('option');
@@ -822,10 +898,11 @@
       });
     }
 
-    // ---- 6F. Embedded YouTube IFrame Player & Range Preview ----
+    // ---- 6F. Embedded YouTube / Instagram Preview Player ----
     let ytPlayer = null;
     let ytPlayerReady = false;
     let ytApiRequested = false;
+    let igEmbedScriptRequested = false;
     let pendingPlayerVideo = null;
     let previewRangeInterval = null;
     let previewStopAtSec = null;
@@ -838,11 +915,34 @@
       const curTitle = titleInput && titleInput.value.trim();
       if (curTitle) parts.push(`<strong>${escapeHtml(curTitle)}</strong>`);
       const subParts = [];
-      if (fetchedAuthorName) subParts.push(`Channel: ${escapeHtml(fetchedAuthorName)}`);
-      if (fetchedDurationSec > 0) subParts.push(`Duration: ${formatSecondsFriendly(fetchedDurationSec)}`);
-      if (currentYoutubeId) subParts.push(`ID: <code>${escapeHtml(currentYoutubeId)}</code>`);
+      if (currentPlatform === 'instagram') {
+        const kindLabel = currentInstagramType === 'reel' ? 'Instagram Reel' : (currentInstagramType === 'tv' ? 'Instagram Video' : 'Instagram Post');
+        subParts.push(kindLabel);
+        if (fetchedAuthorName) subParts.push(`Creator: ${escapeHtml(fetchedAuthorName)}`);
+        if (currentInstagramId) subParts.push(`Shortcode: <code>${escapeHtml(currentInstagramId)}</code>`);
+      } else {
+        if (fetchedAuthorName) subParts.push(`Channel: ${escapeHtml(fetchedAuthorName)}`);
+        if (fetchedDurationSec > 0) subParts.push(`Duration: ${formatSecondsFriendly(fetchedDurationSec)}`);
+        if (currentYoutubeId) subParts.push(`ID: <code>${escapeHtml(currentYoutubeId)}</code>`);
+      }
       if (subParts.length) parts.push(`<span>${subParts.join(' · ')}</span>`);
       ytMetaInfo.innerHTML = parts.length ? parts.join('<br>') : 'Video preview ready.';
+    }
+
+    function setPlatformUiMode(platform) {
+      const isIg = platform === 'instagram';
+      if (ytPreviewPlayerWrap) ytPreviewPlayerWrap.style.display = isIg ? 'none' : '';
+      if (igPreviewWrap) {
+        igPreviewWrap.style.display = isIg ? 'block' : 'none';
+        if (!isIg) igPreviewWrap.innerHTML = '';
+      }
+      if (ytTimeBtns) ytTimeBtns.style.display = isIg ? 'none' : '';
+      if (ytTimestampFieldsRow) ytTimestampFieldsRow.style.display = isIg ? 'none' : '';
+      if (ytTimeHint) {
+        ytTimeHint.innerHTML = isIg
+          ? 'Full Instagram Post/Reel will be embedded via official Instagram embed (timestamps apply to YouTube videos only).'
+          : 'Play or scrub the video above and click <strong>Set Start</strong> / <strong>Set End</strong> to capture exact timestamps without typing.';
+      }
     }
 
     function escapeHtml(str) {
@@ -868,6 +968,7 @@
     }
 
     function applyFallbackDataFromPlayer() {
+      if (currentPlatform !== 'youtube') return;
       if (!ytPlayer || typeof ytPlayer.getVideoData !== 'function') return;
       const data = ytPlayer.getVideoData() || {};
       if (data.author && !fetchedAuthorName) {
@@ -889,6 +990,7 @@
 
     function initOrCuePlayer(videoId, startSec) {
       if (!ytPreviewCard) return;
+      setPlatformUiMode('youtube');
       ytPreviewCard.style.display = 'block';
       pendingPlayerVideo = { videoId, startSec: startSec || 0 };
 
@@ -916,6 +1018,39 @@
         const tag = document.createElement('script');
         tag.src = 'https://www.youtube.com/iframe_api';
         document.head.appendChild(tag);
+      }
+    }
+
+    function initOrRenderInstagramPreview(instagramId, instagramType) {
+      if (!ytPreviewCard || !igPreviewWrap) return;
+      clearRangeMonitor();
+      if (ytPlayer && ytPlayerReady && typeof ytPlayer.pauseVideo === 'function') {
+        try { ytPlayer.pauseVideo(); } catch (e) {}
+      }
+      setPlayerButtonsEnabled(false);
+      setPlatformUiMode('instagram');
+      ytPreviewCard.style.display = 'block';
+
+      const normType = instagramType || 'p';
+      const permalink = `https://www.instagram.com/${encodeURIComponent(normType)}/${encodeURIComponent(instagramId)}/`;
+      igPreviewWrap.innerHTML =
+        `<blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="${escapeHtml(permalink)}?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:6px; margin:0 auto; max-width:360px; min-width:240px; padding:0; width:100%;">` +
+        `<div style="padding:18px; text-align:center;"><a href="${escapeHtml(permalink)}" target="_blank" rel="noopener noreferrer" style="color:#277cea; font-weight:600; text-decoration:none;">View on Instagram ↗</a></div>` +
+        `</blockquote>`;
+
+      if (window.instgrm && window.instgrm.Embeds && typeof window.instgrm.Embeds.process === 'function') {
+        window.instgrm.Embeds.process();
+      } else if (!igEmbedScriptRequested) {
+        igEmbedScriptRequested = true;
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.instagram.com/embed.js';
+        script.onload = function() {
+          if (window.instgrm && window.instgrm.Embeds && typeof window.instgrm.Embeds.process === 'function') {
+            window.instgrm.Embeds.process();
+          }
+        };
+        document.body.appendChild(script);
       }
     }
 
@@ -985,7 +1120,7 @@
       });
     }
 
-    // ---- 6G. Fetch YouTube Metadata & Populate Fields ----
+    // ---- 6G. Fetch Media Metadata & Populate Fields ----
     let fetchReqCounter = 0;
     let lastProcessedSignature = '';
 
@@ -1005,16 +1140,33 @@
       return t;
     }
 
-    function renderExistingClipsForVideo(videoId) {
+    function extractTitleFromInstagramCaption(rawCaption) {
+      if (!rawCaption) return '';
+      const lines = String(rawCaption)
+        .split(/\r?\n/)
+        .map(l => l.replace(/#[A-Za-z0-9_]+/g, '').trim())
+        .filter(Boolean);
+      if (!lines.length) return '';
+      let firstLine = lines[0].replace(/\s+/g, ' ').trim();
+      if (firstLine.length > 72) {
+        const cut = firstLine.slice(0, 72);
+        const lastSpace = cut.lastIndexOf(' ');
+        firstLine = (lastSpace > 35 ? cut.slice(0, lastSpace) : cut).trim();
+      }
+      return /[A-Za-z0-9]{2,}/.test(firstLine) ? firstLine : '';
+    }
+
+    function renderExistingClipsForMedia(platform, mediaId) {
       if (!existingClipsNotice || !existingClipsList || !existingClipsHeading) return;
-      const matches = clipsByYoutubeId.get(videoId) || [];
+      const matches = (platform === 'instagram' ? clipsByInstagramId.get(mediaId) : clipsByYoutubeId.get(mediaId)) || [];
       if (!matches.length) {
         existingClipsNotice.style.display = 'none';
         existingClipsList.innerHTML = '';
         return;
       }
 
-      existingClipsHeading.textContent = `ℹ️ This YouTube video already has ${matches.length} clip${matches.length === 1 ? '' : 's'} in the Lindy Collection archive:`;
+      const sourceLabel = platform === 'instagram' ? 'Instagram post/Reel' : 'YouTube video';
+      existingClipsHeading.textContent = `ℹ️ This ${sourceLabel} already has ${matches.length} clip${matches.length === 1 ? '' : 's'} in the Lindy Collection archive:`;
       existingClipsList.innerHTML = '';
 
       matches.forEach(c => {
@@ -1028,7 +1180,7 @@
         link.textContent = c.t || c.id;
         chip.appendChild(link);
 
-        if (c.st !== undefined || c.et !== undefined) {
+        if (platform !== 'instagram' && (c.st !== undefined || c.et !== undefined)) {
           const timeSpan = document.createElement('span');
           timeSpan.className = 'yt-existing-chip-time';
           const stFmt = c.st !== undefined && c.st !== '' ? formatSecondsFriendly(c.st) : '0:00';
@@ -1069,7 +1221,9 @@
       }
 
       if (clipEventSelect && (forceReset || isEligibleForAutofill(clipEventSelect))) {
-        const existingMatches = clipsByYoutubeId.get(currentYoutubeId) || [];
+        const existingMatches = (currentPlatform === 'instagram'
+          ? clipsByInstagramId.get(currentInstagramId)
+          : clipsByYoutubeId.get(currentYoutubeId)) || [];
         const archiveEvent = (existingMatches.find(c => c.ev) || {}).ev || '';
         const inferredEvent = archiveEvent || inferEventFromTitle(cleanedTitle);
         if (inferredEvent && Array.from(clipEventSelect.options).some(o => o.value === inferredEvent)) {
@@ -1105,31 +1259,133 @@
       return null;
     }
 
-    async function handleYoutubeUrlChange(forceReset) {
+    async function fetchInstagramOembed(instagramId, instagramType) {
+      const normType = instagramType || 'p';
+      const postUrl = `https://www.instagram.com/${encodeURIComponent(normType)}/${encodeURIComponent(instagramId)}/`;
+      const endpoints = [
+        `https://graph.facebook.com/v25.0/instagram_oembed?url=${encodeURIComponent(postUrl)}&omitscript=true`,
+        `https://noembed.com/embed?url=${encodeURIComponent(postUrl)}`
+      ];
+      for (const ep of endpoints) {
+        try {
+          const resp = await fetch(ep, { method: 'GET', mode: 'cors' });
+          if (!resp.ok) continue;
+          const data = await resp.json();
+          if (data && !data.error) {
+            const titleCandidate = extractTitleFromInstagramCaption(data.title || '');
+            const authorCandidate = String(data.author_name || '').trim();
+            if (titleCandidate || authorCandidate) {
+              return { title: titleCandidate, author: authorCandidate };
+            }
+          }
+        } catch (err) {
+          // Best-effort tokenless oEmbed; fall back gracefully to manual title entry
+        }
+      }
+      return null;
+    }
+
+    async function handleMediaUrlChange(forceReset) {
       if (!ytInput) return;
       const raw = ytInput.value.trim();
       if (!raw) {
+        currentPlatform = '';
         currentYoutubeId = '';
+        currentInstagramId = '';
+        currentInstagramType = 'p';
         currentUploadDate = '';
         lastProcessedSignature = '';
         if (btnRefetchYt) btnRefetchYt.style.display = 'none';
         if (ytPreviewCard) ytPreviewCard.style.display = 'none';
-        setYtStatus('Paste a YouTube link to automatically fetch the title, clip ID, timestamps, and preview.', '');
+        setPlatformUiMode('youtube');
+        setYtStatus('Paste a YouTube or Instagram link to preview the clip and fill metadata.', '');
         return;
       }
 
-      const { videoId, startSec, endSec } = parseYoutubeInput(raw);
-      if (!videoId) {
-        setYtStatus('Enter a full YouTube URL (youtube.com/watch?v=…, youtu.be/…, shorts/…) or 11-character video ID.', 'warn');
+      const parsed = parseMediaInput(raw);
+      if (parsed.unsupportedReason) {
+        setYtStatus(parsed.unsupportedReason, 'warn');
+        return;
+      }
+      if (!parsed.platform) {
+        setYtStatus('Enter a valid YouTube URL/ID (youtube.com/watch?v=…, youtu.be/…, shorts/…) or public Instagram URL (instagram.com/reel/… or /p/…).', 'warn');
         return;
       }
 
-      const signature = `${videoId}|${startSec || ''}|${endSec || ''}`;
+      if (parsed.platform === 'instagram') {
+        const { instagramId, instagramType, authorHint } = parsed;
+        const signature = `ig|${instagramType}|${instagramId}`;
+        if (!forceReset && signature === lastProcessedSignature) return;
+        lastProcessedSignature = signature;
+
+        currentPlatform = 'instagram';
+        currentYoutubeId = '';
+        currentInstagramId = instagramId;
+        currentInstagramType = instagramType || 'p';
+        if (btnRefetchYt) btnRefetchYt.style.display = 'inline-block';
+
+        ytInput.classList.remove('has-error');
+        const errYt = document.getElementById('err-clipYoutubeUrl');
+        if (errYt) errYt.style.display = 'none';
+
+        // Clear any auto-filled timestamps since Instagram embeds do not support start/end seeking
+        if (startInput && isEligibleForAutofill(startInput)) setAutofilledValue(startInput, '', tagAutoStart);
+        if (endInput && isEligibleForAutofill(endInput)) setAutofilledValue(endInput, '', tagAutoEnd);
+
+        const archiveClips = clipsByInstagramId.get(instagramId) || [];
+        renderExistingClipsForMedia('instagram', instagramId);
+        const clipWithUploadDate = archiveClips.find(c => c.ud);
+        currentUploadDate = clipWithUploadDate ? clipWithUploadDate.ud : '';
+        const clipWithEvent = archiveClips.find(c => c.ev);
+        if (clipWithEvent && clipEventSelect && (forceReset || isEligibleForAutofill(clipEventSelect))) {
+          if (Array.from(clipEventSelect.options).some(o => o.value === clipWithEvent.ev)) {
+            setAutofilledValue(clipEventSelect, clipWithEvent.ev, tagAutoEvent);
+          }
+        }
+
+        fetchedAuthorName = authorHint ? ('@' + authorHint) : '';
+        fetchedDurationSec = 0;
+        initOrRenderInstagramPreview(instagramId, currentInstagramType);
+
+        const reqId = ++fetchReqCounter;
+        setYtStatus('Loading Instagram preview…', 'loading');
+
+        const meta = await fetchInstagramOembed(instagramId, currentInstagramType);
+        if (reqId !== fetchReqCounter) return;
+
+        if (meta && meta.author && !fetchedAuthorName) {
+          fetchedAuthorName = meta.author.startsWith('@') ? meta.author : ('@' + meta.author);
+        }
+
+        if (meta && meta.title) {
+          applyFetchedVideoTitle(meta.title, forceReset);
+          updateMetaInfoDisplay();
+          setYtStatus(`✓ Instagram preview loaded & title suggested${fetchedAuthorName ? ' · ' + fetchedAuthorName : ''} — verify title below.`, 'success');
+        } else if (archiveClips.length > 0 && archiveClips[0].t) {
+          applyFetchedVideoTitle(archiveClips[0].t, forceReset);
+          updateMetaInfoDisplay();
+          setYtStatus('✓ Auto-filled from existing archive metadata for this Instagram clip.', 'success');
+        } else {
+          if (forceReset && titleInput && isEligibleForAutofill(titleInput)) {
+            setAutofilledValue(titleInput, '', tagAutoTitle);
+            maybeRefreshAutoClipId(true);
+          }
+          updateMetaInfoDisplay();
+          setYtStatus(`✓ Instagram preview loaded${fetchedAuthorName ? ' (' + fetchedAuthorName + ')' : ''} — please enter a descriptive Clip Title below.`, 'success');
+        }
+        return;
+      }
+
+      const { videoId, startSec, endSec } = parsed;
+      const signature = `yt|${videoId}|${startSec || ''}|${endSec || ''}`;
       if (!forceReset && signature === lastProcessedSignature) return;
       lastProcessedSignature = signature;
 
-      const isNewVideo = videoId !== currentYoutubeId;
+      const isNewVideo = videoId !== currentYoutubeId || currentPlatform !== 'youtube';
+      currentPlatform = 'youtube';
       currentYoutubeId = videoId;
+      currentInstagramId = '';
+      currentInstagramType = 'p';
       if (btnRefetchYt) btnRefetchYt.style.display = 'inline-block';
 
       ytInput.classList.remove('has-error');
@@ -1151,7 +1407,7 @@
 
       // 2. Check existing archive clips for this YouTube video (upload_date, event, duplicates)
       const archiveClips = clipsByYoutubeId.get(videoId) || [];
-      renderExistingClipsForVideo(videoId);
+      renderExistingClipsForMedia('youtube', videoId);
       const clipWithUploadDate = archiveClips.find(c => c.ud);
       currentUploadDate = clipWithUploadDate ? clipWithUploadDate.ud : '';
       const clipWithEvent = archiveClips.find(c => c.ev);
@@ -1192,24 +1448,24 @@
     if (ytInput) {
       ytInput.addEventListener('paste', function() {
         if (ytDebounceTimer) clearTimeout(ytDebounceTimer);
-        ytDebounceTimer = setTimeout(() => handleYoutubeUrlChange(false), 120);
+        ytDebounceTimer = setTimeout(() => handleMediaUrlChange(false), 120);
       });
       ytInput.addEventListener('input', function() {
         if (ytDebounceTimer) clearTimeout(ytDebounceTimer);
-        ytDebounceTimer = setTimeout(() => handleYoutubeUrlChange(false), 380);
+        ytDebounceTimer = setTimeout(() => handleMediaUrlChange(false), 380);
       });
       ytInput.addEventListener('change', function() {
         if (ytDebounceTimer) clearTimeout(ytDebounceTimer);
-        handleYoutubeUrlChange(false);
+        handleMediaUrlChange(false);
       });
     }
     if (btnRefetchYt) {
       btnRefetchYt.addEventListener('click', function() {
-        handleYoutubeUrlChange(true);
+        handleMediaUrlChange(true);
       });
     }
 
-    // ---- 6H. Initial Pre-fill from Query Params (?page=, ?url=, ?youtube=) or Referrer ----
+    // ---- 6H. Initial Pre-fill from Query Params (?page=, ?url=, ?youtube=, ?instagram=) or Referrer ----
     let initializedClipPrefill = false;
     function initClipPrefill() {
       if (initializedClipPrefill) return;
@@ -1226,7 +1482,7 @@
         } catch (e) {}
       }
 
-      const rawYtParam = params.get('url') || params.get('youtube') || params.get('v') || '';
+      const rawMediaParam = params.get('url') || params.get('youtube') || params.get('instagram') || params.get('v') || '';
       let initialAssocUrl = '';
 
       if (rawPage) {
@@ -1262,7 +1518,7 @@
                 switchToMode('new');
                 if (ytInput) {
                   ytInput.value = `https://www.youtube.com/watch?v=${refClip.yt}`;
-                  handleYoutubeUrlChange(true);
+                  handleMediaUrlChange(true);
                 }
               });
               textWrap.appendChild(btnSameVid);
@@ -1294,11 +1550,11 @@
         switchToMode('link-existing');
       }
 
-      if (rawYtParam && ytInput && !ytInput.value.trim()) {
-        ytInput.value = rawYtParam.trim();
-        handleYoutubeUrlChange(false);
+      if (rawMediaParam && ytInput && !ytInput.value.trim()) {
+        ytInput.value = rawMediaParam.trim();
+        handleMediaUrlChange(false);
       } else if (ytInput && ytInput.value.trim()) {
-        handleYoutubeUrlChange(false);
+        handleMediaUrlChange(false);
       }
     }
 
@@ -1390,9 +1646,11 @@
       const mode = (document.querySelector('input[name="clipMode"]:checked') || {}).value || 'new';
       if (mode === 'new') {
         const ytEl = document.getElementById('clipYoutubeUrl');
-        const { videoId } = parseYoutubeInput(ytEl ? ytEl.value : '');
-        if (!videoId) {
-          failField(ytEl, 'err-clipYoutubeUrl', 'Please provide a valid YouTube URL or 11-character video ID.');
+        const parsedMedia = parseMediaInput(ytEl ? ytEl.value : '');
+        if (parsedMedia.unsupportedReason) {
+          failField(ytEl, 'err-clipYoutubeUrl', parsedMedia.unsupportedReason);
+        } else if (!parsedMedia.platform) {
+          failField(ytEl, 'err-clipYoutubeUrl', 'Please provide a valid YouTube URL/ID or public Instagram Post/Reel URL.');
         }
 
         const cidEl = document.getElementById('clipId');
@@ -1405,18 +1663,20 @@
 
         checkRequired('clipTitle');
 
-        const stEl = document.getElementById('clipStartTime');
-        const etEl = document.getElementById('clipEndTime');
-        const stSec = stEl && stEl.value.trim() ? parseTimestampToken(stEl.value) : null;
-        const etSec = etEl && etEl.value.trim() ? parseTimestampToken(etEl.value) : null;
+        if (parsedMedia.platform !== 'instagram') {
+          const stEl = document.getElementById('clipStartTime');
+          const etEl = document.getElementById('clipEndTime');
+          const stSec = stEl && stEl.value.trim() ? parseTimestampToken(stEl.value) : null;
+          const etSec = etEl && etEl.value.trim() ? parseTimestampToken(etEl.value) : null;
 
-        if (stSec !== null && Number.isNaN(stSec)) {
-          failField(stEl, 'err-clipStartTime', 'Invalid start time. Use seconds (e.g. 90) or mm:ss (e.g. 1:30).');
-        }
-        if (etSec !== null && Number.isNaN(etSec)) {
-          failField(etEl, 'err-clipEndTime', 'Invalid end time. Use seconds (e.g. 120) or mm:ss (e.g. 2:00).');
-        } else if (stSec !== null && etSec !== null && !Number.isNaN(stSec) && etSec <= stSec) {
-          failField(etEl, 'err-clipEndTime', 'End Time must be greater than Start Time.');
+          if (stSec !== null && Number.isNaN(stSec)) {
+            failField(stEl, 'err-clipStartTime', 'Invalid start time. Use seconds (e.g. 90) or mm:ss (e.g. 1:30).');
+          }
+          if (etSec !== null && Number.isNaN(etSec)) {
+            failField(etEl, 'err-clipEndTime', 'Invalid end time. Use seconds (e.g. 120) or mm:ss (e.g. 2:00).');
+          } else if (stSec !== null && etSec !== null && !Number.isNaN(stSec) && etSec <= stSec) {
+            failField(etEl, 'err-clipEndTime', 'End Time must be greater than Start Time.');
+          }
         }
       } else {
         const existingVal = getResolvedExistingClip();
@@ -1475,9 +1735,8 @@
       const targetPageJoined = targetUrls.join(', ');
 
       if (mode === 'new') {
-        const rawYt = (document.getElementById('clipYoutubeUrl') || {}).value?.trim() || '';
-        const { videoId } = parseYoutubeInput(rawYt);
-        const ytId = videoId || rawYt;
+        const rawMedia = (document.getElementById('clipYoutubeUrl') || {}).value?.trim() || '';
+        const parsedMedia = parseMediaInput(rawMedia);
         const cid = (document.getElementById('clipId') || {}).value?.trim().toLowerCase().replace(/[^a-z0-9_]/g, '_') || '';
         const title = (document.getElementById('clipTitle') || {}).value?.trim() || '';
         const clipType = (document.getElementById('clipType') || {}).value || '';
@@ -1496,15 +1755,25 @@
           'Submission-Type: clip',
           'Clip-Mode: new',
           'Contributor-Name: ' + contributor,
-          'Clip-ID: ' + cid,
-          'YouTube-ID: ' + ytId,
+          'Clip-ID: ' + cid
+        ];
+        if (parsedMedia.platform === 'instagram') {
+          metaLines.push('Instagram-ID: ' + parsedMedia.instagramId);
+          metaLines.push('Instagram-Type: ' + (parsedMedia.instagramType || 'p'));
+        } else {
+          const ytId = parsedMedia.videoId || rawMedia;
+          metaLines.push('YouTube-ID: ' + ytId);
+        }
+        metaLines.push(
           'Title: ' + title,
           'Target-Page: ' + (targetPageJoined || 'None'),
           'Summary: ' + summary
-        ];
+        );
         if (clipType) metaLines.push('Clip-Type: ' + clipType);
-        if (startFormatted) metaLines.push('Start-Time: ' + startFormatted);
-        if (endFormatted) metaLines.push('End-Time: ' + endFormatted);
+        if (parsedMedia.platform !== 'instagram') {
+          if (startFormatted) metaLines.push('Start-Time: ' + startFormatted);
+          if (endFormatted) metaLines.push('End-Time: ' + endFormatted);
+        }
         if (eventName) metaLines.push('Event: ' + eventName);
         if (currentUploadDate) metaLines.push('Upload-Date: ' + currentUploadDate);
         content = notes || 'No additional clip description provided.';

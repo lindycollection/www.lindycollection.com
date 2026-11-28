@@ -42,23 +42,36 @@ layout: compress
 
   <div class="hero" fetchpriority="high" data-bg="{{site.url}}/assets/img/posts/{{page.featured-img}}.jpg">
   {% else %}
-    {% assign hero_clip_id = nil %}
+    {% assign hero_bg_url = nil %}
     {% if page.clips and page.clips.size > 0 %}
-      {% assign first_clip_name = page.clips | first %}
-      {% assign first_clip = site.clips | where: 'clip_id', first_clip_name | first %}
-      {% if first_clip and first_clip.youtube_id %}
-        {% assign hero_clip_id = first_clip.youtube_id %}
-      {% endif %}
+      {% for clip_name in page.clips %}
+        {% assign cand_clip = site.clips | where: 'clip_id', clip_name | first %}
+        {% if cand_clip %}
+          {% if cand_clip.featured-img %}
+            {% assign hero_bg_url = site.url | append: "/assets/img/posts/" | append: cand_clip.featured-img | append: ".jpg" %}
+            {% break %}
+          {% elsif cand_clip.youtube_id and cand_clip.youtube_id != "" %}
+            {% assign hero_bg_url = "https://img.youtube.com/vi/" | append: cand_clip.youtube_id | append: "/hqdefault.jpg" %}
+            {% break %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
     {% endif %}
-    {% if hero_clip_id == nil and page.crossref %}
-      {% assign crossref_first_clip = site.clips | where: page.crossref, page.crossref_id | first %}
-      {% if crossref_first_clip and crossref_first_clip.youtube_id %}
-        {% assign hero_clip_id = crossref_first_clip.youtube_id %}
-      {% endif %}
+    {% if hero_bg_url == nil and page.crossref %}
+      {% assign crossref_clips = site.clips | where: page.crossref, page.crossref_id %}
+      {% for cand_clip in crossref_clips %}
+        {% if cand_clip.featured-img %}
+          {% assign hero_bg_url = site.url | append: "/assets/img/posts/" | append: cand_clip.featured-img | append: ".jpg" %}
+          {% break %}
+        {% elsif cand_clip.youtube_id and cand_clip.youtube_id != "" %}
+          {% assign hero_bg_url = "https://img.youtube.com/vi/" | append: cand_clip.youtube_id | append: "/hqdefault.jpg" %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
     {% endif %}
-    {% if hero_clip_id %}
+    {% if hero_bg_url %}
     <div class="hero" fetchpriority="high"
-      data-bg="https://img.youtube.com/vi/{{hero_clip_id}}/hqdefault.jpg">
+      data-bg="{{ hero_bg_url }}">
     {% else %}
     <div class="hero dark-bg">
     {% endif %}
@@ -139,6 +152,20 @@ layout: compress
             {% include youtube_player.html id=1 clip_info=yt_argument %}
             {% endif %}
           </div>
+          {% elsif page.instagram_id and page.instagram_id != "" %}
+          {% assign ig_raw_type = page.instagram_type | default: 'p' | downcase | strip %}
+          {% if ig_raw_type == '' %}
+            {% assign ig_type = 'p' %}
+          {% elsif ig_raw_type == 'reels' %}
+            {% assign ig_type = 'reel' %}
+          {% else %}
+            {% assign ig_type = ig_raw_type %}
+          {% endif %}
+          <div class="standalone-instagram-player">
+            <h3 style="margin-bottom: 12px;"><a href="https://www.instagram.com/{{ ig_type }}/{{ page.instagram_id }}/" target="_blank" rel="noopener noreferrer">{{ page.title }} - View on Instagram</a></h3>
+            {% include instagram_player.html id=1 clip_info=page %}
+          </div>
+          <script async src="https://www.instagram.com/embed.js"></script>
           {% endif %}
 
           {{ content }}

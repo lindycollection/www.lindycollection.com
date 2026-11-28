@@ -28,17 +28,38 @@
 {% endif %}
 
 {% assign og_image = nil %}
-{% if page.youtube_id %}
-  {% assign og_image = "https://img.youtube.com/vi/" | append: page.youtube_id | append: "/hqdefault.jpg" %}
-{% elsif page.clips %}
-  {% assign first_clip_id = page.clips | first %}
-  {% assign first_clip = site.clips | where: 'clip_id', first_clip_id | first %}
-  {% if first_clip and first_clip.youtube_id %}
-    {% assign og_image = "https://img.youtube.com/vi/" | append: first_clip.youtube_id | append: "/hqdefault.jpg" %}
-  {% endif %}
-{% elsif page.featured-img %}
+{% if page.featured-img %}
   {% assign featured_rel = "/assets/img/posts/" | append: page.featured-img | append: ".jpg" %}
   {% assign og_image = featured_rel | absolute_url %}
+{% elsif page.youtube_id and page.youtube_id != "" %}
+  {% assign og_image = "https://img.youtube.com/vi/" | append: page.youtube_id | append: "/hqdefault.jpg" %}
+{% elsif page.clips and page.clips.size > 0 %}
+  {% for clip_name in page.clips %}
+    {% assign cand_clip = site.clips | where: 'clip_id', clip_name | first %}
+    {% if cand_clip %}
+      {% if cand_clip.featured-img %}
+        {% assign featured_rel = "/assets/img/posts/" | append: cand_clip.featured-img | append: ".jpg" %}
+        {% assign og_image = featured_rel | absolute_url %}
+        {% break %}
+      {% elsif cand_clip.youtube_id and cand_clip.youtube_id != "" %}
+        {% assign og_image = "https://img.youtube.com/vi/" | append: cand_clip.youtube_id | append: "/hqdefault.jpg" %}
+        {% break %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% if og_image == nil and page.crossref %}
+  {% assign crossref_clips = site.clips | where: page.crossref, page.crossref_id %}
+  {% for cand_clip in crossref_clips %}
+    {% if cand_clip.featured-img %}
+      {% assign featured_rel = "/assets/img/posts/" | append: cand_clip.featured-img | append: ".jpg" %}
+      {% assign og_image = featured_rel | absolute_url %}
+      {% break %}
+    {% elsif cand_clip.youtube_id and cand_clip.youtube_id != "" %}
+      {% assign og_image = "https://img.youtube.com/vi/" | append: cand_clip.youtube_id | append: "/hqdefault.jpg" %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
 {% endif %}
 
 {% if og_image == nil or og_image == blank %}

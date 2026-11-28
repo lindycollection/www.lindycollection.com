@@ -14,21 +14,54 @@
     <noscript><img src="{{site.url}}/assets/img/posts/{{post.featured-img}}_thumb.jpg" alt="{{ post.title }}" width="400" height="300" loading="lazy" decoding="async"></noscript>
   </figure>
   {% else %}
+    {% assign thumb_featured_img = nil %}
     {% assign thumb_clip_id = nil %}
+    {% assign thumb_ig_clip = nil %}
     {% if post.clips and post.clips.size > 0 %}
-      {% assign first_clip_name = post.clips | first %}
-      {% assign first_clip = site.clips | where: 'clip_id', first_clip_name | first %}
-      {% if first_clip and first_clip.youtube_id %}
-        {% assign thumb_clip_id = first_clip.youtube_id %}
-      {% endif %}
+      {% for clip_name in post.clips %}
+        {% assign cand_clip = site.clips | where: 'clip_id', clip_name | first %}
+        {% if cand_clip %}
+          {% if thumb_featured_img == nil and thumb_clip_id == nil and cand_clip.featured-img %}
+            {% assign thumb_featured_img = cand_clip.featured-img %}
+            {% break %}
+          {% elsif thumb_featured_img == nil and thumb_clip_id == nil and cand_clip.youtube_id and cand_clip.youtube_id != "" %}
+            {% assign thumb_clip_id = cand_clip.youtube_id %}
+            {% break %}
+          {% elsif thumb_ig_clip == nil and cand_clip.instagram_id and cand_clip.instagram_id != "" %}
+            {% assign thumb_ig_clip = cand_clip %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
     {% endif %}
-    {% if thumb_clip_id == nil and post.crossref %}
-      {% assign crossref_first_clip = site.clips | where: post.crossref, post.crossref_id | first %}
-      {% if crossref_first_clip and crossref_first_clip.youtube_id %}
-        {% assign thumb_clip_id = crossref_first_clip.youtube_id %}
-      {% endif %}
+    {% if thumb_featured_img == nil and thumb_clip_id == nil and post.crossref %}
+      {% assign crossref_clips = site.clips | where: post.crossref, post.crossref_id %}
+      {% for cand_clip in crossref_clips %}
+        {% if cand_clip.featured-img %}
+          {% assign thumb_featured_img = cand_clip.featured-img %}
+          {% break %}
+        {% elsif cand_clip.youtube_id and cand_clip.youtube_id != "" %}
+          {% assign thumb_clip_id = cand_clip.youtube_id %}
+          {% break %}
+        {% elsif thumb_ig_clip == nil and cand_clip.instagram_id and cand_clip.instagram_id != "" %}
+          {% assign thumb_ig_clip = cand_clip %}
+        {% endif %}
+      {% endfor %}
     {% endif %}
-    {% if thumb_clip_id %}
+    {% if thumb_featured_img %}
+    <figure class="post-card__thumb">
+      <img
+        src="{{site.url}}/assets/img/posts/{{thumb_featured_img}}_placehold.jpg"
+        data-srcset="{{site.url}}/assets/img/posts/{{thumb_featured_img}}_thumb.jpg, {{site.url}}/assets/img/posts/{{thumb_featured_img}}_thumb@2x.jpg 2x"
+        class="lazyload blur"
+        alt="{{post.title}}"
+        width="400"
+        height="300"
+        loading="lazy"
+        decoding="async"
+      />
+      <noscript><img src="{{site.url}}/assets/img/posts/{{thumb_featured_img}}_thumb.jpg" alt="{{ post.title }}" width="400" height="300" loading="lazy" decoding="async"></noscript>
+    </figure>
+    {% elsif thumb_clip_id %}
     <figure class="post-card__thumb">
       <img
         src="https://img.youtube.com/vi/{{thumb_clip_id}}/default.jpg"
@@ -41,6 +74,10 @@
         decoding="async"
       />
       <noscript><img src="https://img.youtube.com/vi/{{thumb_clip_id}}/hqdefault.jpg" alt="{{ post.title }}" width="480" height="360" loading="lazy" decoding="async"></noscript>
+    </figure>
+    {% elsif thumb_ig_clip %}
+    <figure class="post-card__thumb">
+      {% include instagram_placeholder.html clip_info=thumb_ig_clip %}
     </figure>
     {% else %}
     <figure class="post-card__thumb">

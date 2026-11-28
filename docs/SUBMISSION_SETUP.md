@@ -9,7 +9,7 @@ This guide describes how to configure and maintain the dual-mode content submiss
 The pipeline allows both technical contributors (with GitHub accounts) and non-technical community members (via email) to submit suggestions with mandatory **CC-BY-NC-SA 4.0** legal attribution matching the rest of the site.
 
 The site provides **two separate, dedicated submission pages**:
-1. 🎬 **New Clip Submission Form** ([`/suggest-new-clip/`](https://www.lindycollection.com/suggest-new-clip/)): Dedicated form for submitting new YouTube clips with structured metadata (`clip_id`, `youtube_id`, `title`, timestamps, type, event) or linking an existing clip to an existing page.
+1. 🎬 **New Clip Submission Form** ([`/suggest-new-clip/`](https://www.lindycollection.com/suggest-new-clip/)): Dedicated form for submitting new YouTube or public Instagram clips with structured metadata (`clip_id`, `youtube_id` or `instagram_id`/`instagram_type`, `title`, timestamps, type, event) or linking an existing clip to an existing page.
 2. 📝 **Page Content Suggestion Form** ([`/suggest-changes/`](https://www.lindycollection.com/suggest-changes/)): Dedicated form for proposing new markdown text or corrections directly to the body of any site page.
 
 ```mermaid
@@ -51,12 +51,14 @@ flowchart TD
 ## 📋 The Two Dedicated Submission Pages
 
 ### 1. 🎬 Clip Submission ([`/suggest-new-clip/`](https://www.lindycollection.com/suggest-new-clip/))
-Designed exclusively for submitting video clips or linking existing clips to routines, aerials, solo jazz moves, historical figures, or events with client-side YouTube auto-fill.
+Designed exclusively for submitting YouTube or public Instagram video clips, or linking existing clips to routines, aerials, solo jazz moves, historical figures, or events.
 - **New Clip Mode**:
-  - `clipYoutubeUrl` / `youtube_id` (Required): Full YouTube URL or ID. Pasting a URL automatically fetches the video title (via YouTube oEmbed / IFrame API), generates a unique `clip_id`, extracts `?t=`/`&start=`/`&end=` timestamps, checks for existing clips on the same video, and loads an interactive preview player with one-click **Set Start / Set End** buttons.
-  - `clipTitle` (Required, Auto-filled): Descriptive title fetched from YouTube.
+  - `clipYoutubeUrl` (`youtube_id` or `instagram_id` + `instagram_type`, Required): Full YouTube URL/ID or public Instagram Post/Reel URL (`instagram.com/reel/...` or `/p/...`).
+    - **YouTube URLs**: Automatically fetches the video title (via YouTube oEmbed / IFrame API), generates a unique `clip_id`, extracts `?t=`/`&start=`/`&end=` timestamps, checks for existing clips on the same video, and loads an interactive preview player with one-click **Set Start / Set End** buttons.
+    - **Instagram URLs**: Strips tracking query parameters (`?igsh=...`, `?lqvp=...`), renders an interactive official `embed.js` preview, hides YouTube-only timestamp fields, checks for duplicate clips by shortcode, and emits `Instagram-ID` + `Instagram-Type` metadata.
+  - `clipTitle` (Required, Auto-filled when available): Descriptive title fetched from YouTube (or entered/verified for Instagram clips).
   - `clipId` (Required, Auto-filled): Short name, `lowercase_underscored` (disambiguated automatically against existing clips).
-  - `startTime` / `endTime` (Optional, Auto-filled from URL or player): Seconds or `MM:SS` format (e.g. `1:30` -> `90`).
+  - `startTime` / `endTime` (Optional, YouTube only; Auto-filled from URL or player): Seconds or `MM:SS` format (e.g. `1:30` -> `90`).
   - `targetPage` (Optional): Category + Page dropdowns populated from site collections (supports associating with one or multiple pages, pre-selected when arriving via `?page=`).
   - `clipType` (Optional dropdown, Auto-suggested): `tutorial`, `interview`, `competition`, `performance`, `routine`, `social`, `recap`, `historical`.
   - `event` (Optional dropdown, Auto-suggested): Event identifier populated from `_events/` (e.g. `camp_hollywood_2024`), with custom fallback.
