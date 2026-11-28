@@ -1,0 +1,24 @@
+{% assign ig_raw_type = include.clip_info.instagram_type | default: 'p' | downcase | strip %}
+{% if ig_raw_type == '' %}
+  {% assign ig_type = 'p' %}
+{% elsif ig_raw_type == 'reels' %}
+  {% assign ig_type = 'reel' %}
+{% else %}
+  {% assign ig_type = ig_raw_type %}
+{% endif %}
+{% capture ig_permalink %}https://www.instagram.com/{{ ig_type }}/{{ include.clip_info.instagram_id }}/{% endcapture %}
+
+<div class="instagram-container">
+  <blockquote
+    class="instagram-media"
+    {% unless include.clip_info.instagram_captioned == false %}data-instgrm-captioned{% endunless %}
+    data-instgrm-permalink="{{ ig_permalink }}?utm_source=ig_embed&amp;utm_campaign=loading"
+    data-instgrm-version="14"
+    style="background:#FFF; border:0; border-radius:8px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 0 auto; max-width:540px; min-width:280px; padding:0; width:100%;">
+    <div style="padding:24px; text-align:center;">
+      <a href="{{ ig_permalink }}" target="_blank" rel="noopener noreferrer" style="color:#277cea; font-weight:600; text-decoration:none;">
+        View on Instagram ↗
+      </a>
+    </div>
+  </blockquote>
+</div>

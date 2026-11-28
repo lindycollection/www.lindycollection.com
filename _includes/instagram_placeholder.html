@@ -1,0 +1,19 @@
+{% assign ig_ph_type = include.clip_info.instagram_type | default: 'p' | downcase | strip %}
+{% if ig_ph_type == 'reel' or ig_ph_type == 'reels' %}
+  {% assign ig_ph_label = 'Instagram Reel' %}
+{% elsif ig_ph_type == 'tv' %}
+  {% assign ig_ph_label = 'Instagram Video' %}
+{% else %}
+  {% assign ig_ph_label = 'Instagram Post' %}
+{% endif %}
+<div class="ig-placeholder" aria-hidden="true">
+  <div class="ig-placeholder__icon-wrap">
+    <svg class="ig-placeholder__icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+    </svg>
+    <span class="ig-placeholder__play">▶</span>
+  </div>
+  <span class="ig-placeholder__label">{{ ig_ph_label }}</span>
+</div>

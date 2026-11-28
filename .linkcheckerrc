@@ -13,6 +13,8 @@ ignore=
     https?://(www\.)?youtube\.com/.*
     https?://img\.youtube\.com/.*
     https?://youtu\.be/.*
+    https?://(www\.|m\.)?instagram\.com/.*
+    https?://instagr\.am/.*
     https?://github\.com/.*/(commit|pull|issues|blob)/.*
     https?://(www\.)?nytimes\.com/.*
     https?://(www\.)?washingtonpost\.com/.*
